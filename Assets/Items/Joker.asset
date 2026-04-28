@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ad92049d43a4ca4e8890f3e9b93a8f3, type: 3}
   m_Name: Joker
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  displayName: 
-  score: 0
-  icon: {fileID: 0}
-  value: 
-  suit: 0
+  displayName: Joker
+  score: 10
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  value: Joker
+  suit: 4

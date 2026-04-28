@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ad92049d43a4ca4e8890f3e9b93a8f3, type: 3}
   m_Name: AAA
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  displayName: 
-  icon: {fileID: 0}
-  value: 0
+  displayName: AAA
+  score: 0
+  icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  value: 
   suit: 0
