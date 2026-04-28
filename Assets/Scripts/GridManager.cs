@@ -6,6 +6,15 @@ public class GridManager : MonoBehaviour
 
     private ItemData[] gridState = new ItemData[9];
 
+    public DiceHandler DiceHandler;
+    public TicTacToeHandler TicTacToeHandler;
+
+    private void Awake()
+    {
+        DiceHandler = GetComponent<DiceHandler>();
+        TicTacToeHandler = GetComponent<TicTacToeHandler>();
+    }
+
     private void Start()
     {
         for (int i = 0; i < cells.Length; i++)
@@ -14,6 +23,12 @@ public class GridManager : MonoBehaviour
             cells[i].OnItemPlaced += OnItemPlacedInCell;
             cells[i].OnItemRemoved += OnItemRemovedFromCell;
         }
+    }
+
+    public void StartRound()
+    {
+        DiceHandler.PlayRound();
+        TicTacToeHandler.PlayRound();
     }
 
     private void OnItemPlacedInCell(int index, Draggable item)
