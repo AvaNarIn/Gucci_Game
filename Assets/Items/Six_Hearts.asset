@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Six_Hearts
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   displayName: 
-  score: 0
+  score: 1
   icon: {fileID: 0}
   value: 0
   suit: 0

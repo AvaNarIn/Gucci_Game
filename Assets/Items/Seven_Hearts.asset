@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Seven_Hearts
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   displayName: 
-  score: 0
+  score: 2
   icon: {fileID: 0}
   value: 1
   suit: 0

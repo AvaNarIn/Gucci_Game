@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f8c04d6dd85da43882f736c8c4a719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Draggable
-  itemData: {fileID: 11400000, guid: dea8b4b8b690a9f428dfef872385a495, type: 2}
+  itemData: {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
 --- !u!225 &301592506
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -493,6 +493,8 @@ GameObject:
   - component: {fileID: 308498417}
   - component: {fileID: 308498418}
   - component: {fileID: 308498419}
+  - component: {fileID: 308498421}
+  - component: {fileID: 308498420}
   m_Layer: 5
   m_Name: GridPanel_Player
   m_TagString: Untagged
@@ -588,9 +590,11 @@ MonoBehaviour:
   - {fileID: 2100496046}
   - {fileID: 1381031195}
   - {fileID: 463418522}
-  DiceHandler: {fileID: 308498417}
-  TicTacToeHandler: {fileID: 308498418}
+  DiceHandler: {fileID: 0}
+  TicTacToeHandler: {fileID: 0}
   CardHandler: {fileID: 308498419}
+  ChessHandler: {fileID: 0}
+  CheckerHandler: {fileID: 0}
 --- !u!114 &308498417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,6 +634,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardHandler
   animationDuration: 1.2
+--- !u!114 &308498420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308498412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb8bf02c1b58f24d8d9205ce6bbf913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChessHandler
+  animationDuration: 0
+--- !u!114 &308498421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308498412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22d73dd5a6ab50b4d9bde982a29d55cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheckerHandler
+  animationDuration: 0
 --- !u!1 &331274570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,7 +1910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f8c04d6dd85da43882f736c8c4a719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Draggable
-  itemData: {fileID: 11400000, guid: 31cfc84b867d0e54f859f87b83e3266e, type: 2}
+  itemData: {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
 --- !u!225 &1154494634
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2109,7 +2139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f8c04d6dd85da43882f736c8c4a719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Draggable
-  itemData: {fileID: 11400000, guid: 51474a3e0d174a848a2c51bd88a4595e, type: 2}
+  itemData: {fileID: 11400000, guid: dea8b4b8b690a9f428dfef872385a495, type: 2}
 --- !u!225 &1189845942
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2248,7 +2278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f8c04d6dd85da43882f736c8c4a719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Draggable
-  itemData: {fileID: 11400000, guid: dea8b4b8b690a9f428dfef872385a495, type: 2}
+  itemData: {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
 --- !u!225 &1220715126
 CanvasGroup:
   m_ObjectHideFlags: 0
