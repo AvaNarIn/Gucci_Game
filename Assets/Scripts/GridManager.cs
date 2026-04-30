@@ -8,11 +8,25 @@ public class GridManager : MonoBehaviour
 
     public DiceHandler DiceHandler;
     public TicTacToeHandler TicTacToeHandler;
+    public CardHandler CardHandler;
+    public ChessHandler ChessHandler;
+    public CheckerHandler CheckerHandler;
+    private ItemHandler[] Handlers = new ItemHandler[5];
 
     private void Awake()
     {
         DiceHandler = GetComponent<DiceHandler>();
         TicTacToeHandler = GetComponent<TicTacToeHandler>();
+        CardHandler = GetComponent<CardHandler>();
+        ChessHandler = GetComponent<ChessHandler>();
+        CheckerHandler = GetComponent<CheckerHandler>();
+
+
+        Handlers[0] = DiceHandler;
+        Handlers[1] = TicTacToeHandler;
+        Handlers[2] = CardHandler;
+        Handlers[3] = ChessHandler;
+        Handlers[4] = CheckerHandler;
     }
 
     private void Start()
@@ -25,10 +39,16 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void StartRound()
+    public void StartCounting()
     {
-        DiceHandler.PlayRound();
-        TicTacToeHandler.PlayRound();
+        foreach (ItemHandler handler in Handlers)
+        {
+            handler.ApplyingEffects();
+        }
+        foreach (ItemHandler handler in Handlers)
+        {
+            handler.CountingScore();
+        }
     }
 
     private void OnItemPlacedInCell(int index, Draggable item)

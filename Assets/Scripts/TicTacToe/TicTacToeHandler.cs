@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TicTacToeHandler : MonoBehaviour
+public class TicTacToeHandler : ItemHandler
 {
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private float animationDuration = 1.0f;
-    public void PlayRound()
+    public override IEnumerator ApplyingEffects_Coroutine()
     {
-        StartCoroutine(RoundCoroutine());
+        yield return new WaitForSeconds(animationDuration);
     }
 
-    private IEnumerator RoundCoroutine()
+    public override IEnumerator CountingScore_Coroutine()
     {
         ItemData[] gridState = gridManager.GetGridState();
 
@@ -53,7 +51,7 @@ public class TicTacToeHandler : MonoBehaviour
             if (m0 == -1 || m1 == -1 || m2 == -1)
                 continue;
 
-            if (marks[m0].type == marks[m1].type && marks[m1].type == marks[m2].type)
+            if (marks[m0].markType == marks[m1].markType && marks[m1].markType == marks[m2].markType)
             {
                 winningLines.Add(line);
             }
@@ -84,8 +82,10 @@ public class TicTacToeHandler : MonoBehaviour
         float total = 0f;
         for (int i = 0; i < marks.Count; i++)
         {
+            TicTacToeData mark = marks[i];
             float multiplier = Mathf.Pow(1.5f, lineCount[i]);
-            total += marks[i].score * multiplier;
+            Debug.Log($"ќчки за {mark.markType}: {mark.score * multiplier}");
+            total += mark.score * multiplier;
         }
 
         return total;

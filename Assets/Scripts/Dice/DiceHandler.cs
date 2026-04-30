@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceHandler : MonoBehaviour
+public class DiceHandler : ItemHandler
 {
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private float animationDuration = 1.5f;
-
-    public void PlayRound()
+    public override IEnumerator ApplyingEffects_Coroutine()
     {
-        StartCoroutine(RoundCoroutine());
+        yield return new WaitForSeconds(animationDuration);
     }
 
-    private IEnumerator RoundCoroutine()
+    public override IEnumerator CountingScore_Coroutine()
     {
         List<DiceData> diceList = new List<DiceData>();
         ItemData[] gridState = gridManager.GetGridState();
@@ -27,8 +24,8 @@ public class DiceHandler : MonoBehaviour
         List<int> rolledValues = new List<int>();
         foreach (var dice in diceList)
         {
-            int roll = Random.Range(1, dice.numberOfFaces + 1);
-            Debug.Log($"Очки за один кубик: {roll}");
+            int roll = Random.Range(1, (int)(dice.numberOfFaces) + 1);
+            Debug.Log($"Значение на кубике: {roll}");
             rolledValues.Add(roll);
         }
 
@@ -55,6 +52,7 @@ public class DiceHandler : MonoBehaviour
             int count = counts[value];
             int matches = count - 1;
             float multiplier = 1f + matches * 0.125f;
+            Debug.Log($"Очки за {dice.numberOfFaces}: {dice.score * multiplier}");
             total += dice.score * multiplier;
         }
 
