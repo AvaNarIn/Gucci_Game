@@ -10,7 +10,7 @@ public class GridManager : MonoBehaviour
     public TicTacToeHandler TicTacToeHandler;
     public CardHandler CardHandler;
     public ChessHandler ChessHandler;
-    public CheckerHandler CheckerHandler;
+    public RockPaperScissorsHandler CheckerHandler;
     private ItemHandler[] Handlers = new ItemHandler[5];
 
     private void Awake()
@@ -19,7 +19,7 @@ public class GridManager : MonoBehaviour
         TicTacToeHandler = GetComponent<TicTacToeHandler>();
         CardHandler = GetComponent<CardHandler>();
         ChessHandler = GetComponent<ChessHandler>();
-        CheckerHandler = GetComponent<CheckerHandler>();
+        CheckerHandler = GetComponent<RockPaperScissorsHandler>();
 
 
         Handlers[0] = DiceHandler;
