@@ -27,6 +27,7 @@ public class ChessHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration); //ÇÀÃËÓØÊÀ ÄËß ÀÍÈÌÀÖÈÈ
 
         float totalScore = CalculateScore(pieces, pieceIndices);
+        LastScore = totalScore;
         Debug.Log($"Î÷êè çà øàõìàòû: {totalScore}");
     }
 

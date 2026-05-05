@@ -3,10 +3,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     [SerializeField] private ItemData itemData;
     public ItemData ItemData => itemData;
+
+    [SerializeField] private bool isDraggable = true;
+    public GridManager OwnerGridManager { get; private set; }
 
     private Canvas canvas;
     private RectTransform rectTransform;
@@ -16,15 +19,32 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private Vector2 originalAnchoredPos;
     private GridCell originalCell;
 
+    public System.Action<Draggable> OnClicked;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    public void Initialize(GridManager owner) => OwnerGridManager = owner;
+
+    public void SetItemData(ItemData data)
+    {
+        itemData = data;
+        GetComponent<Image>().sprite = data.icon;
+    }
+    public void SetDraggable(bool draggable)
+    {
+        isDraggable = draggable;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!isDraggable) return;
+
         originalParent = transform.parent;
         originalAnchoredPos = rectTransform.anchoredPosition;
         originalCell = originalParent?.GetComponent<GridCell>();
@@ -39,11 +59,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!isDraggable) return;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!isDraggable) return;
         canvasGroup.blocksRaycasts = true;
 
         if (transform.parent == canvas.transform)
@@ -65,5 +87,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             transform.SetParent(originalParent, false);
             rectTransform.anchoredPosition = originalAnchoredPos;
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (transform.parent == canvas?.transform)
+            return;
+
+        OnClicked?.Invoke(this);
     }
 }

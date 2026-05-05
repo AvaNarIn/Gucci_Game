@@ -60,8 +60,9 @@ public class TicTacToeHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration); //ЗАГЛУШКА ПОД АНИМАЦИЮ
 
  
-        float score = CalculateScore(marks, positions, winningLines);
-        Debug.Log($"Очки за крестики-нолики: {score}");
+        float totalScore = CalculateScore(marks, positions, winningLines);
+        LastScore = totalScore;
+        Debug.Log($"Очки за крестики-нолики: {totalScore}");
     }
 
     private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines)

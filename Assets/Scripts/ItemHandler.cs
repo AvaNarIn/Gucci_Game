@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +7,7 @@ public abstract class ItemHandler : MonoBehaviour
 {
     protected GridManager gridManager;
     [SerializeField] protected float animationDuration;
+    public float LastScore { get; protected set; }
     void Awake()
     {
         gridManager = GetComponent<GridManager>();

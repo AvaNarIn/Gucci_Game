@@ -29,8 +29,9 @@ public class DiceHandler : ItemHandler
             rolledValues.Add(roll);
         }
 
-        float score = CalculateScore(diceList, rolledValues);
-        Debug.Log($"Очки за кубики: {score}");
+        float totalScore = CalculateScore(diceList, rolledValues);
+        LastScore = totalScore;
+        Debug.Log($"Очки за кубики: {totalScore}");
     }
 
     private float CalculateScore(List<DiceData> diceList, List<int> values)

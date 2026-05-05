@@ -25,6 +25,7 @@ public class CardHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration);  //ÇÀÃËÓØÊÀ ÏÎÄ ÀÍÈÌÀÖÈŞ
 
         float totalScore = CalculateScore(allCards);
+        LastScore = totalScore;
         Debug.Log($"Î÷êè çà êàğòû: {totalScore}");
     }
 

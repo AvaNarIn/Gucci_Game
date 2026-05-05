@@ -77,7 +77,7 @@ public class RockPaperScissorsHandler : ItemHandler
             Debug.Log($"{current.shape} ({current.score}) побил {beatenNeighbours} соседей, " +
                       $"множитель {multiplier:F4}, очки: {itemScore:F2}");
         }
-
+        LastScore = totalScore;
         Debug.Log($"Общий счёт камней-ножниц-бумаг: {totalScore}");
     }
 }
