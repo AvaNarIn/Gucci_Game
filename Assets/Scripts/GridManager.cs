@@ -29,14 +29,10 @@ public class GridManager : MonoBehaviour
     public IEnumerator CountingCoroutine(System.Action<int> onComplete)
     {
         foreach (var handler in handlers)
-        {
             yield return handler.ApplyingEffects_Coroutine();
-        }
 
         foreach (var handler in handlers)
-        {
             yield return handler.CountingScore_Coroutine();
-        }
 
         int total = Mathf.RoundToInt(handlers.Sum(h => h != null ? h.LastScore : 0f));
         onComplete?.Invoke(total);
@@ -52,13 +48,27 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    public Draggable CreateItemInHand(ItemData data, Transform handParent)
+    public Draggable CreateItemInHand(ItemData data, Transform handParent, bool isDraggable)
     {
         GameObject itemObject = Instantiate(draggablePrefab, handParent);
         Draggable draggable = itemObject.GetComponent<Draggable>();
         draggable.Initialize(this);
         draggable.SetItemData(data);
+        draggable.SetDraggable(isDraggable);
         return draggable;
+    }
+
+    public void RemoveItemFromCell(int cellIndex)
+    {
+        if (cellIndex < 0 || cellIndex >= 9) return;
+        // Гарантированно очищаем состояние сетки
+        gridState[cellIndex] = null;
+        GridCell cell = cells[cellIndex];
+        if (cell.currentItem != null)
+        {
+            Draggable item = cell.currentItem;
+            cell.RemoveItem(item);
+        }
     }
 
     private void OnItemPlacedInCell(int index, Draggable item)
@@ -81,5 +91,10 @@ public class GridManager : MonoBehaviour
             if (cells[i].currentItem == null)
                 empty.Add(i);
         return empty;
+    }
+
+    public bool HasItemsOnField()
+    {
+        return cells.Any(c => c.currentItem != null);
     }
 }

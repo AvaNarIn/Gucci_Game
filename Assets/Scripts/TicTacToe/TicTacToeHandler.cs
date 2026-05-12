@@ -12,14 +12,15 @@ public class TicTacToeHandler : ItemHandler
     public override IEnumerator CountingScore_Coroutine()
     {
         ItemData[] gridState = gridManager.GetGridState();
-
         List<TicTacToeData> marks = new List<TicTacToeData>();
+        List<int> markIndices = new List<int>();
         int[] positions = new int[9];
         for (int i = 0; i < 9; i++)
         {
             if (gridState[i] is TicTacToeData mark)
             {
                 marks.Add(mark);
+                markIndices.Add(i);
                 positions[i] = marks.Count - 1;
             }
             else
@@ -59,34 +60,34 @@ public class TicTacToeHandler : ItemHandler
 
         yield return new WaitForSeconds(animationDuration); //ÇÀÃËÓØÊÀ ÏÎÄ ÀÍÈÌÀÖÈÞ
 
- 
-        float totalScore = CalculateScore(marks, positions, winningLines);
+
+        float totalScore = CalculateScore(marks, positions, winningLines, markIndices);
         LastScore = totalScore;
         Debug.Log($"Î÷êè çà êðåñòèêè-íîëèêè: {totalScore}");
     }
 
-    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines)
+    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines, List<int> markIndices)
     {
         int[] lineCount = new int[marks.Count];
-
         foreach (var line in winningLines)
         {
             int m0 = positions[line[0]];
             int m1 = positions[line[1]];
             int m2 = positions[line[2]];
-
             lineCount[m0]++;
             lineCount[m1]++;
             lineCount[m2]++;
         }
 
         float total = 0f;
+        GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < marks.Count; i++)
         {
             TicTacToeData mark = marks[i];
             float multiplier = Mathf.Pow(1.5f, lineCount[i]);
-            Debug.Log($"Î÷êè çà {mark.markType}: {mark.score * multiplier}");
-            total += mark.score * multiplier;
+            GridCell cell = cells[markIndices[i]];
+            float cellMult = cell.GetMultiplier(mark);
+            total += mark.score * multiplier * cellMult;
         }
 
         return total;

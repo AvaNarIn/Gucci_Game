@@ -23,10 +23,6 @@ public class Character : MonoBehaviour, IPointerClickHandler
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateUI();
-        if (currentHealth <= 0)
-        {
-            // Победа атакующего
-        }
     }
 
     public bool IsAlive => currentHealth > 0;

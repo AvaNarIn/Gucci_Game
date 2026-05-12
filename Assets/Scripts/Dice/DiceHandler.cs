@@ -12,29 +12,31 @@ public class DiceHandler : ItemHandler
     public override IEnumerator CountingScore_Coroutine()
     {
         List<DiceData> diceList = new List<DiceData>();
+        List<int> diceIndices = new List<int>();
         ItemData[] gridState = gridManager.GetGridState();
-        foreach (var item in gridState)
+        for (int i = 0; i < gridState.Length; i++)
         {
-            if (item is DiceData dice)
+            if (gridState[i] is DiceData dice)
+            {
                 diceList.Add(dice);
+                diceIndices.Add(i);
+            }
         }
 
-        yield return new WaitForSeconds(animationDuration); //ЗАГЛУШКА ПОД АНИМАЦИЮ
+        yield return new WaitForSeconds(animationDuration);
 
         List<int> rolledValues = new List<int>();
         foreach (var dice in diceList)
         {
             int roll = Random.Range(1, (int)(dice.numberOfFaces) + 1);
-            Debug.Log($"Значение на кубике: {roll}");
             rolledValues.Add(roll);
         }
 
-        float totalScore = CalculateScore(diceList, rolledValues);
+        float totalScore = CalculateScore(diceList, rolledValues, diceIndices);
         LastScore = totalScore;
-        Debug.Log($"Очки за кубики: {totalScore}");
     }
 
-    private float CalculateScore(List<DiceData> diceList, List<int> values)
+    private float CalculateScore(List<DiceData> diceList, List<int> values, List<int> indices)
     {
         Dictionary<int, int> counts = new Dictionary<int, int>();
         foreach (int v in values)
@@ -46,6 +48,7 @@ public class DiceHandler : ItemHandler
         }
 
         float total = 0f;
+        GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < diceList.Count; i++)
         {
             DiceData dice = diceList[i];
@@ -53,8 +56,9 @@ public class DiceHandler : ItemHandler
             int count = counts[value];
             int matches = count - 1;
             float multiplier = 1f + matches * 0.125f;
-            Debug.Log($"Очки за {dice.numberOfFaces}: {dice.score * multiplier}");
-            total += dice.score * multiplier;
+            GridCell cell = cells[indices[i]];
+            float cellMult = cell.GetMultiplier(dice);
+            total += dice.score * multiplier * cellMult;
         }
 
         return total;

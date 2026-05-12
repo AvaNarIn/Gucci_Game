@@ -2,10 +2,23 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum CellType
+{
+    Empty,
+    Universal,
+    Dice,
+    Card,
+    Chess,
+    RockPaperScissors,
+    TicTacToe
+}
+
 public class GridCell : MonoBehaviour, IDropHandler
 {
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private Image healthBar;
+    [SerializeField] private CellType cellType = CellType.Empty;
+    [SerializeField] private float multiplier = 1f;
 
     public int CellIndex { get; private set; }
     public GridManager OwnerGridManager { get; private set; }
@@ -31,8 +44,19 @@ public class GridCell : MonoBehaviour, IDropHandler
 
         Draggable draggable = eventData.pointerDrag?.GetComponent<Draggable>();
         if (draggable == null) return;
-
         if (draggable.OwnerGridManager != OwnerGridManager) return;
+
+        if (draggable.OriginalCell != null && draggable.OriginalCell != this)
+            return;
+
+        if (draggable.OriginalCell == this)
+            return;
+
+        if (TurnManager.Instance.IsPlayerGridManager(draggable.OwnerGridManager))
+        {
+            if (!TurnManager.Instance.CanAffordPlayer(draggable.ItemData.score))
+                return;
+        }
 
         PlaceItem(draggable);
     }
@@ -41,8 +65,16 @@ public class GridCell : MonoBehaviour, IDropHandler
     {
         if (currentItem != null) return;
 
+        currentHealth = maxHealth;
         currentItem = item;
         item.AttachToCell(transform);
+        item.SetCellIndex(CellIndex);
+
+        if (TurnManager.Instance.IsPlayerGridManager(item.OwnerGridManager))
+            TurnManager.Instance.SpendPlayerMana(item.ItemData.score);
+        else if (TurnManager.Instance.IsBotGridManager(item.OwnerGridManager))
+            TurnManager.Instance.SpendBotMana(item.ItemData.score);
+
         OnItemPlaced?.Invoke(CellIndex, item);
         UpdateHealthBar();
     }
@@ -52,14 +84,38 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem == item)
         {
             currentItem = null;
+            item.ClearCellIndex();
             OnItemRemoved?.Invoke(CellIndex);
             UpdateHealthBar();
+        }
+    }
+
+    public void TempRemoveItem(Draggable item)
+    {
+        if (currentItem == item)
+        {
+            currentItem = null;
+        }
+    }
+
+    public void ReturnItemToCell(Draggable item)
+    {
+        if (currentItem == null)
+        {
+            currentItem = item;
+            item.AttachToCell(transform);
+            item.SetCellIndex(CellIndex);
+        }
+        else
+        {
+            Destroy(item.gameObject);
         }
     }
 
     public void TakeDamage(int damage)
     {
         if (currentItem == null) return;
+        if (damage <= 0) return;
 
         currentHealth -= damage;
         if (currentHealth <= 0)
@@ -73,6 +129,28 @@ public class GridCell : MonoBehaviour, IDropHandler
             }
         }
         UpdateHealthBar();
+    }
+
+    public float GetMultiplier(ItemData item)
+    {
+        if (cellType == CellType.Empty) return 1f;
+        if (cellType == CellType.Universal) return multiplier;
+
+        switch (cellType)
+        {
+            case CellType.Dice:
+                return item is DiceData ? multiplier : 1f;
+            case CellType.Card:
+                return item is CardData ? multiplier : 1f;
+            case CellType.Chess:
+                return item is ChessData ? multiplier : 1f;
+            case CellType.RockPaperScissors:
+                return item is RockPaperScissorsData ? multiplier : 1f;
+            case CellType.TicTacToe:
+                return item is TicTacToeData ? multiplier : 1f;
+            default:
+                return 1f;
+        }
     }
 
     private void UpdateHealthBar()

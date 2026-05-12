@@ -71,7 +71,9 @@ public class RockPaperScissorsHandler : ItemHandler
             }
 
             float multiplier = Mathf.Pow(1.1f, beatenNeighbours);
-            float itemScore = current.score * multiplier;
+            GridCell cell = gridManager.GetCells()[index];
+            float cellMult = cell.GetMultiplier(current);
+            float itemScore = current.score * multiplier * cellMult;
             totalScore += itemScore;
 
             Debug.Log($"{current.shape} ({current.score}) побил {beatenNeighbours} соседей, " +

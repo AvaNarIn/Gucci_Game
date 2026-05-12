@@ -16,20 +16,24 @@ public class CardHandler : ItemHandler
     {
         ItemData[] gridState = gridManager.GetGridState();
         List<CardData> allCards = new List<CardData>();
+        List<int> cardIndices = new List<int>();
         for (int i = 0; i < gridState.Length; i++)
         {
             if (gridState[i] is CardData card)
+            {
                 allCards.Add(card);
+                cardIndices.Add(i);
+            }
         }
 
-        yield return new WaitForSeconds(animationDuration);  //ÇÀÃËÓØÊÀ ÏÎÄ ÀÍÈÌÀÖÈÞ
+        yield return new WaitForSeconds(animationDuration);
 
-        float totalScore = CalculateScore(allCards);
+        float totalScore = CalculateScore(allCards, cardIndices);
         LastScore = totalScore;
         Debug.Log($"Î÷êè çà êàðòû: {totalScore}");
     }
 
-    private float CalculateScore(List<CardData> cards)
+    private float CalculateScore(List<CardData> cards, List<int> cardIndices)
     {
         if (cards.Count == 0) return 0;
 
@@ -58,11 +62,14 @@ public class CardHandler : ItemHandler
         { bestMultiplier = 1.1f; bestSet = pairSet; }
 
         float total = 0f;
-        foreach (var card in cards)
+        GridCell[] cells = gridManager.GetCells();
+        for (int i = 0; i < cards.Count; i++)
         {
-            float mult = bestSet.Contains(card) ? bestMultiplier : 1f;
-            Debug.Log($"Î÷êè çà {card.value} {card.suit}: {card.score * mult}");
-            total += card.score * mult;
+            CardData card = cards[i];
+            GridCell cell = cells[cardIndices[i]];
+            float cellMult = cell.GetMultiplier(card);
+            float comboMult = bestSet.Contains(card) ? bestMultiplier : 1f;
+            total += card.score * comboMult * cellMult;
         }
         return total;
     }

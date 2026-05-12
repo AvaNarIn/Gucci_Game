@@ -37,7 +37,6 @@ public class ChessHandler : ItemHandler
 
         int[] rows = indices.Select(i => i / 3).ToArray();
         int[] cols = indices.Select(i => i % 3).ToArray();
-
         List<List<Vector2Int>> attackedByPiece = new List<List<Vector2Int>>();
 
         for (int i = 0; i < pieces.Count; i++)
@@ -45,12 +44,13 @@ public class ChessHandler : ItemHandler
             List<Vector2Int> attacked = GetAttackedCells(
                 pieces[i].TypeOfChessPiece,
                 rows[i], cols[i],
-                rows, cols 
+                rows, cols
             );
             attackedByPiece.Add(attacked);
         }
 
         float total = 0f;
+        GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < pieces.Count; i++)
         {
             int targets = 0;
@@ -62,10 +62,10 @@ public class ChessHandler : ItemHandler
                     targets++;
             }
             float multiplier = Mathf.Pow(1.25f, targets);
-            float pieceScore = pieces[i].score * multiplier;
+            GridCell cell = cells[indices[i]];
+            float cellMult = cell.GetMultiplier(pieces[i]);
+            float pieceScore = pieces[i].score * multiplier * cellMult;
             total += pieceScore;
-
-            Debug.Log($"Фигура {pieces[i].TypeOfChessPiece} ({pieces[i].score} x {multiplier:F4} = {pieceScore:F4})");
         }
 
         return total;

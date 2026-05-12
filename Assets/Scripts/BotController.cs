@@ -13,27 +13,44 @@ public class BotController : MonoBehaviour
     private System.Action onPlacementComplete;
     private System.Action<int> onActionComplete;
 
-    private void Start()
-    {
-        foreach (Transform child in handPanel)
-        {
-            Draggable d = child.GetComponent<Draggable>();
-            if (d != null)
-                handItems.Add(d);
-        }
-    }
-
     public void StartPlacementPhase(System.Action onComplete)
     {
         onPlacementComplete = onComplete;
+        handItems.Clear();
+        foreach (Transform child in handPanel)
+        {
+            Draggable d = child.GetComponent<Draggable>();
+            if (d != null) handItems.Add(d);
+        }
+
+        if (handItems.Count >= 6)
+        {
+            Draggable cheapest = handItems[0];
+            for (int i = 1; i < handItems.Count; i++)
+            {
+                if (handItems[i].ItemData.score < cheapest.ItemData.score)
+                    cheapest = handItems[i];
+            }
+            cheapest.DestroyItem();
+            TurnManager.Instance.AddBotMana(1);
+            handItems.Remove(cheapest);
+        }
+
         StartCoroutine(PlacementCoroutine());
     }
 
     private IEnumerator PlacementCoroutine()
     {
-        while (handItems.Count > 0)
+        bool placed;
+        do
         {
-            Draggable chosen = handItems[Random.Range(0, handItems.Count)];
+            placed = false;
+            if (handItems.Count == 0) break;
+
+            List<Draggable> affordableCards = handItems.FindAll(d => TurnManager.Instance.CanAffordBot(d.ItemData.score));
+            if (affordableCards.Count == 0) break;
+
+            Draggable chosen = affordableCards[Random.Range(0, affordableCards.Count)];
             List<int> emptyCells = botGridManager.GetEmptyCells();
             if (emptyCells.Count == 0) break;
 
@@ -41,10 +58,11 @@ public class BotController : MonoBehaviour
             if (botGridManager.PlaceExistingDraggable(chosen, targetCell))
             {
                 handItems.Remove(chosen);
-                Debug.Log($"Бот выставил {chosen.ItemData.displayName} в ячейку {targetCell}");
+                placed = true;
             }
             yield return new WaitForSeconds(placementDelay);
-        }
+        } while (placed && handItems.Count > 0 && botGridManager.GetEmptyCells().Count > 0);
+
         onPlacementComplete?.Invoke();
     }
 
@@ -68,14 +86,13 @@ public class BotController : MonoBehaviour
         while (remainingScore > 0 && (enemyCells.Count > 0 || playerCharacter.IsAlive))
         {
             bool attackCharacter = enemyCells.Count == 0 ||
-                (playerCharacter.IsAlive && Random.value < 0.3f); // 30% шанс атаковать персонажа
+                (playerCharacter.IsAlive && Random.value < 0.3f);
 
             if (attackCharacter)
             {
                 int damage = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
                 playerCharacter.TakeDamage(damage);
                 remainingScore -= damage;
-                Debug.Log($"Бот атакует персонажа на {damage} урона");
             }
             else
             {
@@ -83,7 +100,6 @@ public class BotController : MonoBehaviour
                 int damage = Mathf.Min(remainingScore, targetCell.CurrentHealth);
                 targetCell.TakeDamage(damage);
                 remainingScore -= damage;
-                Debug.Log($"Бот атакует клетку {targetCell.CellIndex} на {damage} урона");
                 if (targetCell.currentItem == null)
                     enemyCells.Remove(targetCell);
             }

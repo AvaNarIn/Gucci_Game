@@ -18,6 +18,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private Transform originalParent;
     private Vector2 originalAnchoredPos;
     private GridCell originalCell;
+    public GridCell OriginalCell => originalCell;
+
+    private int currentCellIndex = -1;
 
     public System.Action<Draggable> OnClicked;
 
@@ -36,10 +39,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         itemData = data;
         GetComponent<Image>().sprite = data.icon;
     }
-    public void SetDraggable(bool draggable)
-    {
-        isDraggable = draggable;
-    }
+
+    public void SetDraggable(bool draggable) { isDraggable = draggable; }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -50,7 +51,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         originalCell = originalParent?.GetComponent<GridCell>();
 
         if (originalCell != null)
-            originalCell.RemoveItem(this);
+            originalCell.TempRemoveItem(this);
 
         transform.SetParent(canvas.transform, true);
         transform.SetAsLastSibling();
@@ -76,24 +77,54 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         transform.SetParent(cellTransform, false);
         rectTransform.anchoredPosition = Vector2.zero;
+        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        GridCell cell = cellTransform.GetComponent<GridCell>();
+        if (cell != null)
+            SetCellIndex(cell.CellIndex);
     }
 
     public void ReturnToOriginalCell()
     {
         if (originalCell != null)
-            originalCell.PlaceItem(this);
+        {
+            originalCell.ReturnItemToCell(this);
+        }
         else
         {
             transform.SetParent(originalParent, false);
             rectTransform.anchoredPosition = originalAnchoredPos;
+            // возврат в руку Ц индекса нет
+            SetCellIndex(-1);
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (transform.parent == canvas?.transform)
-            return;
-
+        if (transform.parent == canvas?.transform) return;
         OnClicked?.Invoke(this);
+    }
+
+    public void DestroyItem()
+    {
+        if (OwnerGridManager != null && currentCellIndex >= 0 && currentCellIndex < 9)
+        {
+            OwnerGridManager.RemoveItemFromCell(currentCellIndex);
+        }
+        else
+        {
+            // ћусорка из руки
+        }
+        Destroy(gameObject);
+    }
+
+    public void SetCellIndex(int index)
+    {
+        currentCellIndex = index;
+    }
+
+    public void ClearCellIndex()
+    {
+        currentCellIndex = -1;
     }
 }
