@@ -26,13 +26,15 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Text botManaText;
     [SerializeField] private Transform playerHandPanel;
     [SerializeField] private Transform botHandPanel;
-    [SerializeField] private Character playerCharacter;
-    [SerializeField] private Character botCharacter;
+    public Character playerCharacter;
+    public Character botCharacter;
     [SerializeField] private DeckManager playerDeckManager;
     [SerializeField] private DeckManager botDeckManager;
 
     public GridManager PlayerGridManager => playerGridManager;
     public GridManager BotGridManager => botGridManager;
+
+    public System.Action<bool> OnGameOver;
 
     private TurnPhase currentPhase;
     private int playerAccumulatedScore;
@@ -43,23 +45,43 @@ public class TurnManager : MonoBehaviour
     private bool firstPlayerTurn = true;
     private bool firstBotTurn = true;
     private List<Draggable> subscribedDraggables = new List<Draggable>();
+    private bool gameOverTriggered = false;
+    public Text buffsText;
 
     private void Awake()
     {
         Instance = this;
+        playerCharacter.OnDeath += () => TriggerGameOver(false);
+        botCharacter.OnDeath += () => TriggerGameOver(true);
     }
 
-    private void Start()
+    public void StartBattle()
     {
-        AddPlayerMana(10);
-        AddBotMana(10);
+        gameOverTriggered = false;
+        playerMana = 10;
+        botMana = 10;
+        firstPlayerTurn = true;
+        firstBotTurn = true;
+        playerAccumulatedScore = 0;
+        botAccumulatedScore = 0;
+        roundNumber = 1;
+
         playerDeckManager.DrawInitialHand();
+        MetaGameManager.Instance?.RefreshDeckButtonText();
         InitializeHand(playerGridManager, playerHandPanel, true);
         InitializeHand(botGridManager, botHandPanel, false);
-        roundNumber = 1;
+        UpdateBuffDisplay();
+
+        foreach (var handler in FindObjectsByType<ItemHandler>())
+        {
+            handler.RefreshAbilities();
+        }
+
         SetPhase(TurnPhase.PlayerPlacement);
         UpdateUI();
     }
+
+
 
     private void InitializeHand(GridManager manager, Transform handPanel, bool isDraggable)
     {
@@ -74,6 +96,14 @@ public class TurnManager : MonoBehaviour
         }
     }
 
+    public void UpdateBuffDisplay()
+    {
+        if (buffsText == null) return;
+        string text = "";
+        foreach (var buff in PlayerInventory.activeBuffs)
+            text += $"{buff.data.buffName} (боёв: {buff.remainingBattles})\n";
+        buffsText.text = text;
+    }
     private void SetPhase(TurnPhase phase)
     {
         UnsubscribeAttackTargets();
@@ -157,7 +187,6 @@ public class TurnManager : MonoBehaviour
             character.TakeDamage(damage);
             playerAccumulatedScore -= damage;
             UpdateUI();
-            CheckGameOver();
         }
     }
 
@@ -226,64 +255,47 @@ public class TurnManager : MonoBehaviour
         botAccumulatedScore = remainingScore;
         UpdateUI();
         playerDeckManager.DrawTurnCards(2);
+        MetaGameManager.Instance?.RefreshDeckButtonText();
         roundNumber++;
         CheckEndGame();
         SetPhase(TurnPhase.PlayerPlacement);
     }
 
+    private void TriggerGameOver(bool playerWon)
+    {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+        actionButton.interactable = false;
+        OnGameOver?.Invoke(playerWon);
+    }
+
     private void CheckEndGame()
     {
+        if (gameOverTriggered) return;
         bool playerHasItems = playerGridManager.HasItemsOnField() || !playerDeckManager.IsHandEmpty || !playerDeckManager.IsDeckEmpty;
         bool botHasItems = botGridManager.HasItemsOnField() || !botDeckManager.IsHandEmpty || !botDeckManager.IsDeckEmpty;
         if (roundNumber >= 100 || (!playerHasItems && !botHasItems))
         {
             if (playerCharacter.CurrentHealth > botCharacter.CurrentHealth)
-                Debug.Log("Игрок победил!");
+                TriggerGameOver(true);
             else
-                Debug.Log("Бот победил!");
-            actionButton.interactable = false;
-            enabled = false;
+                TriggerGameOver(false);
         }
     }
 
-    private void CheckGameOver()
-    {
-        if (!playerCharacter.IsAlive)
-            Debug.Log("Бот победил!");
-        else if (!botCharacter.IsAlive)
-            Debug.Log("Игрок победил!");
-    }
-
-    public void SpendPlayerMana(int amount)
-    {
-        playerMana -= amount;
-        UpdateUI();
-    }
-
-    public void SpendBotMana(int amount)
-    {
-        botMana -= amount;
-        UpdateUI();
-    }
-
-    public void AddPlayerMana(int amount)
-    {
-        playerMana += amount;
-        UpdateUI();
-    }
-
-    public void AddBotMana(int amount)
-    {
-        botMana += amount;
-        UpdateUI();
-    }
-
+    public void SpendPlayerMana(int amount) { playerMana -= amount; UpdateUI(); }
+    public void SpendBotMana(int amount) { botMana -= amount; UpdateUI(); }
+    public void AddPlayerMana(int amount) { playerMana += amount; UpdateUI(); }
+    public void AddBotMana(int amount) { botMana += amount; UpdateUI(); }
     public bool CanAffordPlayer(int cost) => playerMana >= cost;
     public bool CanAffordBot(int cost) => botMana >= cost;
-
     public bool IsPlayerGridManager(GridManager manager) => manager == playerGridManager;
     public bool IsBotGridManager(GridManager manager) => manager == botGridManager;
 
+    public bool HasBuff(TemporaryBuffData buff)
+    {
+        return PlayerInventory.activeBuffs.Exists(b => b.data == buff);
+    }
     private void UpdateUI()
     {
         playerScoreText.text = $"Очки игрока: {playerAccumulatedScore}";

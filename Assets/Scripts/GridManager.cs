@@ -60,15 +60,10 @@ public class GridManager : MonoBehaviour
 
     public void RemoveItemFromCell(int cellIndex)
     {
-        if (cellIndex < 0 || cellIndex >= 9) return;
-        // Гарантированно очищаем состояние сетки
         gridState[cellIndex] = null;
         GridCell cell = cells[cellIndex];
-        if (cell.currentItem != null)
-        {
-            Draggable item = cell.currentItem;
-            cell.RemoveItem(item);
-        }
+
+        cell.RemoveItem();
     }
 
     private void OnItemPlacedInCell(int index, Draggable item)

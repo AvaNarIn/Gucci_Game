@@ -37,7 +37,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void SetItemData(ItemData data)
     {
         itemData = data;
-        GetComponent<Image>().sprite = data.icon;
+        //GetComponent<Image>().sprite = data.icon;
     }
 
     public void SetDraggable(bool draggable) { isDraggable = draggable; }
@@ -49,9 +49,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         originalParent = transform.parent;
         originalAnchoredPos = rectTransform.anchoredPosition;
         originalCell = originalParent?.GetComponent<GridCell>();
-
-        if (originalCell != null)
-            originalCell.TempRemoveItem(this);
 
         transform.SetParent(canvas.transform, true);
         transform.SetAsLastSibling();
@@ -88,13 +85,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         if (originalCell != null)
         {
-            originalCell.ReturnItemToCell(this);
+            AttachToCell(originalCell.GetComponent<RectTransform>());
         }
         else
         {
             transform.SetParent(originalParent, false);
             rectTransform.anchoredPosition = originalAnchoredPos;
-            // возврат в руку – индекса нет
+            // возврат в руку - индекса нет
             SetCellIndex(-1);
         }
     }
@@ -121,10 +118,5 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void SetCellIndex(int index)
     {
         currentCellIndex = index;
-    }
-
-    public void ClearCellIndex()
-    {
-        currentCellIndex = -1;
     }
 }

@@ -11,6 +11,7 @@ public class Character : MonoBehaviour, IPointerClickHandler
     public int CurrentHealth => currentHealth;
 
     public System.Action<Character> OnClicked;
+    public System.Action OnDeath;
 
     private void Awake()
     {
@@ -23,9 +24,17 @@ public class Character : MonoBehaviour, IPointerClickHandler
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateUI();
+        if (currentHealth <= 0)
+            OnDeath?.Invoke();
     }
 
     public bool IsAlive => currentHealth > 0;
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        UpdateUI();
+    }
 
     private void UpdateUI()
     {
@@ -36,5 +45,12 @@ public class Character : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         OnClicked?.Invoke(this);
+    }
+
+    public void SetMaxHealth(int newMaxHealth)
+    {
+        maxHealth = newMaxHealth;
+        currentHealth = newMaxHealth;
+        UpdateUI();
     }
 }

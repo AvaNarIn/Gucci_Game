@@ -1,35 +1,64 @@
-    using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using System.Collections;
 
 public abstract class ItemHandler : MonoBehaviour
 {
-    protected GridManager gridManager;
-    [SerializeField] protected float animationDuration;
     public float LastScore { get; protected set; }
-    void Awake()
+    protected GridManager gridManager;
+
+    [Header("Набор предметов, который обрабатывает этот Handler")]
+    public ItemSet set;
+
+    public AbilityDatabase abilityDatabase;
+    public int animationDuration;
+    public Dictionary<AbilityData, bool> ActiveAbilities { get; private set; } = new Dictionary<AbilityData, bool>();
+
+    protected virtual void Awake()
     {
         gridManager = GetComponent<GridManager>();
     }
 
-    public virtual void ApplyingEffects()
+    public void InitAbilities()
     {
-        StartCoroutine(ApplyingEffects_Coroutine());
+        ActiveAbilities.Clear();
+        if (abilityDatabase != null)
+        {
+            foreach (var ability in abilityDatabase.allAbilities)
+            {
+                if (ability.set == set)
+                    ActiveAbilities[ability] = false;
+            }
+        }
     }
 
-    public virtual void CountingScore()
+    public void RefreshAbilities()
     {
-        StartCoroutine(CountingScore_Coroutine());
+        List<AbilityData> keys = new List<AbilityData>(ActiveAbilities.Keys);
+        foreach (var key in keys)
+            ActiveAbilities[key] = false;
+
+        foreach (var ability in PlayerInventory.abilities)
+        {
+            if (ability.set == set && ActiveAbilities.ContainsKey(ability))
+                ActiveAbilities[ability] = true;
+        }
     }
 
-    public virtual IEnumerator ApplyingEffects_Coroutine()
+    public bool IsAbilityActive(AbilityData ability)
     {
-        yield return new WaitForSeconds(animationDuration);
+        return ActiveAbilities.ContainsKey(ability) && ActiveAbilities[ability];
     }
 
-    public virtual IEnumerator CountingScore_Coroutine()
+    public AbilityData GetAbilityByName(string name)
     {
-        yield return new WaitForSeconds(animationDuration);
+        foreach (var ability in ActiveAbilities.Keys)
+        {
+            if (ability.abilityName == name) return ability;
+        }
+        return null;
     }
+
+    public abstract IEnumerator ApplyingEffects_Coroutine();
+    public abstract IEnumerator CountingScore_Coroutine();
 }

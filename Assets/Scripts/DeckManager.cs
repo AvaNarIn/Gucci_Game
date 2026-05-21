@@ -4,7 +4,7 @@ using UnityEngine;
 public class DeckManager : MonoBehaviour
 {
     [SerializeField] private GridManager gridManager;
-    [SerializeField] private Transform handPanel;
+    public Transform handPanel;
     [SerializeField] private GameObject draggablePrefab;
     [SerializeField] private List<ItemData> deck;
     private List<ItemData> drawPile;
@@ -13,6 +13,12 @@ public class DeckManager : MonoBehaviour
     private void Awake()
     {
         drawPile = new List<ItemData>(deck);
+        Shuffle(drawPile);
+    }
+
+    public void SetCustomDeck(List<ItemData> newDeck)
+    {
+        drawPile = new List<ItemData>(newDeck);
         Shuffle(drawPile);
     }
 
@@ -52,6 +58,18 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    public List<ItemData> GetDeck() => deck;
+    public List<ItemData> GetDrawPile() => drawPile;
     public bool IsHandEmpty => handPanel.childCount == 0;
     public bool IsDeckEmpty => drawPile.Count == 0;
+
+    public void RemoveCardFromDrawPile(ItemData card)
+    {
+        drawPile.Remove(card);
+    }
+
+    public void AddCardToDrawPile(ItemData card)
+    {
+        drawPile.Add(card);
+    }
 }

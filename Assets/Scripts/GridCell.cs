@@ -17,6 +17,7 @@ public class GridCell : MonoBehaviour, IDropHandler
 {
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private Image healthBar;
+    [SerializeField] private Text healthText;
     [SerializeField] private CellType cellType = CellType.Empty;
     [SerializeField] private float multiplier = 1f;
 
@@ -35,6 +36,27 @@ public class GridCell : MonoBehaviour, IDropHandler
         CellIndex = index;
         OwnerGridManager = owner;
         currentHealth = maxHealth;
+        healthText.text = currentHealth.ToString();
+        healthText.color = Color.green;
+        UpdateHealthBar();
+    }
+
+    public void SetProperties(int newMaxHealth, CellType newType, float newMultiplier)
+    {
+        maxHealth = newMaxHealth;
+        cellType = newType;
+        multiplier = newMultiplier;
+        currentHealth = newMaxHealth;
+        healthText.text = currentHealth.ToString();
+        healthText.color = Color.green;
+        UpdateHealthBar();
+    }
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        healthText.text = currentHealth.ToString();
+        healthText.color = Color.green;
         UpdateHealthBar();
     }
 
@@ -66,6 +88,8 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem != null) return;
 
         currentHealth = maxHealth;
+        healthText.text = currentHealth.ToString();
+        healthText.color = Color.white;
         currentItem = item;
         item.AttachToCell(transform);
         item.SetCellIndex(CellIndex);
@@ -79,37 +103,13 @@ public class GridCell : MonoBehaviour, IDropHandler
         UpdateHealthBar();
     }
 
-    public void RemoveItem(Draggable item)
+    public void RemoveItem()
     {
-        if (currentItem == item)
-        {
-            currentItem = null;
-            item.ClearCellIndex();
-            OnItemRemoved?.Invoke(CellIndex);
-            UpdateHealthBar();
-        }
-    }
-
-    public void TempRemoveItem(Draggable item)
-    {
-        if (currentItem == item)
-        {
-            currentItem = null;
-        }
-    }
-
-    public void ReturnItemToCell(Draggable item)
-    {
-        if (currentItem == null)
-        {
-            currentItem = item;
-            item.AttachToCell(transform);
-            item.SetCellIndex(CellIndex);
-        }
-        else
-        {
-            Destroy(item.gameObject);
-        }
+        Destroy(currentItem.gameObject);
+        currentItem = null;
+        OnItemRemoved?.Invoke(CellIndex);
+        UpdateHealthBar();
+        healthText.color = Color.green;
     }
 
     public void TakeDamage(int damage)
@@ -120,14 +120,10 @@ public class GridCell : MonoBehaviour, IDropHandler
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
-            if (currentItem != null)
-            {
-                Draggable item = currentItem;
-                RemoveItem(item);
-                Destroy(item.gameObject);
-            }
+            RemoveItem();
+            currentHealth = maxHealth;
         }
+        healthText.text = currentHealth.ToString();
         UpdateHealthBar();
     }
 
@@ -155,7 +151,6 @@ public class GridCell : MonoBehaviour, IDropHandler
 
     private void UpdateHealthBar()
     {
-        if (healthBar != null)
-            healthBar.fillAmount = (float)currentHealth / maxHealth;
+        healthBar.fillAmount = (float)currentHealth / maxHealth;
     }
 }
