@@ -7,10 +7,6 @@ public class TicTacToeHandler : ItemHandler
     public override IEnumerator ApplyingEffects_Coroutine()
     {
         yield return new WaitForSeconds(animationDuration);
-        if (ActiveAbilities[GetAbilityByName("NewAbility 5")])
-        {
-            Debug.Log("Есть способность");
-        }
     }
 
     public override IEnumerator CountingScore_Coroutine()

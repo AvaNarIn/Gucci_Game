@@ -2272,6 +2272,7 @@ GameObject:
   - component: {fileID: 308498421}
   - component: {fileID: 308498420}
   - component: {fileID: 308498422}
+  - component: {fileID: 308498423}
   m_Layer: 5
   m_Name: GridPanel_Player
   m_TagString: Untagged
@@ -2459,51 +2460,34 @@ MonoBehaviour:
   handPanel: {fileID: 1146578038}
   draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
   deck:
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
-  - {fileID: 11400000, guid: cb0f0ceb73dc524408532f2ff091c80b, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+--- !u!114 &308498423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308498412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562cc851573f0f94785ebace7ff64dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BotAbilityHandler
 --- !u!1 &342096005
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,6 +2992,7 @@ MonoBehaviour:
   itemDatabase: {fileID: 11400000, guid: 23a9bad7283b1c14a8c1925805451bd1, type: 2}
   abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   buffDatabase: {fileID: 11400000, guid: ae4e3219be5e50b4b84df2e3f0ddf485, type: 2}
+  bossAbilityDatabase: {fileID: 11400000, guid: 48d701d65cdaedf488e3d286c7413c91, type: 2}
   playerDeckManager: {fileID: 308498422}
   botDeckManager: {fileID: 1969181805}
   turnManager: {fileID: 27735632}
@@ -3020,8 +3005,6 @@ MonoBehaviour:
   abilitySlotsUI: {fileID: 1426548039}
   openDeckButton: {fileID: 720997789}
   deckCountText: {fileID: 125068295}
-  playerGridManager: {fileID: 308498416}
-  botGridManager: {fileID: 1969181799}
 --- !u!1001 &414939298
 PrefabInstance:
   m_ObjectHideFlags: 0

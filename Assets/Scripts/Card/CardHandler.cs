@@ -14,6 +14,7 @@ public class CardHandler : ItemHandler
 
     public override IEnumerator CountingScore_Coroutine()
     {
+        // Получаем все карты с поля
         ItemData[] gridState = gridManager.GetGridState();
         List<CardData> allCards = new List<CardData>();
         List<int> cardIndices = new List<int>();
@@ -26,14 +27,36 @@ public class CardHandler : ItemHandler
             }
         }
 
-        yield return new WaitForSeconds(animationDuration);
+        yield return new WaitForSeconds(animationDuration);  // заглушка под анимацию
 
-        float totalScore = CalculateScore(allCards, cardIndices);
+        // === Обработка способности "Усиление комбинации" ===
+        string abilityName = "Усиление комбинации";
+        AbilityData boostAbility = GetAbilityByName(abilityName);
+        string storedCombo = null;
+
+        if (boostAbility != null && ActiveAbilities[boostAbility])
+        {
+            storedCombo = GetAbilityState(abilityName) as string;
+            if (string.IsNullOrEmpty(storedCombo))
+            {
+                string[] combos = { "Пара", "Две пары", "Сет", "Стрит", "Флеш", "Фулл-хаус", "Каре", "Стрит-флеш", "Флеш-рояль", "Пять одинаковых" };
+                storedCombo = combos[Random.Range(0, combos.Length)];
+                SetAbilityState(abilityName, storedCombo);
+            }
+        }
+        else if (boostAbility != null && !ActiveAbilities[boostAbility])
+        {
+            RemoveAbilityState(abilityName);
+        }
+        // Если boostAbility == null – такой способности вообще нет в базе, ничего не делаем
+
+        // Подсчёт очков (передаём storedCombo)
+        float totalScore = CalculateScore(allCards, cardIndices, storedCombo);
         LastScore = totalScore;
         Debug.Log($"Очки за карты: {totalScore}");
     }
 
-    private float CalculateScore(List<CardData> cards, List<int> cardIndices)
+    private float CalculateScore(List<CardData> cards, List<int> cardIndices, string storedCombo)
     {
         if (cards.Count == 0) return 0;
 
@@ -61,6 +84,14 @@ public class CardHandler : ItemHandler
         else if (TryGetPair(cards, out var pairSet))
         { bestMultiplier = 1.1f; bestSet = pairSet; }
 
+        float effectiveMultiplier = bestMultiplier;
+        if (!string.IsNullOrEmpty(storedCombo))
+        {
+            string currentCombo = GetCurrentComboName(bestSet, cards);
+            if (currentCombo == storedCombo)
+                effectiveMultiplier *= 2f;
+        }
+
         float total = 0f;
         GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < cards.Count; i++)
@@ -68,10 +99,25 @@ public class CardHandler : ItemHandler
             CardData card = cards[i];
             GridCell cell = cells[cardIndices[i]];
             float cellMult = cell.GetMultiplier(card);
-            float comboMult = bestSet.Contains(card) ? bestMultiplier : 1f;
+            float comboMult = bestSet.Contains(card) ? effectiveMultiplier : 1f;
             total += card.score * comboMult * cellMult;
         }
         return total;
+    }
+
+    private string GetCurrentComboName(HashSet<CardData> bestSet, List<CardData> cards)
+    {
+        if (TryGetFiveOfAKind(cards, out var fiveSet) && fiveSet.SetEquals(bestSet)) return "Пять одинаковых";
+        if (TryGetRoyalFlush(cards, out var royalSet) && royalSet.SetEquals(bestSet)) return "Флеш-рояль";
+        if (TryGetStraightFlush(cards, out var sfSet) && sfSet.SetEquals(bestSet)) return "Стрит-флеш";
+        if (TryGetFourOfAKind(cards, out var fourSet) && fourSet.SetEquals(bestSet)) return "Каре";
+        if (TryGetFullHouse(cards, out var fhSet) && fhSet.SetEquals(bestSet)) return "Фулл-хаус";
+        if (TryGetFlush(cards, out var flushSet) && flushSet.SetEquals(bestSet)) return "Флеш";
+        if (TryGetStraight(cards, out var straightSet) && straightSet.SetEquals(bestSet)) return "Стрит";
+        if (TryGetThreeOfAKind(cards, out var threeSet) && threeSet.SetEquals(bestSet)) return "Сет";
+        if (TryGetTwoPair(cards, out var twoPairSet) && twoPairSet.SetEquals(bestSet)) return "Две пары";
+        if (TryGetPair(cards, out var pairSet) && pairSet.SetEquals(bestSet)) return "Пара";
+        return "Старшая карта";
     }
 
     private bool TryGetFiveOfAKind(List<CardData> cards, out HashSet<CardData> bestSet)

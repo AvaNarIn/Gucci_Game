@@ -16,7 +16,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Instance { get; private set; }
 
     [SerializeField] private GridManager playerGridManager;
-    [SerializeField] private GridManager botGridManager;
+    public GridManager botGridManager;
     [SerializeField] private BotController botController;
     [SerializeField] private Button actionButton;
     [SerializeField] private Text actionButtonText;
@@ -30,6 +30,10 @@ public class TurnManager : MonoBehaviour
     public Character botCharacter;
     [SerializeField] private DeckManager playerDeckManager;
     [SerializeField] private DeckManager botDeckManager;
+    [SerializeField] private Text buffsText;
+
+    // Добавленное поле
+    private BotAbilityHandler botAbilityHandler;
 
     public GridManager PlayerGridManager => playerGridManager;
     public GridManager BotGridManager => botGridManager;
@@ -46,42 +50,50 @@ public class TurnManager : MonoBehaviour
     private bool firstBotTurn = true;
     private List<Draggable> subscribedDraggables = new List<Draggable>();
     private bool gameOverTriggered = false;
-    public Text buffsText;
 
     private void Awake()
     {
         Instance = this;
         playerCharacter.OnDeath += () => TriggerGameOver(false);
         botCharacter.OnDeath += () => TriggerGameOver(true);
+        botAbilityHandler = botGridManager.GetComponent<BotAbilityHandler>();
     }
 
     public void StartBattle()
     {
         gameOverTriggered = false;
-        playerMana = 10;
-        botMana = 10;
+        playerMana = 8;                     // изменено на 8
+        botMana = 8;                        // изменено на 8
         firstPlayerTurn = true;
         firstBotTurn = true;
         playerAccumulatedScore = 0;
         botAccumulatedScore = 0;
         roundNumber = 1;
 
+        int bonusMana = 0;
+        foreach (var buff in PlayerInventory.activeBuffs)
+        {
+            if (buff.data.buffName == "Дополнительная мана")
+                bonusMana += 2;
+        }
+        playerMana += bonusMana;
+
         playerDeckManager.DrawInitialHand();
-        MetaGameManager.Instance?.RefreshDeckButtonText();
         InitializeHand(playerGridManager, playerHandPanel, true);
         InitializeHand(botGridManager, botHandPanel, false);
-        UpdateBuffDisplay();
 
         foreach (var handler in FindObjectsByType<ItemHandler>())
-        {
             handler.RefreshAbilities();
-        }
 
+        UpdateBuffDisplay();
         SetPhase(TurnPhase.PlayerPlacement);
         UpdateUI();
     }
 
-
+    public void SetBotAbilityHandler(BotAbilityHandler handler)
+    {
+        botAbilityHandler = handler;
+    }
 
     private void InitializeHand(GridManager manager, Transform handPanel, bool isDraggable)
     {
@@ -96,14 +108,6 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void UpdateBuffDisplay()
-    {
-        if (buffsText == null) return;
-        string text = "";
-        foreach (var buff in PlayerInventory.activeBuffs)
-            text += $"{buff.data.buffName} (боёв: {buff.remainingBattles})\n";
-        buffsText.text = text;
-    }
     private void SetPhase(TurnPhase phase)
     {
         UnsubscribeAttackTargets();
@@ -118,7 +122,8 @@ public class TurnManager : MonoBehaviour
                 if (!firstPlayerTurn)
                     AddPlayerMana(5);
                 firstPlayerTurn = false;
-                actionButtonText.text = "Подсчитать очки";
+                // В первом раунде кнопка сразу "Завершить ход"
+                actionButtonText.text = (roundNumber == 1) ? "Завершить ход" : "Подсчитать очки";
                 actionButton.interactable = true;
                 break;
             case TurnPhase.PlayerAction:
@@ -205,7 +210,15 @@ public class TurnManager : MonoBehaviour
         switch (currentPhase)
         {
             case TurnPhase.PlayerPlacement:
-                StartCoroutine(CalculatePlayerScore());
+                if (roundNumber == 1)
+                {
+                    // Первый раунд: сразу передаём ход боту без фазы PlayerAction
+                    StartBotTurn();
+                }
+                else
+                {
+                    StartCoroutine(CalculatePlayerScore());
+                }
                 break;
             case TurnPhase.PlayerAction:
                 StartBotTurn();
@@ -236,7 +249,19 @@ public class TurnManager : MonoBehaviour
 
     private void OnBotPlacementComplete()
     {
-        StartCoroutine(CalculateBotScore());
+        // В первом раунде пропускаем подсчёт очков бота
+        if (roundNumber == 1)
+        {
+            botAccumulatedScore = 0;
+            UpdateUI();
+            SetPhase(TurnPhase.BotAction);
+            botController.StartActionPhase(OnBotActionComplete, botAccumulatedScore,
+                playerGridManager, playerCharacter);
+        }
+        else
+        {
+            StartCoroutine(CalculateBotScore());
+        }
     }
 
     private IEnumerator CalculateBotScore()
@@ -255,8 +280,11 @@ public class TurnManager : MonoBehaviour
         botAccumulatedScore = remainingScore;
         UpdateUI();
         playerDeckManager.DrawTurnCards(2);
-        MetaGameManager.Instance?.RefreshDeckButtonText();
         roundNumber++;
+
+        if (botAbilityHandler != null)
+            botAbilityHandler.OnBotTurnEnd(playerGridManager);
+
         CheckEndGame();
         SetPhase(TurnPhase.PlayerPlacement);
     }
@@ -292,10 +320,15 @@ public class TurnManager : MonoBehaviour
     public bool IsPlayerGridManager(GridManager manager) => manager == playerGridManager;
     public bool IsBotGridManager(GridManager manager) => manager == botGridManager;
 
-    public bool HasBuff(TemporaryBuffData buff)
+    public void UpdateBuffDisplay()
     {
-        return PlayerInventory.activeBuffs.Exists(b => b.data == buff);
+        if (buffsText == null) return;
+        string text = "";
+        foreach (var buff in PlayerInventory.activeBuffs)
+            text += $"{buff.data.buffName} (боёв: {buff.remainingBattles})\n";
+        buffsText.text = text;
     }
+
     private void UpdateUI()
     {
         playerScoreText.text = $"Очки игрока: {playerAccumulatedScore}";

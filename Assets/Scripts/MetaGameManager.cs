@@ -9,6 +9,7 @@ public class MetaGameManager : MonoBehaviour
     public ItemDatabase itemDatabase;
     public AbilityDatabase abilityDatabase;
     public TemporaryBuffDatabase buffDatabase;
+    public BossAbilityDatabase bossAbilityDatabase;   // новая база способностей босса
     public DeckManager playerDeckManager;
     public DeckManager botDeckManager;
     public TurnManager turnManager;
@@ -27,10 +28,7 @@ public class MetaGameManager : MonoBehaviour
     private List<EnemyInfo.RewardType> effectiveRewards;
     private int rewardIndex;
     private int enemiesDefeated;
-    private int nextEnemyHealth = 10;      // здоровье следующего врага (базовое)
-
-    public GridManager playerGridManager;
-    public GridManager botGridManager;
+    private int nextEnemyHealth = 5;
 
     void Awake()
     {
@@ -42,17 +40,6 @@ public class MetaGameManager : MonoBehaviour
         itemDatabase.Init();
         abilityDatabase.Init();
         turnManager.OnGameOver += OnBattleFinished;
-
-        foreach (var handler in playerGridManager.GetComponents<ItemHandler>())
-        {
-            handler.abilityDatabase = abilityDatabase;
-            handler.InitAbilities();
-        }
-        foreach (var handler in botGridManager.GetComponents<ItemHandler>())
-        {
-            handler.abilityDatabase = abilityDatabase;
-            handler.InitAbilities();
-        }
 
         if (PlayerInventory.cards.Count == 0)
             PlayerInventory.cards.AddRange(playerDeckManager.GetDeck());
@@ -98,7 +85,10 @@ public class MetaGameManager : MonoBehaviour
 
         if (isBoss)
         {
-            enemy.abilityDescription = "Способность босса: " + Random.Range(1, 100);
+            // Выбираем случайную способность из базы боссов
+            BossAbilityData bossAbility = bossAbilityDatabase.GetRandomAbility();
+            enemy.abilityDescription = bossAbility != null ? bossAbility.abilityName : "Неизвестная способность";
+
             enemy.set1 = sets[Random.Range(0, sets.Length)];
             enemy.set2 = enemy.set1;
             enemy.rewards = new EnemyInfo.RewardType[3];
@@ -141,10 +131,13 @@ public class MetaGameManager : MonoBehaviour
         turnManager.botCharacter.SetMaxHealth(chosenEnemy.health);
         turnManager.botCharacter.ResetHealth();
 
-        // Устанавливаем способность бота
-        BotAbilityHandler botAbilityHandler = botGridManager.GetComponent<BotAbilityHandler>();
+        // Передаём способность босса обработчику
+        BotAbilityHandler botAbilityHandler = turnManager.botGridManager.GetComponent<BotAbilityHandler>();
         if (botAbilityHandler != null)
-            botAbilityHandler.SetBossAbility(chosenEnemy);
+        {
+            BossAbilityData bossAbility = System.Array.Find(bossAbilityDatabase.allAbilities, a => a.abilityName == chosenEnemy.abilityDescription);
+            botAbilityHandler.SetBossAbility(bossAbility);
+        }
 
         enemySelectionUI.gameObject.SetActive(false);
         turnManager.StartBattle();
@@ -178,6 +171,10 @@ public class MetaGameManager : MonoBehaviour
     {
         ResetBattleState();
         PlayerInventory.DecreaseBuffDurations();
+
+        // Обновляем текст баффов сразу после боя
+        if (turnManager != null)
+            turnManager.UpdateBuffDisplay();
 
         if (!playerWon)
         {

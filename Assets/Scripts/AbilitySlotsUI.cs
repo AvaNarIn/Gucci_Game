@@ -68,7 +68,7 @@ public class AbilitySlotsUI : MonoBehaviour
         AbilityData ability = PlayerInventory.abilities[index];
         detailNameText.text = ability.abilityName;
         detailSetText.text = "“ËÔ: " + ability.set.ToString();
-        detailDescriptionText.text = ability.description;
+        detailDescriptionText.text = ItemHandler.GetAbilityCustomDescription(ability);
         detailPanel.SetActive(true);
         currentlyViewedIndex = index;
     }

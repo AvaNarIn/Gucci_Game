@@ -11,8 +11,11 @@ public abstract class ItemHandler : MonoBehaviour
     public ItemSet set;
 
     public AbilityDatabase abilityDatabase;
-    public int animationDuration;
+    public float animationDuration;
+
     public Dictionary<AbilityData, bool> ActiveAbilities { get; private set; } = new Dictionary<AbilityData, bool>();
+
+    private static Dictionary<string, object> abilityStateStore = new Dictionary<string, object>();
 
     protected virtual void Awake()
     {
@@ -57,6 +60,43 @@ public abstract class ItemHandler : MonoBehaviour
             if (ability.abilityName == name) return ability;
         }
         return null;
+    }
+
+    public bool HasAbility(string name)
+    {
+        foreach (var ability in ActiveAbilities.Keys)
+        {
+            if (ability.abilityName == name && ActiveAbilities[ability])
+                return true;
+        }
+        return false;
+    }
+
+    public static void SetAbilityState(string abilityName, object state)
+    {
+        abilityStateStore[abilityName] = state;
+    }
+
+    public static object GetAbilityState(string abilityName)
+    {
+        abilityStateStore.TryGetValue(abilityName, out object value);
+        return value;
+    }
+
+    public static void RemoveAbilityState(string abilityName)
+    {
+        abilityStateStore.Remove(abilityName);
+    }
+
+    public static string GetAbilityCustomDescription(AbilityData ability)
+    {
+        if (ability.abilityName == "Усиление комбинации")
+        {
+            string combo = GetAbilityState(ability.abilityName) as string;
+            if (!string.IsNullOrEmpty(combo))
+                return ability.description + "\nВыбранная комбинация: " + combo;
+        }
+        return ability.description;
     }
 
     public abstract IEnumerator ApplyingEffects_Coroutine();

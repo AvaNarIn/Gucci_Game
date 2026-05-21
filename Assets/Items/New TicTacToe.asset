@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: New TicTacToe
   m_EditorClassIdentifier: Assembly-CSharp::TicTacToeData
   displayName: New TicTacToe
-  score: 3
+  score: 1
   icon: {fileID: 0}
   markType: 0

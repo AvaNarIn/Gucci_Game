@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BuffDatabase", menuName = "Database/Buff Database")]
+[CreateAssetMenu(fileName = "BuffDatabase", menuName = "Game/Buff Database")]
 public class TemporaryBuffDatabase : ScriptableObject
 {
     public List<TemporaryBuffData> allBuffs;

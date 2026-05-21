@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewBuff", menuName = "Buffs/Temporary Buff Data")]
+[CreateAssetMenu(fileName = "NewBuff", menuName = "Game/Temporary Buff Data")]
 public class TemporaryBuffData : ScriptableObject
 {
     public string buffName;
