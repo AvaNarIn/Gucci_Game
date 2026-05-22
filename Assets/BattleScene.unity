@@ -2566,7 +2566,7 @@ MonoBehaviour:
   - {fileID: 2076719973}
   - {fileID: 2089467191}
   - {fileID: 1446389004}
-  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
 --- !u!114 &308498417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2656,7 +2656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 308498416}
   handPanel: {fileID: 1146578038}
-  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
   deck:
   - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
   - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
@@ -3017,8 +3017,8 @@ MonoBehaviour:
   cardPrefab: {fileID: 3840051381014900644, guid: f1e925c0b7e993a4aaa03e2f7cc7bbae, type: 3}
   cardsContainer: {fileID: 1184457420}
   closeButton: {fileID: 1651074769}
-  playerDeckManager: {fileID: 0}
-  playerGridManager: {fileID: 0}
+  playerDeckManager: {fileID: 308498422}
+  playerGridManager: {fileID: 308498416}
 --- !u!1 &383626803
 GameObject:
   m_ObjectHideFlags: 0
@@ -6945,6 +6945,7 @@ GameObject:
   - component: {fileID: 1146578040}
   - component: {fileID: 1146578039}
   - component: {fileID: 1146578041}
+  - component: {fileID: 1146578042}
   m_Layer: 5
   m_Name: Hand_Player
   m_TagString: Untagged
@@ -7035,6 +7036,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1146578042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146578037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a36a8e1898ff6ec438210d1453ff8d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandDropZone
 --- !u!114 &1169657021 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7553976056402596212, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
@@ -9841,7 +9854,7 @@ MonoBehaviour:
   - {fileID: 719790675}
   - {fileID: 817297419}
   - {fileID: 973094427}
-  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
 --- !u!114 &1969181800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9931,7 +9944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 1969181799}
   handPanel: {fileID: 888826171}
-  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
   deck:
   - {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
 --- !u!114 &1969181806

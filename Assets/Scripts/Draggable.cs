@@ -44,7 +44,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!isDraggable) return;
+        if (!isDraggable)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
 
         originalParent = transform.parent;
         originalAnchoredPos = rectTransform.anchoredPosition;

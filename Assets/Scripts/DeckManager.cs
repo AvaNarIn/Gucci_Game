@@ -24,33 +24,25 @@ public class DeckManager : MonoBehaviour
 
     public void DrawInitialHand()
     {
-        int toDraw = Mathf.Min(3, drawPile.Count, maxHandSize);
-        DrawCards(toDraw);
+        int currentHandCount = handPanel.childCount;
+        int space = maxHandSize - currentHandCount;
+        int draw = Mathf.Min(space, 3, drawPile.Count);
+        DrawCards(draw);
     }
 
-        public void DrawTurnCards(int count)
-        {
-        for (int i = 0; i < count; i++)
-        {
-            if (drawPile.Count == 0) break;
-            ItemData data = drawPile[0];
-            drawPile.RemoveAt(0);
-
-            if (data == null)
-            {
-                Debug.LogError("[DeckManager] В drawPile оказался null! Проверьте формирование колоды.");
-                continue;
-            }
-
-            Debug.Log($"[DeckManager] Создаю предмет в руке: {data.displayName} (score: {data.score})");
-            gridManager.CreateItemInHand(data, handPanel, false);
-        }
+    public void DrawTurnCards(int count)
+    {
+        int currentHandCount = handPanel.childCount;
+        int space = maxHandSize - currentHandCount;
+        int draw = Mathf.Min(space, count, drawPile.Count);
+        DrawCards(draw);
     }
 
     private void DrawCards(int count)
     {
         for (int i = 0; i < count; i++)
         {
+            if (handPanel.childCount >= maxHandSize) break;
             if (drawPile.Count == 0) break;
             ItemData data = drawPile[0];
             drawPile.RemoveAt(0);
@@ -69,18 +61,11 @@ public class DeckManager : MonoBehaviour
         }
     }
 
-    public List<ItemData> GetDeck() => deck;
     public List<ItemData> GetDrawPile() => drawPile;
+    public List<ItemData> GetDeck() => deck;
+    public void AddCardToDrawPile(ItemData card) => drawPile.Add(card);
+    public void RemoveCardFromDrawPile(ItemData card) => drawPile.Remove(card);
+
     public bool IsHandEmpty => handPanel.childCount == 0;
     public bool IsDeckEmpty => drawPile.Count == 0;
-
-    public void RemoveCardFromDrawPile(ItemData card)
-    {
-        drawPile.Remove(card);
-    }
-
-    public void AddCardToDrawPile(ItemData card)
-    {
-        drawPile.Add(card);
-    }
 }
