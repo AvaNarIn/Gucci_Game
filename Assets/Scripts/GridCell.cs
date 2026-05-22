@@ -36,7 +36,7 @@ public class GridCell : MonoBehaviour, IDropHandler
         CellIndex = index;
         OwnerGridManager = owner;
         currentHealth = maxHealth;
-        healthText.text = currentHealth.ToString();
+        healthText.text = GameUtils.FormatNumber(maxHealth);
         healthText.color = Color.green;
         UpdateHealthBar();
     }
@@ -47,7 +47,7 @@ public class GridCell : MonoBehaviour, IDropHandler
         cellType = newType;
         multiplier = newMultiplier;
         currentHealth = newMaxHealth;
-        healthText.text = currentHealth.ToString();
+        healthText.text = GameUtils.FormatNumber(currentHealth);
         healthText.color = Color.green;
         UpdateHealthBar();
     }
@@ -55,7 +55,7 @@ public class GridCell : MonoBehaviour, IDropHandler
     public void ResetHealth()
     {
         currentHealth = maxHealth;
-        healthText.text = currentHealth.ToString();
+        healthText.text = GameUtils.FormatNumber(currentHealth);
         healthText.color = Color.green;
         UpdateHealthBar();
     }
@@ -88,7 +88,7 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem != null) return;
 
         currentHealth = maxHealth;
-        healthText.text = currentHealth.ToString();
+        healthText.text = GameUtils.FormatNumber(currentHealth);
         healthText.color = Color.white;
         currentItem = item;
         item.AttachToCell(transform);
@@ -123,7 +123,7 @@ public class GridCell : MonoBehaviour, IDropHandler
             RemoveItem();
             currentHealth = maxHealth;
         }
-        healthText.text = currentHealth.ToString();
+        healthText.text = GameUtils.FormatNumber(currentHealth);
         UpdateHealthBar();
     }
 

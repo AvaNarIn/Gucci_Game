@@ -39,7 +39,7 @@ public class Character : MonoBehaviour, IPointerClickHandler
     private void UpdateUI()
     {
         if (healthText != null)
-            healthText.text = $"HP: {currentHealth}/{maxHealth}";
+            healthText.text = GameUtils.FormatNumber(currentHealth);
     }
 
     public void OnPointerClick(PointerEventData eventData)
