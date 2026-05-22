@@ -5,62 +5,109 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Персонажи")]
-    public CharacterData[] allCharacters;   // все 10 персонажей (пока два)
+    public CharacterData[] allCharacters;
     public Transform characterButtonContainer;
-    public GameObject characterButtonPrefab; // префаб кнопки персонажа (Button + Text)
+    public GameObject characterButtonPrefab;
 
     [Header("Уровни")]
     public GameObject levelSelectionPanel;
     public Transform levelButtonContainer;
-    public GameObject levelButtonPrefab;    // префаб кнопки уровня (Button + Text)
+    public GameObject levelButtonPrefab;
+
+    [Header("Прогресс")]
+    public Button resetProgressButton;
 
     private CharacterData selectedCharacter;
-    private int selectedLevel;
 
     void Start()
     {
+        resetProgressButton.onClick.AddListener(ResetProgress);
         PopulateCharacters();
     }
 
     void PopulateCharacters()
     {
+        foreach (Transform child in characterButtonContainer)
+            Destroy(child.gameObject);
+
         foreach (var character in allCharacters)
         {
             GameObject btnGO = Instantiate(characterButtonPrefab, characterButtonContainer);
-            btnGO.GetComponentInChildren<Text>().text = $"{character.characterName}\n{character.description}";
-            btnGO.GetComponent<Button>().onClick.AddListener(() => OnCharacterClicked(character));
+            Text text = btnGO.GetComponentInChildren<Text>();
+            Button btn = btnGO.GetComponent<Button>();
+
+            bool unlocked = ProgressManager.IsCharacterUnlocked(character);
+            int maxLevel = ProgressManager.GetMaxLevel(character);
+
+            if (unlocked)
+            {
+                text.text = $"{character.characterName}\n(Ур. {maxLevel})\n{character.description}";
+                btn.interactable = true;
+                btn.onClick.AddListener(() => OnCharacterClicked(character));
+            }
+            else
+            {
+                string requirement = "";
+                if (character.requiredCharacter != null)
+                    requirement = $"Требуется: {character.requiredCharacter.characterName} ур.{character.requiredLevel}";
+                text.text = $"{character.characterName}\n{requirement}\n{character.description}";
+                btn.interactable = false;
+            }
         }
     }
 
     void OnCharacterClicked(CharacterData character)
     {
         selectedCharacter = character;
-        ShowLevelSelection();
+        ShowLevelSelection(character);
     }
 
-    void ShowLevelSelection()
+    void ShowLevelSelection(CharacterData character)
     {
         levelSelectionPanel.SetActive(true);
         foreach (Transform child in levelButtonContainer)
             Destroy(child.gameObject);
 
+        int maxLevel = ProgressManager.GetMaxLevel(character);
+
         for (int level = 1; level <= 6; level++)
         {
-            int currentLevel = level; // capture
+            int currentLevel = level;
             GameObject btnGO = Instantiate(levelButtonPrefab, levelButtonContainer);
-            btnGO.GetComponentInChildren<Text>().text = $"Уровень {currentLevel}";
+            Text text = btnGO.GetComponentInChildren<Text>();
             Button btn = btnGO.GetComponent<Button>();
-            // Здесь можно сохранять прогресс (например, в PlayerPrefs) и отключать недоступные уровни.
-            // Пока все уровни доступны.
-            btn.interactable = true;
+
+            text.text = $"Уровень {currentLevel}";
+
+            if (level <= maxLevel)
+            {
+                text.text += " (пройден)";
+                btn.interactable = true;  // можно переигрывать
+            }
+            else if (level == maxLevel + 1)
+            {
+                btn.interactable = true;  // текущий открытый уровень
+            }
+            else
+            {
+                btn.interactable = false; // заблокирован
+            }
+
             btn.onClick.AddListener(() => OnLevelClicked(currentLevel));
         }
     }
 
     void OnLevelClicked(int level)
     {
-        selectedLevel = level;
-        LevelManager.StartRun(selectedCharacter, selectedLevel);
-        SceneManager.LoadScene("BattleScene");  // имя вашей боевой сцены
+        LevelManager.StartRun(selectedCharacter, level);
+        SceneManager.LoadScene("BattleScene");
+    }
+
+    void ResetProgress()
+    {
+        ProgressManager.ResetProgress();
+        // Обновляем интерфейс
+        PopulateCharacters();
+        levelSelectionPanel.SetActive(false);
     }
 }

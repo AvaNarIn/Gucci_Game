@@ -8,4 +8,8 @@ public class CharacterData : ScriptableObject
     public string description;
     public ItemSet set;
     public List<ItemData> startingDeck;
+
+    [Header("”словие разблокировки")]
+    public CharacterData requiredCharacter;   // если null Ц доступен сразу
+    public int requiredLevel;
 }

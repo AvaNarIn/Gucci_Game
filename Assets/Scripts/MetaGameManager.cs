@@ -35,6 +35,9 @@ public class MetaGameManager : MonoBehaviour
     private int enemiesDefeated;
     private int currentEnemyHealth = 30;
 
+    public GameObject settingsPanel;   // панель с кнопкой "Выйти в меню"
+    public Button exitToMenuButton;    // кнопка внутри settingsPanel
+
     // Таблица здоровья для 18 боссов (6 уровней * 3 босса)
     private int[] enemyHealthTable = new int[]
     {
@@ -52,6 +55,8 @@ public class MetaGameManager : MonoBehaviour
         itemDatabase.Init();
         abilityDatabase.Init();
         turnManager.OnGameOver += OnBattleFinished;
+
+        exitToMenuButton.onClick.AddListener(ExitToMenu);
 
         if (PlayerInventory.cards.Count == 0)
             PlayerInventory.cards.AddRange(playerDeckManager.GetDeck());
@@ -85,6 +90,12 @@ public class MetaGameManager : MonoBehaviour
     public void OpenDeck()
     {
         deckViewUI.Show();
+    }
+
+    public void ExitToMenu()
+    {
+        LevelManager.EndRun();
+        SceneManager.LoadScene("MainMenu");
     }
 
     void GenerateEnemies()
@@ -358,6 +369,13 @@ public class MetaGameManager : MonoBehaviour
             LevelManager.OnBossDefeated();
         }
 
+        if (LevelManager.levelCompleted)
+        {
+            ProgressManager.SetMaxLevel(LevelManager.selectedCharacter, LevelManager.currentLevel);
+            levelCompletePanel.SetActive(true);
+            return;
+        }
+
         playerDeckManager.SetCustomDeck(PlayerInventory.cards);
         RefreshDeckButtonText();
 
@@ -378,6 +396,11 @@ public class MetaGameManager : MonoBehaviour
 
         rewardIndex = 0;
         ShowNextReward();
+    }
+
+    public void OpenSettings()
+    {
+        settingsPanel.SetActive(true);
     }
 
     public void OnContinueClicked()

@@ -29,3 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bce5bf859e6634f488a78d47660fba69, type: 2}
   - {fileID: 11400000, guid: edab4e778f41d8c49b772e3e846d2371, type: 2}
   - {fileID: 11400000, guid: d83259ef38974d84cb88dc6aaff765c5, type: 2}
+  requiredCharacter: {fileID: 11400000, guid: 718e1dab2a6d893498fe93229d68241e, type: 2}
+  requiredLevel: 6
