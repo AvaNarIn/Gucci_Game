@@ -21,6 +21,8 @@ public class Character : MonoBehaviour, IPointerClickHandler
 
     public void TakeDamage(int damage)
     {
+        GetComponent<DamageFeedback>()?.Play();
+
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateUI();

@@ -137,6 +137,8 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem == null) return;
         if (damage <= 0) return;
 
+        GetComponent<DamageFeedback>()?.Play();
+
         currentHealth -= damage;
         if (currentHealth <= 0)
         {

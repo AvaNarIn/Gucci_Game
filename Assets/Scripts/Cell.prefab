@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 8399999715960321701}
   - component: {fileID: 206622987706630072}
   - component: {fileID: 6487180976578152961}
+  - component: {fileID: 5126654609448049767}
   m_Layer: 5
   m_Name: Cell
   m_TagString: Untagged
@@ -252,6 +253,26 @@ MonoBehaviour:
   multiplier: 1
   currentItem: {fileID: 0}
   cellLabel: {fileID: 8215584027309984889}
+--- !u!114 &5126654609448049767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4869863609634185331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054d24ea3c01c534d92fa8166bffb55b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFeedback
+  flashGraphic: {fileID: 206622987706630072}
+  shakeTarget: {fileID: 0}
+  hitColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashDuration: 0.1
+  shakeDuration: 0.12
+  shakeStrength: 8
+  punchScale: 1.08
+  scaleDuration: 0.12
 --- !u!1 &7522232674738611467
 GameObject:
   m_ObjectHideFlags: 0
