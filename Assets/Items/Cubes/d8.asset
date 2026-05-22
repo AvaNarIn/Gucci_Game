@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229d2dc6312d4a04db5a443c5fb18fa7, type: 3}
   m_Name: d8
   m_EditorClassIdentifier: Assembly-CSharp::DiceData
-  displayName: 
-  score: 0
+  displayName: d8
+  score: 3
   icon: {fileID: 0}
-  numberOfFaces: 0
+  numberOfFaces: 8

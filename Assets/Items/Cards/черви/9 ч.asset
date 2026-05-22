@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "9 \u0447"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   displayName: New Card
-  score: 3
+  score: 4
   icon: {fileID: -6231928857498735244, guid: 2c84205ef2a8b99408c4e55b0e23c669, type: 3}
   value: 3
   suit: 0

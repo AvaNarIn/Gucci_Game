@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c047336ed47164c4d84d4f632d8ed78d, type: 3}
   m_Name: "\u041A\u0440\u0435\u0441\u0442\u0438\u043A"
   m_EditorClassIdentifier: Assembly-CSharp::TicTacToeData
-  displayName: "\u041A\u0440\u0435\u0441\u0442\u0438\u043A"
-  score: 1
+  displayName: x
+  score: 5
   icon: {fileID: 8482712648628362555, guid: 92679de91da32674084a662465047a76, type: 3}
   markType: 0
