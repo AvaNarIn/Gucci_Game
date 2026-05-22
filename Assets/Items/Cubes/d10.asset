@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DiceData
   displayName: d10
   score: 4
-  icon: {fileID: -1332072529364945697, guid: 5aaaea9534b3c2c4b966dfeb2c95923d, type: 3}
+  icon: {fileID: -6309646403122757737, guid: 36efbe00fb481df438546eb77c6a145c, type: 3}
   numberOfFaces: 10
