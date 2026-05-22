@@ -31,9 +31,9 @@ public class BotController : MonoBehaviour
                 if (handItems[i].ItemData.score < cheapest.ItemData.score)
                     cheapest = handItems[i];
             }
+            handItems.Remove(cheapest);   // удал€ем из списка до уничтожени€
             cheapest.DestroyItem();
             TurnManager.Instance.AddBotMana(1);
-            handItems.Remove(cheapest);
         }
 
         StartCoroutine(PlacementCoroutine());
@@ -41,13 +41,15 @@ public class BotController : MonoBehaviour
 
     private IEnumerator PlacementCoroutine()
     {
-        bool placed;
-        do
+        while (handItems.Count > 0)
         {
-            placed = false;
+            // ”дал€ем все уничтоженные предметы, оставшиес€ в списке
+            handItems.RemoveAll(item => item == null);
             if (handItems.Count == 0) break;
 
-            List<Draggable> affordableCards = handItems.FindAll(d => TurnManager.Instance.CanAffordBot(d.ItemData.score));
+            // ‘ильтруем доступные по мане карты, провер€€, что объект живой
+            List<Draggable> affordableCards = handItems.FindAll(d =>
+                d != null && TurnManager.Instance != null && TurnManager.Instance.CanAffordBot(d.ItemData.score));
             if (affordableCards.Count == 0) break;
 
             Draggable chosen = affordableCards[Random.Range(0, affordableCards.Count)];
@@ -58,11 +60,9 @@ public class BotController : MonoBehaviour
             if (botGridManager.PlaceExistingDraggable(chosen, targetCell))
             {
                 handItems.Remove(chosen);
-                placed = true;
             }
             yield return new WaitForSeconds(placementDelay);
-        } while (placed && handItems.Count > 0 && botGridManager.GetEmptyCells().Count > 0);
-
+        }
         onPlacementComplete?.Invoke();
     }
 

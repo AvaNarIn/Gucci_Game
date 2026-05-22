@@ -28,12 +28,23 @@ public class DeckManager : MonoBehaviour
         DrawCards(toDraw);
     }
 
-    public void DrawTurnCards(int count)
-    {
-        int currentHandCount = handPanel.childCount;
-        int space = maxHandSize - currentHandCount;
-        int draw = Mathf.Min(space, count, drawPile.Count);
-        DrawCards(draw);
+        public void DrawTurnCards(int count)
+        {
+        for (int i = 0; i < count; i++)
+        {
+            if (drawPile.Count == 0) break;
+            ItemData data = drawPile[0];
+            drawPile.RemoveAt(0);
+
+            if (data == null)
+            {
+                Debug.LogError("[DeckManager] В drawPile оказался null! Проверьте формирование колоды.");
+                continue;
+            }
+
+            Debug.Log($"[DeckManager] Создаю предмет в руке: {data.displayName} (score: {data.score})");
+            gridManager.CreateItemInHand(data, handPanel, false);
+        }
     }
 
     private void DrawCards(int count)

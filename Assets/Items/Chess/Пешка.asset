@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChessData
   displayName: "\u041F\u0435\u0448\u043A\u0430"
   score: 1
+  set: 2
   icon: {fileID: -8930405804869186576, guid: 9f173663b95f6d54e98b07763c539a99, type: 3}
   TypeOfChessPiece: 0

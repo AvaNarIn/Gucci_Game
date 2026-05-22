@@ -50,6 +50,12 @@ public class GridManager : MonoBehaviour
 
     public Draggable CreateItemInHand(ItemData data, Transform handParent, bool isDraggable)
     {
+        if (data == null)
+        {
+            Debug.LogError("[GridManager] Попытка создать предмет с data == null!");
+            return null;
+        }
+
         GameObject itemObject = Instantiate(draggablePrefab, handParent);
         Draggable draggable = itemObject.GetComponent<Draggable>();
         draggable.Initialize(this);

@@ -5,12 +5,18 @@ public static class PlayerInventory
     public static List<ItemData> cards = new List<ItemData>();
     public static List<AbilityData> abilities = new List<AbilityData>();
     public static List<BuffInstance> activeBuffs = new List<BuffInstance>();
+    public static int maxAbilities = 1;   // будет меняться LevelManager
 
     public static bool AddCard(ItemData card)
     {
         if (cards.Count >= 45) return false;
         cards.Add(card);
         return true;
+    }
+
+    public static bool RemoveCard(ItemData card)
+    {
+        return cards.Remove(card);
     }
 
     public static bool ReplaceCard(ItemData oldCard, ItemData newCard)
@@ -23,7 +29,7 @@ public static class PlayerInventory
 
     public static bool AddAbility(AbilityData ability)
     {
-        if (abilities.Count >= 6) return false;
+        if (abilities.Count >= maxAbilities) return false;
         abilities.Add(ability);
         return true;
     }
@@ -32,11 +38,6 @@ public static class PlayerInventory
     {
         int idx = abilities.IndexOf(oldAbility);
         if (idx >= 0) abilities[idx] = newAbility;
-    }
-
-    public static bool RemoveCard(ItemData card)
-    {
-        return cards.Remove(card);
     }
 
     public static void RemoveExpiredBuffs()

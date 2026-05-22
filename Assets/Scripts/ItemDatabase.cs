@@ -10,11 +10,11 @@ public class ItemDatabase : ScriptableObject
     public void Init()
     {
         lookup = new Dictionary<ItemSet, List<ItemData>>();
-        var sets = System.Enum.GetValues(typeof(ItemSet)) as ItemSet[];
+        ItemSet[] sets = (ItemSet[])System.Enum.GetValues(typeof(ItemSet));
         foreach (var set in sets)
             lookup[set] = new List<ItemData>();
         foreach (var item in allItems)
-            lookup[ItemSetHelper.GetSet(item)].Add(item);
+            lookup[item.set].Add(item);
     }
 
     public ItemData GetRandomItem(ItemSet set)

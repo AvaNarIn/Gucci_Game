@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TicTacToeData
   displayName: "\u041A\u0440\u0435\u0441\u0442\u0438\u043A"
   score: 1
+  set: 4
   icon: {fileID: 8482712648628362555, guid: 92679de91da32674084a662465047a76, type: 3}
   markType: 0

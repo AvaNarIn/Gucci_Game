@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2840d1555a2e5124c9d67471b1cb33e2, type: 3}
+  m_Name: "\u0428\u0443\u0442"
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterData
+  characterName: "\u0428\u0443\u0442"
+  description: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0428\u0443\u0442\u0430"
+  set: 1
+  startingDeck:
+  - {fileID: 11400000, guid: c7cd2681c1585c34490f66287acf84f9, type: 2}
+  - {fileID: 11400000, guid: 494f93c65a78f684982635ce28b31c42, type: 2}
+  - {fileID: 11400000, guid: 905d7526ead98454e923d8ad345d27c4, type: 2}
+  - {fileID: 11400000, guid: 3446d2ebd28764041b9647eeb77a1780, type: 2}
+  - {fileID: 11400000, guid: a4f3e05857757f048a31cd509cc531c2, type: 2}
+  - {fileID: 11400000, guid: ed01feb2a6af8cf48a87f917c39c3756, type: 2}
+  - {fileID: 11400000, guid: ac3136ce2c20d334ba7a9ad8dcde05c5, type: 2}
+  - {fileID: 11400000, guid: 17416b9b0b06d0147808e5c35d69a99c, type: 2}
+  - {fileID: 11400000, guid: ba00033e80681bb47a3337104d24b30b, type: 2}
+  - {fileID: 11400000, guid: f67619be91d29a0458a598f918f94dd7, type: 2}
+  - {fileID: 11400000, guid: ae66ad46c2251c3489e8da6d508c7232, type: 2}
+  - {fileID: 11400000, guid: 577d60fcf6d5bf048ba64cd5b559ee90, type: 2}
+  - {fileID: 11400000, guid: 0b8caf850d3a683459018606e869f3b0, type: 2}
+  - {fileID: 11400000, guid: 18804e65aea968c42a7dd2ca47b1cb22, type: 2}
+  - {fileID: 11400000, guid: e1ee1bb160c0d9f4e8c56a1f284ee7fa, type: 2}
+  - {fileID: 11400000, guid: a0e21fd84fc18284195b2f212451510b, type: 2}
+  - {fileID: 11400000, guid: ebd4475e5c348f948b512a2f5a89aa85, type: 2}
+  - {fileID: 11400000, guid: 4feb4ae0abfb9c542aff30ea82d32517, type: 2}
+  - {fileID: 11400000, guid: 96ee7d313b4e6b643a046128bb4c016c, type: 2}
+  - {fileID: 11400000, guid: 1dfe1bf17f08c894b901c78306629542, type: 2}

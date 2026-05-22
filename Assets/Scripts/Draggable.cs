@@ -37,7 +37,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void SetItemData(ItemData data)
     {
         itemData = data;
-        //GetComponent<Image>().sprite = data.icon;
+        GetComponent<Image>().sprite = data.icon;
     }
 
     public void SetDraggable(bool draggable) { isDraggable = draggable; }

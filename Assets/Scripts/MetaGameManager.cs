@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MetaGameManager : MonoBehaviour
 {
@@ -23,12 +24,23 @@ public class MetaGameManager : MonoBehaviour
     public Button openDeckButton;
     public Text deckCountText;
 
+    public GameObject levelCompletePanel;
+    public Button continueButton;
+    public Button exitButton;
+
     private EnemyInfo[] currentEnemies;
     private EnemyInfo chosenEnemy;
     private List<EnemyInfo.RewardType> effectiveRewards;
     private int rewardIndex;
     private int enemiesDefeated;
     private int currentEnemyHealth = 30;
+
+    // Таблица здоровья для 18 боссов (6 уровней * 3 босса)
+    private int[] enemyHealthTable = new int[]
+    {
+        30, 40, 60, 80, 110, 170, 220, 280, 430, 540,
+        680, 1100, 1400, 1800, 2800, 3500, 4400, 6700
+    };
 
     void Awake()
     {
@@ -52,7 +64,15 @@ public class MetaGameManager : MonoBehaviour
 
         RefreshDeckButtonText();
         abilitySlotsUI.UpdateSlots();
+
+        if (!LevelManager.runActive)
+        {
+            SceneManager.LoadScene("MainMenu");
+            return;
+        }
+
         enemiesDefeated = 0;
+        currentEnemyHealth = 30;
         GenerateEnemies();
     }
 
@@ -76,13 +96,6 @@ public class MetaGameManager : MonoBehaviour
             currentEnemies[i] = GenerateRandomEnemy(isBoss);
         enemySelectionUI.Show(currentEnemies);
     }
-
-    private int[] enemyHealthTable = new int[]
-    {
-    30, 40, 60, 80, 110, 170, 220, 280, 430, 540,
-    680, 1100, 1400, 1800, 2800, 3500, 4400, 6700,
-    8400, 11000, 17000, 21000, 27000, 43000
-    };
 
     EnemyInfo GenerateRandomEnemy(bool isBoss)
     {
@@ -110,12 +123,10 @@ public class MetaGameManager : MonoBehaviour
         int healthIndex = enemiesDefeated;
         if (healthIndex < enemyHealthTable.Length)
         {
-            // Первые 24 боя — по таблице
             enemy.health = enemyHealthTable[healthIndex];
         }
         else
         {
-            // После 24-го боя — умножаем последнее табличное значение
             float lastHealth = enemyHealthTable[enemyHealthTable.Length - 1];
             int battlesAfterTable = healthIndex - enemyHealthTable.Length + 1;
             float multiplier = isBoss ? Mathf.Pow(2f, battlesAfterTable) : Mathf.Pow(1.5f, battlesAfterTable);
@@ -267,6 +278,16 @@ public class MetaGameManager : MonoBehaviour
         for (int i = 0; i < 20; i++) botDeck.Add(itemDatabase.GetRandomItem(chosenEnemy.set2));
         for (int i = 0; i < 5; i++)
             botDeck.Add(itemDatabase.GetRandomItemExcluding(chosenEnemy.set1, chosenEnemy.set2));
+
+        Debug.Log($"[MetaGameManager] Сформирована колода бота: {botDeck.Count} карт");
+        for (int i = 0; i < botDeck.Count; i++)
+        {
+            if (botDeck[i] == null)
+                Debug.LogError($"[MetaGameManager] В botDeck[{i}] находится null!");
+            else
+                Debug.Log($"[MetaGameManager] Карта {i}: {botDeck[i].displayName}");
+        }
+
         botDeckManager.SetCustomDeck(botDeck);
 
         playerDeckManager.SetCustomDeck(PlayerInventory.cards);
@@ -276,7 +297,6 @@ public class MetaGameManager : MonoBehaviour
         turnManager.botCharacter.ResetHealth();
 
         DistributeHealthToCells(chosenEnemy.health, turnManager.BotGridManager.GetCells());
-
         SetupEnemyCellTypes(chosenEnemy, turnManager.BotGridManager.GetCells());
 
         BotAbilityHandler botAbilityHandler = turnManager.BotGridManager.GetComponent<BotAbilityHandler>();
@@ -325,15 +345,27 @@ public class MetaGameManager : MonoBehaviour
 
         if (!playerWon)
         {
-            GenerateEnemies();
+            LevelManager.EndRun();
+            SceneManager.LoadScene("MainMenu");
             return;
         }
 
         enemiesDefeated++;
         currentEnemyHealth = chosenEnemy.health;
 
+        if (chosenEnemy.isBoss)
+        {
+            LevelManager.OnBossDefeated();
+        }
+
         playerDeckManager.SetCustomDeck(PlayerInventory.cards);
         RefreshDeckButtonText();
+
+        if (LevelManager.levelCompleted)
+        {
+            levelCompletePanel.SetActive(true);
+            return;
+        }
 
         effectiveRewards = new List<EnemyInfo.RewardType>();
         foreach (var r in chosenEnemy.rewards)
@@ -346,6 +378,19 @@ public class MetaGameManager : MonoBehaviour
 
         rewardIndex = 0;
         ShowNextReward();
+    }
+
+    public void OnContinueClicked()
+    {
+        levelCompletePanel.SetActive(false);
+        LevelManager.levelCompleted = false;
+        GenerateEnemies();
+    }
+
+    public void OnExitClicked()
+    {
+        LevelManager.EndRun();
+        SceneManager.LoadScene("MainMenu");
     }
 
     void ShowNextReward()
