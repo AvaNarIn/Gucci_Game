@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\u0421\u043B\u043E\u043D"
   m_EditorClassIdentifier: Assembly-CSharp::ChessData
   displayName: "\u0421\u043B\u043E\u043D"
-  score: 1
+  score: 3
   set: 2
   icon: {fileID: 2191726328853024023, guid: 153279a1fd21a2540ac5508fa9a34e2b, type: 3}
   TypeOfChessPiece: 2

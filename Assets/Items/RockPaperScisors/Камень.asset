@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\u041A\u0430\u043C\u0435\u043D\u044C"
   m_EditorClassIdentifier: Assembly-CSharp::RockPaperScissorsData
   displayName: "\u041A\u0430\u043C\u0435\u043D\u044C"
-  score: 1
+  score: 5
   set: 3
   icon: {fileID: -630418432395086098, guid: 57f8239a332eb3447a602f3b47c56eca, type: 3}
   shape: 0
