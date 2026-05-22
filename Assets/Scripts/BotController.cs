@@ -23,12 +23,14 @@ public class BotController : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float placementExploreChance = 0.20f;
 
-    [Header("Action - Priorities")]
-    [SerializeField] private int lowHpThreshold = 8;
-    [SerializeField] private int forcedFaceThreshold = 3;
-    [SerializeField] private float characterBias = 1.15f;
+    [Header("Action - Face Hit Chances")]
+    [SerializeField] private int faceLowHpThreshold = 12;
     [Range(0f, 1f)]
-    [SerializeField] private float lowHpCharacterHitChance = 0.25f;
+    [SerializeField] private float faceHitChanceHighHp = 0.10f;
+    [Range(0f, 1f)]
+    [SerializeField] private float faceHitChanceLowHp = 0.30f;
+
+    [Header("Action - Targeting")]
     [SerializeField] private float canKillNowBonus = 0.20f;
 
     [Header("Action - Variety")]
@@ -44,7 +46,6 @@ public class BotController : MonoBehaviour
     private Action<int> onActionComplete;
 
     private System.Random botRng;
-    private int observedPlayerMaxHealth = 30;
 
     private void Awake()
     {
@@ -264,19 +265,9 @@ public class BotController : MonoBehaviour
         StartCoroutine(ActionCoroutine(attackScore, playerGridManager, playerCharacter));
     }
 
-    private struct AttackOption
-    {
-        public bool isCharacter;
-        public GridCell cell;
-        public float value;
-    }
-
     private IEnumerator ActionCoroutine(int attackScore, GridManager playerGridManager, Character playerCharacter)
     {
         int remainingScore = Mathf.Max(0, attackScore);
-
-        if (playerCharacter != null)
-            observedPlayerMaxHealth = Mathf.Max(observedPlayerMaxHealth, playerCharacter.CurrentHealth);
 
         if (remainingScore <= 0 || playerGridManager == null || playerCharacter == null)
         {
@@ -295,7 +286,24 @@ public class BotController : MonoBehaviour
                 continue;
             }
 
-            if (playerCharacter.IsAlive && playerCharacter.CurrentHealth <= forcedFaceThreshold)
+            bool hasCells = HasAnyEnemyCell(playerGridManager);
+
+            if (!hasCells)
+            {
+                if (playerCharacter.IsAlive)
+                {
+                    int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
+                    playerCharacter.TakeDamage(dmg);
+                    remainingScore -= dmg;
+                }
+                yield return new WaitForSeconds(actionDelay);
+                continue;
+            }
+
+            float faceChance = GetFaceHitChance(playerCharacter);
+            bool attackFace = playerCharacter.IsAlive && Rng01() < faceChance;
+
+            if (attackFace)
             {
                 int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
                 playerCharacter.TakeDamage(dmg);
@@ -304,28 +312,8 @@ public class BotController : MonoBehaviour
                 continue;
             }
 
-            List<AttackOption> options = BuildAttackOptions(playerGridManager, playerCharacter, remainingScore);
-            if (options.Count == 0)
-            {
-                onActionComplete?.Invoke(remainingScore);
-                yield break;
-            }
-
-            AttackOption chosen = ChooseAttack(options, playerCharacter);
-
-            if (chosen.isCharacter)
-            {
-                int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
-                playerCharacter.TakeDamage(dmg);
-                remainingScore -= dmg;
-            }
-            else if (chosen.cell != null)
-            {
-                int dmg = Mathf.Min(remainingScore, chosen.cell.CurrentHealth);
-                chosen.cell.TakeDamage(dmg);
-                remainingScore -= dmg;
-            }
-            else
+            GridCell target = ChooseBestEnemyCellToAttack(playerGridManager, remainingScore);
+            if (target == null)
             {
                 if (playerCharacter.IsAlive)
                 {
@@ -333,7 +321,13 @@ public class BotController : MonoBehaviour
                     playerCharacter.TakeDamage(dmg);
                     remainingScore -= dmg;
                 }
+                yield return new WaitForSeconds(actionDelay);
+                continue;
             }
+
+            int cellDmg = Mathf.Min(remainingScore, target.CurrentHealth);
+            target.TakeDamage(cellDmg);
+            remainingScore -= cellDmg;
 
             yield return new WaitForSeconds(actionDelay);
         }
@@ -341,69 +335,26 @@ public class BotController : MonoBehaviour
         onActionComplete?.Invoke(remainingScore);
     }
 
-    private AttackOption ChooseAttack(List<AttackOption> options, Character playerCharacter)
+    private float GetFaceHitChance(Character playerCharacter)
     {
-        options.Sort((a, b) => b.value.CompareTo(a.value));
-
-        float explore = attackExploreChance;
-        if (playerCharacter != null && playerCharacter.IsAlive && playerCharacter.CurrentHealth <= lowHpThreshold)
-            explore *= 0.25f;
-
-        int k = Mathf.Clamp(attackTopK, 1, options.Count);
-        if (k == 1) return options[0];
-
-        if (Rng01() >= explore)
-            return options[0];
-
-        float min = float.PositiveInfinity;
-        for (int i = 0; i < k; i++) min = Mathf.Min(min, options[i].value);
-
-        float sum = 0f;
-        float[] w = new float[k];
-        for (int i = 0; i < k; i++)
-        {
-            w[i] = Mathf.Max(0.001f, options[i].value - min + 0.001f);
-            sum += w[i];
-        }
-
-        float r = Rng01() * sum;
-        float acc = 0f;
-        for (int i = 0; i < k; i++)
-        {
-            acc += w[i];
-            if (r <= acc) return options[i];
-        }
-
-        return options[0];
+        if (playerCharacter == null || !playerCharacter.IsAlive) return 0f;
+        return playerCharacter.CurrentHealth <= faceLowHpThreshold ? faceHitChanceLowHp : faceHitChanceHighHp;
     }
 
-    private List<AttackOption> BuildAttackOptions(GridManager playerGridManager, Character playerCharacter, int remainingScore)
+    private struct CellAttackOption
+    {
+        public GridCell cell;
+        public float value;
+    }
+
+    private GridCell ChooseBestEnemyCellToAttack(GridManager playerGridManager, int remainingScore)
     {
         GridCell[] cells = playerGridManager.GetCells();
         ItemData[] state = playerGridManager.GetGridState();
-        if (cells == null || state == null) return new List<AttackOption>();
+        if (cells == null || state == null) return null;
 
         float beforeTotal = EstimateTotalScore(state, cells);
-        List<AttackOption> options = new List<AttackOption>(10);
-
-        if (playerCharacter.IsAlive)
-        {
-            int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
-
-            float hpRatio = (observedPlayerMaxHealth > 0)
-                ? (playerCharacter.CurrentHealth / (float)observedPlayerMaxHealth)
-                : 1f;
-
-            float lowHpBoost = Mathf.Lerp(1.75f, 1.0f, hpRatio);
-            float faceValue = dmg * characterBias * lowHpBoost;
-
-            if (playerCharacter.CurrentHealth <= lowHpThreshold && Rng01() < lowHpCharacterHitChance)
-                faceValue *= 1.15f;
-
-            faceValue += RngRange(0f, randomNoise);
-
-            options.Add(new AttackOption { isCharacter = true, cell = null, value = faceValue });
-        }
+        List<CellAttackOption> options = new List<CellAttackOption>();
 
         for (int i = 0; i < 9; i++)
         {
@@ -412,7 +363,6 @@ public class BotController : MonoBehaviour
             if (cell.currentItem == null || cell.currentItem.ItemData == null) continue;
 
             ItemData item = cell.currentItem.ItemData;
-
             bool canKillNow = cell.CurrentHealth <= remainingScore;
 
             ItemData[] temp = (ItemData[])state.Clone();
@@ -432,10 +382,39 @@ public class BotController : MonoBehaviour
 
             value += RngRange(0f, randomNoise);
 
-            options.Add(new AttackOption { isCharacter = false, cell = cell, value = value });
+            options.Add(new CellAttackOption { cell = cell, value = value });
         }
 
-        return options;
+        if (options.Count == 0) return null;
+
+        options.Sort((a, b) => b.value.CompareTo(a.value));
+
+        int k = Mathf.Clamp(attackTopK, 1, options.Count);
+        if (k == 1) return options[0].cell;
+
+        if (Rng01() >= attackExploreChance)
+            return options[0].cell;
+
+        float min = float.PositiveInfinity;
+        for (int i = 0; i < k; i++) min = Mathf.Min(min, options[i].value);
+
+        float sum = 0f;
+        float[] w = new float[k];
+        for (int i = 0; i < k; i++)
+        {
+            w[i] = Mathf.Max(0.001f, options[i].value - min + 0.001f);
+            sum += w[i];
+        }
+
+        float r = Rng01() * sum;
+        float acc = 0f;
+        for (int i = 0; i < k; i++)
+        {
+            acc += w[i];
+            if (r <= acc) return options[i].cell;
+        }
+
+        return options[0].cell;
     }
 
     private bool HasAnyEnemyCell(GridManager playerGridManager)
@@ -554,7 +533,7 @@ public class BotController : MonoBehaviour
         return total;
     }
 
-    private static readonly Dictionary<RockPaperScissorsData.Shapes, RockPaperScissorsData.Shapes> beats =
+    private static readonly Dictionary<RockPaperScissorsData.Shapes, RockPaperScissorsData.Shapes> rpsBeats =
         new Dictionary<RockPaperScissorsData.Shapes, RockPaperScissorsData.Shapes>
         {
             { RockPaperScissorsData.Shapes.Rock, RockPaperScissorsData.Shapes.Scissors },
@@ -564,7 +543,7 @@ public class BotController : MonoBehaviour
 
     private bool Beats(RockPaperScissorsData.Shapes attacker, RockPaperScissorsData.Shapes defender)
     {
-        return beats.ContainsKey(attacker) && beats[attacker] == defender;
+        return rpsBeats.ContainsKey(attacker) && rpsBeats[attacker] == defender;
     }
 
     private float EstimateTttScore(ItemData[] state, GridCell[] cells)
@@ -776,7 +755,6 @@ public class BotController : MonoBehaviour
 
             case ChessData.TypesOfChessPiece.King:
                 for (int dr2 = -1; dr2 <= 1; dr2++)
-                {
                     for (int dc2 = -1; dc2 <= 1; dc2++)
                     {
                         if (dr2 == 0 && dc2 == 0) continue;
@@ -785,7 +763,6 @@ public class BotController : MonoBehaviour
                         if (r >= 0 && r < 3 && c >= 0 && c < 3)
                             attacked.Add(new Vector2Int(r, c));
                     }
-                }
                 break;
         }
 
