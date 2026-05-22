@@ -28,7 +28,7 @@ public class MetaGameManager : MonoBehaviour
     private List<EnemyInfo.RewardType> effectiveRewards;
     private int rewardIndex;
     private int enemiesDefeated;
-    private int nextEnemyHealth = 5;
+    private int currentEnemyHealth = 30;
 
     void Awake()
     {
@@ -59,7 +59,7 @@ public class MetaGameManager : MonoBehaviour
     public void RefreshDeckButtonText()
     {
         if (deckCountText != null && playerDeckManager != null)
-            deckCountText.text = $"Колода ({playerDeckManager.GetDrawPile().Count})";
+            deckCountText.text = $"Колода ({GameUtils.FormatNumber(playerDeckManager.GetDrawPile().Count)})";
     }
 
     public void OpenDeck()
@@ -77,6 +77,14 @@ public class MetaGameManager : MonoBehaviour
         enemySelectionUI.Show(currentEnemies);
     }
 
+    // Таблица здоровья для первых 24 боёв (до 8-го босса включительно)
+    private int[] enemyHealthTable = new int[]
+    {
+    30, 40, 60, 80, 110, 170, 220, 280, 430, 540,
+    680, 1100, 1400, 1800, 2800, 3500, 4400, 6700,
+    8400, 11000, 17000, 21000, 27000, 43000
+    };
+
     EnemyInfo GenerateRandomEnemy(bool isBoss)
     {
         EnemyInfo enemy = new EnemyInfo();
@@ -85,14 +93,11 @@ public class MetaGameManager : MonoBehaviour
 
         if (isBoss)
         {
-            // Выбираем случайную способность из базы боссов
             BossAbilityData bossAbility = bossAbilityDatabase.GetRandomAbility();
             enemy.abilityDescription = bossAbility != null ? bossAbility.abilityName : "Неизвестная способность";
-
             enemy.set1 = sets[Random.Range(0, sets.Length)];
             enemy.set2 = enemy.set1;
             enemy.rewards = new EnemyInfo.RewardType[3];
-            enemy.health = Mathf.FloorToInt(nextEnemyHealth * 1.5f);
         }
         else
         {
@@ -101,7 +106,21 @@ public class MetaGameManager : MonoBehaviour
             do { enemy.set2 = sets[Random.Range(0, sets.Length)]; }
             while (enemy.set2 == enemy.set1);
             enemy.rewards = new EnemyInfo.RewardType[2];
-            enemy.health = Mathf.FloorToInt(nextEnemyHealth * 1.25f);
+        }
+
+        int healthIndex = enemiesDefeated;
+        if (healthIndex < enemyHealthTable.Length)
+        {
+            // Первые 24 боя — по таблице
+            enemy.health = enemyHealthTable[healthIndex];
+        }
+        else
+        {
+            // После 24-го боя — умножаем последнее табличное значение
+            float lastHealth = enemyHealthTable[enemyHealthTable.Length - 1];
+            int battlesAfterTable = healthIndex - enemyHealthTable.Length + 1;
+            float multiplier = isBoss ? Mathf.Pow(2f, battlesAfterTable) : Mathf.Pow(1.5f, battlesAfterTable);
+            enemy.health = GameUtils.RoundToPretty(lastHealth * multiplier);
         }
 
         for (int i = 0; i < enemy.rewards.Length; i++)
@@ -172,7 +191,6 @@ public class MetaGameManager : MonoBehaviour
         ResetBattleState();
         PlayerInventory.DecreaseBuffDurations();
 
-        // Обновляем текст баффов сразу после боя
         if (turnManager != null)
             turnManager.UpdateBuffDisplay();
 
@@ -183,7 +201,7 @@ public class MetaGameManager : MonoBehaviour
         }
 
         enemiesDefeated++;
-        nextEnemyHealth = chosenEnemy.health;
+        currentEnemyHealth = chosenEnemy.health;
 
         playerDeckManager.SetCustomDeck(PlayerInventory.cards);
         RefreshDeckButtonText();

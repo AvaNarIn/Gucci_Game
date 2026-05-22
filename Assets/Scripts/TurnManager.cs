@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public enum TurnPhase
 {
-    PlayerPlacement,
-    PlayerAction,
-    BotPlacement,
-    BotAction
+    PlayerTurn,
+    BotTurn
 }
 
 public class TurnManager : MonoBehaviour
@@ -32,7 +30,6 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private DeckManager botDeckManager;
     [SerializeField] private Text buffsText;
 
-    // Добавленное поле
     private BotAbilityHandler botAbilityHandler;
 
     public GridManager PlayerGridManager => playerGridManager;
@@ -41,8 +38,8 @@ public class TurnManager : MonoBehaviour
     public System.Action<bool> OnGameOver;
 
     private TurnPhase currentPhase;
-    private int playerAccumulatedScore;
-    private int botAccumulatedScore;
+    private int playerScore;
+    private int botScore;
     private int playerMana;
     private int botMana;
     private int roundNumber;
@@ -62,12 +59,12 @@ public class TurnManager : MonoBehaviour
     public void StartBattle()
     {
         gameOverTriggered = false;
-        playerMana = 8;                     // изменено на 8
-        botMana = 8;                        // изменено на 8
+        playerMana = 8;
+        botMana = 8;
         firstPlayerTurn = true;
         firstBotTurn = true;
-        playerAccumulatedScore = 0;
-        botAccumulatedScore = 0;
+        playerScore = 0;
+        botScore = 0;
         roundNumber = 1;
 
         int bonusMana = 0;
@@ -86,7 +83,7 @@ public class TurnManager : MonoBehaviour
             handler.RefreshAbilities();
 
         UpdateBuffDisplay();
-        SetPhase(TurnPhase.PlayerPlacement);
+        SetPhase(TurnPhase.PlayerTurn);
         UpdateUI();
     }
 
@@ -113,31 +110,23 @@ public class TurnManager : MonoBehaviour
         UnsubscribeAttackTargets();
         currentPhase = phase;
 
-        bool canDrag = (phase == TurnPhase.PlayerPlacement);
-        SetPlayerItemsDraggable(canDrag);
+        bool isPlayerTurn = (phase == TurnPhase.PlayerTurn);
+        SetPlayerItemsDraggable(isPlayerTurn);
 
         switch (phase)
         {
-            case TurnPhase.PlayerPlacement:
+            case TurnPhase.PlayerTurn:
                 if (!firstPlayerTurn)
                     AddPlayerMana(5);
                 firstPlayerTurn = false;
-                // В первом раунде кнопка сразу "Завершить ход"
-                actionButtonText.text = (roundNumber == 1) ? "Завершить ход" : "Подсчитать очки";
-                actionButton.interactable = true;
-                break;
-            case TurnPhase.PlayerAction:
                 actionButtonText.text = "Завершить ход";
                 actionButton.interactable = true;
                 SubscribeToEnemyDraggables();
                 break;
-            case TurnPhase.BotPlacement:
+            case TurnPhase.BotTurn:
                 if (!firstBotTurn)
                     AddBotMana(5);
                 firstBotTurn = false;
-                actionButton.interactable = false;
-                break;
-            case TurnPhase.BotAction:
                 actionButton.interactable = false;
                 break;
         }
@@ -170,27 +159,27 @@ public class TurnManager : MonoBehaviour
 
     private void OnEnemyDraggableClicked(Draggable draggable)
     {
-        if (currentPhase != TurnPhase.PlayerAction) return;
+        if (currentPhase != TurnPhase.PlayerTurn) return;
         GridCell cell = draggable.GetComponentInParent<GridCell>();
         if (cell == null) return;
 
-        int damage = Mathf.Min(playerAccumulatedScore, cell.CurrentHealth);
+        int damage = Mathf.Min(playerScore, cell.CurrentHealth);
         if (damage > 0)
         {
             cell.TakeDamage(damage);
-            playerAccumulatedScore -= damage;
+            playerScore -= damage;
             UpdateUI();
         }
     }
 
     private void OnBotCharacterClicked(Character character)
     {
-        if (currentPhase != TurnPhase.PlayerAction) return;
-        int damage = Mathf.Min(playerAccumulatedScore, character.CurrentHealth);
+        if (currentPhase != TurnPhase.PlayerTurn) return;
+        int damage = Mathf.Min(playerScore, character.CurrentHealth);
         if (damage > 0)
         {
             character.TakeDamage(damage);
-            playerAccumulatedScore -= damage;
+            playerScore -= damage;
             UpdateUI();
         }
     }
@@ -207,32 +196,24 @@ public class TurnManager : MonoBehaviour
 
     public void OnActionButton()
     {
-        switch (currentPhase)
+        if (currentPhase == TurnPhase.PlayerTurn)
         {
-            case TurnPhase.PlayerPlacement:
-                if (roundNumber == 1)
-                {
-                    // Первый раунд: сразу передаём ход боту без фазы PlayerAction
-                    StartBotTurn();
-                }
-                else
-                {
-                    StartCoroutine(CalculatePlayerScore());
-                }
-                break;
-            case TurnPhase.PlayerAction:
-                StartBotTurn();
-                break;
+            StartCoroutine(EndPlayerTurn());
         }
     }
 
-    private IEnumerator CalculatePlayerScore()
+    private IEnumerator EndPlayerTurn()
     {
-        int score = 0;
-        yield return StartCoroutine(playerGridManager.CountingCoroutine(value => score = value));
-        playerAccumulatedScore += score;
+        SetPlayerItemsDraggable(false);
+        actionButton.interactable = false;
+        UnsubscribeAttackTargets();
+
+        int earnedScore = 0;
+        yield return StartCoroutine(playerGridManager.CountingCoroutine(value => earnedScore = value));
+        playerScore += earnedScore;
+
         UpdateUI();
-        SetPhase(TurnPhase.PlayerAction);
+        StartBotTurn();
     }
 
     private void StartBotTurn()
@@ -243,41 +224,30 @@ public class TurnManager : MonoBehaviour
             botDeckManager.DrawTurnCards(2);
 
         CheckEndGame();
-        SetPhase(TurnPhase.BotPlacement);
-        botController.StartPlacementPhase(OnBotPlacementComplete);
+        SetPhase(TurnPhase.BotTurn);
+        StartCoroutine(BotTurnSequence());
     }
 
-    private void OnBotPlacementComplete()
+    private IEnumerator BotTurnSequence()
     {
-        // В первом раунде пропускаем подсчёт очков бота
-        if (roundNumber == 1)
-        {
-            botAccumulatedScore = 0;
-            UpdateUI();
-            SetPhase(TurnPhase.BotAction);
-            botController.StartActionPhase(OnBotActionComplete, botAccumulatedScore,
-                playerGridManager, playerCharacter);
-        }
-        else
-        {
-            StartCoroutine(CalculateBotScore());
-        }
-    }
+        // 1. Атака (используем очки, которые были до хода)
+        bool actionDone = false;
+        botController.StartActionPhase((remaining) => {
+            botScore = remaining;
+            actionDone = true;
+        }, botScore, playerGridManager, playerCharacter);
+        yield return new WaitUntil(() => actionDone);
 
-    private IEnumerator CalculateBotScore()
-    {
-        int score = 0;
-        yield return StartCoroutine(botGridManager.CountingCoroutine(value => score = value));
-        botAccumulatedScore += score;
-        UpdateUI();
-        SetPhase(TurnPhase.BotAction);
-        botController.StartActionPhase(OnBotActionComplete, botAccumulatedScore,
-            playerGridManager, playerCharacter);
-    }
+        // 2. Размещение предметов
+        bool placementDone = false;
+        botController.StartPlacementPhase(() => { placementDone = true; });
+        yield return new WaitUntil(() => placementDone);
 
-    private void OnBotActionComplete(int remainingScore)
-    {
-        botAccumulatedScore = remainingScore;
+        // 3. Подсчёт очков за ход
+        int earnedScore = 0;
+        yield return StartCoroutine(botGridManager.CountingCoroutine(value => earnedScore = value));
+        botScore += earnedScore;
+
         UpdateUI();
         playerDeckManager.DrawTurnCards(2);
         roundNumber++;
@@ -286,7 +256,8 @@ public class TurnManager : MonoBehaviour
             botAbilityHandler.OnBotTurnEnd(playerGridManager);
 
         CheckEndGame();
-        SetPhase(TurnPhase.PlayerPlacement);
+
+        SetPhase(TurnPhase.PlayerTurn);
     }
 
     private void TriggerGameOver(bool playerWon)
@@ -331,9 +302,9 @@ public class TurnManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        playerScoreText.text = $"Очки игрока: {playerAccumulatedScore}";
-        botScoreText.text = $"Очки бота: {botAccumulatedScore}";
-        if (playerManaText != null) playerManaText.text = $"Мана: {playerMana}";
-        if (botManaText != null) botManaText.text = $"Мана: {botMana}";
+        playerScoreText.text = $"Очки: {GameUtils.FormatNumber(playerScore)}";
+        botScoreText.text = $"Очки бота: {GameUtils.FormatNumber(botScore)}";
+        if (playerManaText != null) playerManaText.text = $"Мана: {GameUtils.FormatNumber(playerMana)}";
+        if (botManaText != null) botManaText.text = $"Мана: {GameUtils.FormatNumber(botMana)}";
     }
 }
