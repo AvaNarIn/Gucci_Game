@@ -59,8 +59,8 @@ public class TurnManager : MonoBehaviour
     public void StartBattle()
     {
         gameOverTriggered = false;
-        playerMana = 8;
-        botMana = 8;
+        playerMana = 10;
+        botMana = 10;
         firstPlayerTurn = true;
         firstBotTurn = true;
         playerScore = 0;

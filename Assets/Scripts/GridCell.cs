@@ -18,8 +18,8 @@ public class GridCell : MonoBehaviour, IDropHandler
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private Image healthBar;
     [SerializeField] private Text healthText;
-    [SerializeField] private CellType cellType = CellType.Empty;
-    [SerializeField] private float multiplier = 1f;
+    public CellType cellType = CellType.Empty;
+    public float multiplier = 1f;
 
     public int CellIndex { get; private set; }
     public GridManager OwnerGridManager { get; private set; }
@@ -30,6 +30,7 @@ public class GridCell : MonoBehaviour, IDropHandler
 
     private int currentHealth;
     public int CurrentHealth => currentHealth;
+    [SerializeField] private Text cellLabel;
 
     public void Init(int index, GridManager owner)
     {
@@ -38,7 +39,25 @@ public class GridCell : MonoBehaviour, IDropHandler
         currentHealth = maxHealth;
         healthText.text = GameUtils.FormatNumber(maxHealth);
         healthText.color = Color.green;
+        UpdateCellLabel();
         UpdateHealthBar();
+    }
+
+    private void UpdateCellLabel()
+    {
+        if (cellLabel == null) return;
+        string typeName = cellType switch
+        {
+            CellType.Empty => "Пустая",
+            CellType.Universal => "Универсальная",
+            CellType.Dice => "Кубики",
+            CellType.Card => "Карты",
+            CellType.Chess => "Шахматы",
+            CellType.RockPaperScissors => "КНБ",
+            CellType.TicTacToe => "Крестики-Нолики",
+            _ => cellType.ToString()
+        };
+        cellLabel.text = $"{typeName}\nx{multiplier:F1}";
     }
 
     public void SetProperties(int newMaxHealth, CellType newType, float newMultiplier)
@@ -49,6 +68,7 @@ public class GridCell : MonoBehaviour, IDropHandler
         currentHealth = newMaxHealth;
         healthText.text = GameUtils.FormatNumber(currentHealth);
         healthText.color = Color.green;
+        UpdateCellLabel();
         UpdateHealthBar();
     }
 

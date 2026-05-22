@@ -9,7 +9,7 @@ public class MetaGameManager : MonoBehaviour
     public ItemDatabase itemDatabase;
     public AbilityDatabase abilityDatabase;
     public TemporaryBuffDatabase buffDatabase;
-    public BossAbilityDatabase bossAbilityDatabase;   // новая база способностей босса
+    public BossAbilityDatabase bossAbilityDatabase;
     public DeckManager playerDeckManager;
     public DeckManager botDeckManager;
     public TurnManager turnManager;
@@ -77,7 +77,6 @@ public class MetaGameManager : MonoBehaviour
         enemySelectionUI.Show(currentEnemies);
     }
 
-    // Таблица здоровья для первых 24 боёв (до 8-го босса включительно)
     private int[] enemyHealthTable = new int[]
     {
     30, 40, 60, 80, 110, 170, 220, 280, 430, 540,
@@ -132,6 +131,132 @@ public class MetaGameManager : MonoBehaviour
         return enemy;
     }
 
+    void DistributeHealthToCells(int totalHealth, GridCell[] cells)
+    {
+        int numCells = cells.Length;
+        float minRatio = 0.05f;
+        float maxRatio = 0.15f;
+        float totalRatio = 0.90f;
+
+        float[] ratios = new float[numCells];
+        for (int i = 0; i < numCells; i++)
+            ratios[i] = minRatio;
+
+        float remainingRatio = totalRatio - minRatio * numCells;
+
+        System.Random rng = new System.Random();
+        for (int i = 0; i < numCells && remainingRatio > 0.0001f; i++)
+        {
+            float maxAdditional = maxRatio - minRatio;
+            float add = (float)rng.NextDouble() * maxAdditional;
+            if (add > remainingRatio) add = remainingRatio;
+            ratios[i] += add;
+            remainingRatio -= add;
+        }
+
+        if (remainingRatio > 0f)
+            ratios[0] += remainingRatio;
+
+        for (int i = 0; i < numCells; i++)
+        {
+            int cellHealth = Mathf.RoundToInt(ratios[i] * totalHealth);
+            if (cellHealth < 1) cellHealth = 1;
+            cells[i].SetProperties(cellHealth, cells[i].cellType, cells[i].multiplier);
+        }
+    }
+
+    void SetupEnemyCellTypes(EnemyInfo enemy, GridCell[] cells)
+    {
+
+        foreach (var cell in cells)
+        {
+            cell.SetProperties(cell.CurrentHealth, CellType.Empty, 1f);
+        }
+
+        int specialCellsCount = enemy.isBoss ? 3 : 2;
+        float targetSum = enemy.isBoss ? 4.5f : 3.0f;
+
+        List<int> indices = new List<int>();
+        for (int i = 0; i < cells.Length; i++) indices.Add(i);
+        Shuffle(indices);
+        List<int> specialIndices = indices.GetRange(0, specialCellsCount);
+
+        float[] multipliers = GenerateMultipliers(specialCellsCount, targetSum);
+
+        CellType primaryType = ItemSetToCellType(enemy.set1);
+        CellType secondaryType = enemy.isBoss ? primaryType : ItemSetToCellType(enemy.set2);
+
+        for (int i = 0; i < specialCellsCount; i++)
+        {
+            int cellIndex = specialIndices[i];
+            CellType type = enemy.isBoss ? primaryType : (i == 0 ? primaryType : secondaryType);
+            cells[cellIndex].SetProperties(cells[cellIndex].CurrentHealth, type, multipliers[i]);
+        }
+    }
+
+    void Shuffle<T>(List<T> list)
+    {
+        System.Random rng = new System.Random();
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+    float[] GenerateMultipliers(int count, float targetSum)
+    {
+        float[] multipliers = new float[count];
+        float min = 1.0f;
+        float max = 2.0f;
+        float step = 0.1f;
+
+        if (count == 2 && Mathf.Abs(targetSum - 2.0f) < 0.001f)
+        {
+            multipliers[0] = 1.0f;
+            multipliers[1] = 1.0f;
+            return multipliers;
+        }
+
+        System.Random rng = new System.Random();
+        float remaining = targetSum;
+        for (int i = 0; i < count - 1; i++)
+        {
+            float maxForThis = Mathf.Min(max, remaining - (count - 1 - i) * min);
+            float minForThis = Mathf.Max(min, remaining - (count - 1 - i) * max);
+            int steps = Mathf.RoundToInt((maxForThis - minForThis) / step);
+            float chosen;
+            if (steps <= 0)
+                chosen = minForThis;
+            else
+            {
+                int randomStep = rng.Next(steps + 1);
+                chosen = minForThis + randomStep * step;
+            }
+            multipliers[i] = chosen;
+            remaining -= chosen;
+        }
+        multipliers[count - 1] = remaining;
+
+        for (int i = 0; i < count; i++)
+            multipliers[i] = Mathf.Round(multipliers[i] * 10f) / 10f;
+
+        return multipliers;
+    }
+
+    CellType ItemSetToCellType(ItemSet set) => set switch
+    {
+        ItemSet.Dice => CellType.Dice,
+        ItemSet.Card => CellType.Card,
+        ItemSet.Chess => CellType.Chess,
+        ItemSet.RockPaperScissors => CellType.RockPaperScissors,
+        ItemSet.TicTacToe => CellType.TicTacToe,
+        _ => CellType.Empty
+    };
+
     public void OnEnemySelected(int index)
     {
         chosenEnemy = currentEnemies[index];
@@ -150,12 +275,16 @@ public class MetaGameManager : MonoBehaviour
         turnManager.botCharacter.SetMaxHealth(chosenEnemy.health);
         turnManager.botCharacter.ResetHealth();
 
-        // Передаём способность босса обработчику
-        BotAbilityHandler botAbilityHandler = turnManager.botGridManager.GetComponent<BotAbilityHandler>();
+        DistributeHealthToCells(chosenEnemy.health, turnManager.BotGridManager.GetCells());
+
+        SetupEnemyCellTypes(chosenEnemy, turnManager.BotGridManager.GetCells());
+
+        BotAbilityHandler botAbilityHandler = turnManager.BotGridManager.GetComponent<BotAbilityHandler>();
         if (botAbilityHandler != null)
         {
             BossAbilityData bossAbility = System.Array.Find(bossAbilityDatabase.allAbilities, a => a.abilityName == chosenEnemy.abilityDescription);
             botAbilityHandler.SetBossAbility(bossAbility);
+            turnManager.SetBotAbilityHandler(botAbilityHandler);
         }
 
         enemySelectionUI.gameObject.SetActive(false);
