@@ -7748,6 +7748,7 @@ GameObject:
   - component: {fileID: 1298955879}
   - component: {fileID: 1298955878}
   - component: {fileID: 1298955876}
+  - component: {fileID: 1298955880}
   m_Layer: 5
   m_Name: Opponent
   m_TagString: Untagged
@@ -7827,6 +7828,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298955875}
   m_CullTransparentMesh: 1
+--- !u!114 &1298955880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298955875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054d24ea3c01c534d92fa8166bffb55b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFeedback
+  flashGraphic: {fileID: 1298955878}
+  shakeTarget: {fileID: 0}
+  hitColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashDuration: 0.1
+  shakeDuration: 0.12
+  shakeStrength: 8
+  punchScale: 1.08
+  scaleDuration: 0.12
 --- !u!114 &1334571781 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1832419718939755160, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
@@ -9817,8 +9838,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BotController
   botGridManager: {fileID: 1969181799}
   handPanel: {fileID: 888826171}
-  placementDelay: 1
-  actionDelay: 2
+  placementDelay: 2
+  actionDelay: 4
+  baseValueWeight: 1
+  sameSetSynergyWeight: 0.2
+  adjacencySynergyWeight: 0.12
+  positionalWeight: 0.08
+  predictedDeltaWeight: 0.75
+  placementTopK: 3
+  placementExploreChance: 0.2
+  faceLowHpThreshold: 12
+  faceHitChanceHighHp: 0.1
+  faceHitChanceLowHp: 0.3
+  canKillNowBonus: 0.2
+  attackTopK: 2
+  attackExploreChance: 0.12
+  randomNoise: 0.01
 --- !u!114 &1969181799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10053,6 +10088,7 @@ GameObject:
   - component: {fileID: 2013973115}
   - component: {fileID: 2013973114}
   - component: {fileID: 2013973112}
+  - component: {fileID: 2013973116}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -10132,6 +10168,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013973111}
   m_CullTransparentMesh: 1
+--- !u!114 &2013973116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013973111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054d24ea3c01c534d92fa8166bffb55b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFeedback
+  flashGraphic: {fileID: 2013973114}
+  shakeTarget: {fileID: 0}
+  hitColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashDuration: 0.1
+  shakeDuration: 0.12
+  shakeStrength: 8
+  punchScale: 1.08
+  scaleDuration: 0.12
 --- !u!1 &2038353720
 GameObject:
   m_ObjectHideFlags: 0
