@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   displayName: New Card
   score: 3
-  icon: {fileID: 0}
-  value: 0
-  suit: 0
+  icon: {fileID: -2763191353169013023, guid: 05197fb9d82360245be4a67f67fa733b, type: 3}
+  value: 5
+  suit: 2
