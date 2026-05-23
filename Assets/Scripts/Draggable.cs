@@ -11,6 +11,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     [SerializeField] private bool isDraggable = true;
     public GridManager OwnerGridManager { get; private set; }
 
+    [Header("Отображение стоимости")]
+    [SerializeField] private Text costText;   // назначьте дочерний Text в префабе
+
     private Canvas canvas;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -38,6 +41,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         itemData = data;
         GetComponent<Image>().sprite = data.icon;
+
+        // Устанавливаем текст стоимости, если поле назначено
+        if (costText != null)
+            costText.text = data.score.ToString();
     }
 
     public void SetDraggable(bool draggable) { isDraggable = draggable; }
@@ -95,7 +102,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             transform.SetParent(originalParent, false);
             rectTransform.anchoredPosition = originalAnchoredPos;
-            // возврат в руку - индекса нет
             SetCellIndex(-1);
         }
     }

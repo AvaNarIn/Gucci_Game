@@ -26,7 +26,7 @@ public class DamageFeedback : MonoBehaviour
 
     private void Awake()
     {
-        rng = new System.Random(unchecked(Environment.TickCount * 486187739 + GetInstanceID()));
+        rng = new System.Random();
 
         if (shakeTarget == null) shakeTarget = transform as RectTransform;
         baseScale = shakeTarget != null ? shakeTarget.localScale : transform.localScale;

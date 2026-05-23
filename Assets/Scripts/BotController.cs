@@ -49,7 +49,7 @@ public class BotController : MonoBehaviour
 
     private void Awake()
     {
-        botRng = new System.Random(unchecked(Environment.TickCount * 486187739 + GetInstanceID()));
+        botRng = new System.Random();
     }
 
     private float Rng01() => (float)botRng.NextDouble();
