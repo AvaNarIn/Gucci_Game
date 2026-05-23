@@ -211,9 +211,17 @@ public class TurnManager : MonoBehaviour
         int earnedScore = 0;
         yield return StartCoroutine(playerGridManager.CountingCoroutine(value => earnedScore = value));
         playerScore += earnedScore;
-
         UpdateUI();
+
+        yield return new WaitForSeconds(2f);
+
         StartBotTurn();
+    }
+
+    public void UpdateBotScoreDisplay(int currentScore)
+    {
+        botScore = currentScore;
+        botScoreText.text = $"Очки бота: {GameUtils.FormatNumber(botScore)}";
     }
 
     private void StartBotTurn()

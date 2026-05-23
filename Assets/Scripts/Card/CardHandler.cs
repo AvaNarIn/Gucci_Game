@@ -14,20 +14,23 @@ public class CardHandler : ItemHandler
 
     public override IEnumerator CountingScore_Coroutine()
     {
-        // Получаем все карты с поля
         ItemData[] gridState = gridManager.GetGridState();
+        GridCell[] cells = gridManager.GetCells();
         List<CardData> allCards = new List<CardData>();
         List<int> cardIndices = new List<int>();
+        List<Draggable> cardDraggables = new List<Draggable>();
+
         for (int i = 0; i < gridState.Length; i++)
         {
             if (gridState[i] is CardData card)
             {
                 allCards.Add(card);
                 cardIndices.Add(i);
+                cardDraggables.Add(cells[i].currentItem);
             }
         }
 
-        yield return new WaitForSeconds(animationDuration);  // заглушка под анимацию
+        yield return new WaitForSeconds(animationDuration);
 
         // === Обработка способности "Усиление комбинации" ===
         string abilityName = "Усиление комбинации";
@@ -51,12 +54,12 @@ public class CardHandler : ItemHandler
         // Если boostAbility == null – такой способности вообще нет в базе, ничего не делаем
 
         // Подсчёт очков (передаём storedCombo)
-        float totalScore = CalculateScore(allCards, cardIndices, storedCombo);
+        float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo);
         LastScore = totalScore;
         Debug.Log($"Очки за карты: {totalScore}");
     }
 
-    private float CalculateScore(List<CardData> cards, List<int> cardIndices, string storedCombo)
+    private float CalculateScore(List<CardData> cards, List<int> cardIndices, List<Draggable> draggables, string storedCombo)
     {
         if (cards.Count == 0) return 0;
 
@@ -100,8 +103,13 @@ public class CardHandler : ItemHandler
             GridCell cell = cells[cardIndices[i]];
             float cellMult = cell.GetMultiplier(card);
             float comboMult = bestSet.Contains(card) ? effectiveMultiplier : 1f;
-            total += card.score * comboMult * cellMult;
+            float pieceScore = card.score * comboMult * cellMult;
+            total += pieceScore;
+
+            if (draggables[i] != null)
+                draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
+
         return total;
     }
 

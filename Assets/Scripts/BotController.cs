@@ -277,17 +277,20 @@ public class BotController : MonoBehaviour
 
         while (remainingScore > 0 && (HasAnyEnemyCell(playerGridManager) || playerCharacter.IsAlive))
         {
+            // 1. Добивание персонажа, если хватает очков
             if (playerCharacter.IsAlive && remainingScore >= playerCharacter.CurrentHealth)
             {
                 int dmg = playerCharacter.CurrentHealth;
                 playerCharacter.TakeDamage(dmg);
                 remainingScore -= dmg;
+                TurnManager.Instance.UpdateBotScoreDisplay(remainingScore);
                 yield return new WaitForSeconds(actionDelay);
                 continue;
             }
 
             bool hasCells = HasAnyEnemyCell(playerGridManager);
 
+            // 2. Клеток нет — бьём персонажа
             if (!hasCells)
             {
                 if (playerCharacter.IsAlive)
@@ -295,11 +298,13 @@ public class BotController : MonoBehaviour
                     int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
                     playerCharacter.TakeDamage(dmg);
                     remainingScore -= dmg;
+                    TurnManager.Instance.UpdateBotScoreDisplay(remainingScore);
                 }
                 yield return new WaitForSeconds(actionDelay);
                 continue;
             }
 
+            // 3. Случайная атака персонажа
             float faceChance = GetFaceHitChance(playerCharacter);
             bool attackFace = playerCharacter.IsAlive && Rng01() < faceChance;
 
@@ -308,18 +313,22 @@ public class BotController : MonoBehaviour
                 int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
                 playerCharacter.TakeDamage(dmg);
                 remainingScore -= dmg;
+                TurnManager.Instance.UpdateBotScoreDisplay(remainingScore);
                 yield return new WaitForSeconds(actionDelay);
                 continue;
             }
 
+            // 4. Атака клетки (основной удар)
             GridCell target = ChooseBestEnemyCellToAttack(playerGridManager, remainingScore);
             if (target == null)
             {
+                // На всякий случай бьём персонажа, если нет целей
                 if (playerCharacter.IsAlive)
                 {
                     int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);
                     playerCharacter.TakeDamage(dmg);
                     remainingScore -= dmg;
+                    TurnManager.Instance.UpdateBotScoreDisplay(remainingScore);
                 }
                 yield return new WaitForSeconds(actionDelay);
                 continue;
@@ -328,6 +337,7 @@ public class BotController : MonoBehaviour
             int cellDmg = Mathf.Min(remainingScore, target.CurrentHealth);
             target.TakeDamage(cellDmg);
             remainingScore -= cellDmg;
+            TurnManager.Instance.UpdateBotScoreDisplay(remainingScore);
 
             yield return new WaitForSeconds(actionDelay);
         }

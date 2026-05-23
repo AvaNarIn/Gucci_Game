@@ -268,11 +268,11 @@ MonoBehaviour:
   flashGraphic: {fileID: 206622987706630072}
   shakeTarget: {fileID: 0}
   hitColor: {r: 1, g: 0.3, b: 0.3, a: 1}
-  flashDuration: 0.1
-  shakeDuration: 0.12
+  flashDuration: 2
+  shakeDuration: 2
   shakeStrength: 8
   punchScale: 1.08
-  scaleDuration: 0.12
+  scaleDuration: 2
 --- !u!1 &7522232674738611467
 GameObject:
   m_ObjectHideFlags: 0

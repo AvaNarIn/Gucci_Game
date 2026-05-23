@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2840d1555a2e5124c9d67471b1cb33e2, type: 3}
+  m_Name: "\u041A\u043E\u0447\u0435\u0432\u043D\u0438\u043A"
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterData
+  characterName: "\u041A\u043E\u0447\u0435\u0432\u043D\u0438\u043A"
+  description: "\u0421\u043B\u043E\u043D\u044B \u0438 \u041A\u043E\u043D\u0438"
+  set: 2
+  startingDeck:
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: d242eafa73f118d439b5a8e8723535ef, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  - {fileID: 11400000, guid: 51c6af8cd091e1f4aa4a9d28c8c8cbb2, type: 2}
+  requiredCharacter: {fileID: 11400000, guid: 000afb0b77fd3634fa15b1c2cf90ed82, type: 2}
+  requiredLevel: 3
