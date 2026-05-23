@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossAbilityDatabase
   allAbilities:
   - {fileID: 11400000, guid: 4158ee7dcd7c24645bdfd7b0ceb4f3ba, type: 2}
+  - {fileID: 11400000, guid: 49b4c4ba7efa50a438dea98507f3d1ce, type: 2}
+  - {fileID: 11400000, guid: 10869d279590f634dbe67b32263c9e77, type: 2}
+  - {fileID: 11400000, guid: b4c3b29036aa6f04780cf1d1e19e6fdf, type: 2}
+  - {fileID: 11400000, guid: 6a7740ed5405ceb4c9db21339f7b5ac0, type: 2}

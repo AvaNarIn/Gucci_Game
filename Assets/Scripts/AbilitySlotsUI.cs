@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class AbilitySlotsUI : MonoBehaviour
 {
     [Header("Слоты")]
-    public Image[] slotImages;          // 6 Image для иконок способностей
+    public Image[] slotImages;
     public Sprite emptySlotSprite;
 
     [Header("Панель просмотра")]
@@ -15,16 +16,23 @@ public class AbilitySlotsUI : MonoBehaviour
     public Text detailSetText;
     public Text detailDescriptionText;
 
+    [Header("Режим замены")]
+    public GameObject cancelReplaceButton;
+    public UnityEvent OnCancelReplace;
+
     [Header("Данные")]
     public AbilityDatabase abilityDatabase;
 
     private Action<AbilityData> onReplaceCallback;
     private bool replaceMode;
     private int currentlyViewedIndex = -1;
+    private int selectedReplaceIndex = -1;   // какой слот выбран для замены (подсвечен зелёным)
 
     void Start()
     {
         detailPanel.SetActive(false);
+        if (cancelReplaceButton != null)
+            cancelReplaceButton.SetActive(false);
         UpdateSlots();
     }
 
@@ -33,9 +41,26 @@ public class AbilitySlotsUI : MonoBehaviour
         for (int i = 0; i < slotImages.Length; i++)
         {
             if (i < PlayerInventory.abilities.Count)
+            {
                 slotImages[i].sprite = PlayerInventory.abilities[i].icon;
+                // Цвет в зависимости от режима и выбора
+                if (replaceMode)
+                {
+                    if (i == selectedReplaceIndex)
+                        slotImages[i].color = Color.green;   // выбран для замены
+                    else
+                        slotImages[i].color = new Color(1f, 1f, 0.5f); // доступен для выбора
+                }
+                else
+                {
+                    slotImages[i].color = Color.white;
+                }
+            }
             else
+            {
                 slotImages[i].sprite = emptySlotSprite;
+                slotImages[i].color = Color.white;
+            }
 
             Button btn = slotImages[i].GetComponent<Button>();
             if (btn == null)
@@ -48,9 +73,19 @@ public class AbilitySlotsUI : MonoBehaviour
             {
                 btn.onClick.AddListener(() => OnSlotClickedForReplace(index));
             }
-            else
+            else if (!replaceMode)
             {
                 btn.onClick.AddListener(() => OnSlotClicked(index));
+            }
+        }
+
+        if (cancelReplaceButton != null)
+        {
+            cancelReplaceButton.SetActive(replaceMode);
+            if (replaceMode)
+            {
+                cancelReplaceButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                cancelReplaceButton.GetComponent<Button>().onClick.AddListener(CancelReplaceMode);
             }
         }
     }
@@ -83,11 +118,10 @@ public class AbilitySlotsUI : MonoBehaviour
     {
         if (replaceMode && index < PlayerInventory.abilities.Count && onReplaceCallback != null)
         {
-            onReplaceCallback?.Invoke(PlayerInventory.abilities[index]);
-            replaceMode = false;
-            onReplaceCallback = null;
-            CloseDetail();
+            // Подсвечиваем выбранный слот и сразу вызываем замену
+            selectedReplaceIndex = index;
             UpdateSlots();
+            onReplaceCallback?.Invoke(PlayerInventory.abilities[index]);
         }
     }
 
@@ -95,6 +129,7 @@ public class AbilitySlotsUI : MonoBehaviour
     {
         replaceMode = true;
         onReplaceCallback = callback;
+        selectedReplaceIndex = -1;
         CloseDetail();
         UpdateSlots();
     }
@@ -103,6 +138,8 @@ public class AbilitySlotsUI : MonoBehaviour
     {
         replaceMode = false;
         onReplaceCallback = null;
+        selectedReplaceIndex = -1;
         UpdateSlots();
+        OnCancelReplace?.Invoke();
     }
 }

@@ -14,26 +14,36 @@ public class BotAbilityHandler : MonoBehaviour
             Debug.Log("Обычный противник, способности нет");
     }
 
-    /// <summary>Вызывается в конце хода бота.</summary>
     public void OnBotTurnEnd(GridManager playerGridManager)
     {
         if (currentBossAbility == null) return;
 
-        if (currentBossAbility.abilityName == "Анти Карты")
-        {
-            var cardCells = new List<GridCell>();
-            foreach (var cell in playerGridManager.GetCells())
-            {
-                if (cell.currentItem != null && cell.currentItem.ItemData is CardData)
-                    cardCells.Add(cell);
-            }
+        string abilityName = currentBossAbility.abilityName;
+        System.Type targetType = null;
 
-            if (cardCells.Count > 0)
+        if (abilityName == "Анти-Карты") targetType = typeof(CardData);
+        else if (abilityName == "Анти-Кубики") targetType = typeof(DiceData);
+        else if (abilityName == "Анти-Шахматы") targetType = typeof(ChessData);
+        else if (abilityName == "Анти-КНБ") targetType = typeof(RockPaperScissorsData);
+        else if (abilityName == "Анти-Крестики-Нолики") targetType = typeof(TicTacToeData);
+
+        if (targetType == null) return;
+
+        var targetCells = new List<GridCell>();
+        foreach (var cell in playerGridManager.GetCells())
+        {
+            if (cell.currentItem != null && cell.currentItem.ItemData != null &&
+                targetType.IsAssignableFrom(cell.currentItem.ItemData.GetType()))
             {
-                GridCell target = cardCells[Random.Range(0, cardCells.Count)];
-                target.TakeDamage(target.CurrentHealth);   // наносим урон, равный здоровью клетки
-                Debug.Log($"[Анти Карты] Уничтожена карта игрока в клетке {target.CellIndex}");
+                targetCells.Add(cell);
             }
+        }
+
+        if (targetCells.Count > 0)
+        {
+            GridCell target = targetCells[Random.Range(0, targetCells.Count)];
+            target.TakeDamage(target.CurrentHealth);
+            Debug.Log($"[{abilityName}] Уничтожен предмет игрока в клетке {target.CellIndex}");
         }
     }
 }

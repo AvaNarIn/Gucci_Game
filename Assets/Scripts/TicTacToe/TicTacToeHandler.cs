@@ -63,6 +63,9 @@ public class TicTacToeHandler : ItemHandler
 
         float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
 
+        string abilityName = "Базовое усиление (Крестики-Нолики)";
+        AbilityData boostAbility = GetAbilityByName(abilityName);
+
         if (HasAbility("Базовое усиление (Крестики-Нолики)"))
             totalScore *= 1.5f;
 

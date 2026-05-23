@@ -660,8 +660,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -696,7 +696,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 160}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &93352279
 GameObject:
@@ -2276,7 +2276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7528302, g: 1, b: 0.7931585, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2829,7 +2829,7 @@ MonoBehaviour:
   - {fileID: 2076719973}
   - {fileID: 2089467191}
   - {fileID: 1446389004}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
 --- !u!114 &308498417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2843,7 +2843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiceHandler
   set: 0
-  abilityDatabase: {fileID: 0}
+  abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   animationDuration: 0
 --- !u!114 &308498418
 MonoBehaviour:
@@ -2858,7 +2858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TicTacToeHandler
   set: 4
-  abilityDatabase: {fileID: 0}
+  abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   animationDuration: 0
 --- !u!114 &308498419
 MonoBehaviour:
@@ -2873,7 +2873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardHandler
   set: 1
-  abilityDatabase: {fileID: 0}
+  abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   animationDuration: 0
 --- !u!114 &308498420
 MonoBehaviour:
@@ -2888,7 +2888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChessHandler
   set: 2
-  abilityDatabase: {fileID: 0}
+  abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   animationDuration: 0
 --- !u!114 &308498421
 MonoBehaviour:
@@ -2903,7 +2903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckerHandler
   set: 3
-  abilityDatabase: {fileID: 0}
+  abilityDatabase: {fileID: 11400000, guid: 0f26817a1dab9404c9fba32c0b49fef8, type: 2}
   animationDuration: 0
 --- !u!114 &308498422
 MonoBehaviour:
@@ -2919,24 +2919,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 308498416}
   handPanel: {fileID: 1146578038}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
-  deck:
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
-  - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  deck: []
 --- !u!114 &308498423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3471,6 +3455,7 @@ MonoBehaviour:
   exitButton: {fileID: 937304785}
   settingsPanel: {fileID: 247049512}
   exitToMenuButton: {fileID: 69905171}
+  playerGridManager: {fileID: 308498416}
 --- !u!1001 &414939298
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6361,7 +6346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 501468014516332074, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7537992015839450894, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
       propertyPath: m_Pivot.x
@@ -6425,11 +6410,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7537992015839450894, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7537992015839450894, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 250
+      value: -274.90002
       objectReference: {fileID: 0}
     - target: {fileID: 7537992015839450894, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7489,7 +7474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1211848515
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7564,20 +7549,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySelectionUI
   enemyCards:
-  - gameObject: {fileID: 1816958134}
-    abilityText: {fileID: 1758864651}
-    set1Text: {fileID: 552649910}
-    set2Text: {fileID: 1334571781}
-    rewardsText: {fileID: 1951271449}
-    healthText: {fileID: 1924619066}
-    selectButton: {fileID: 1372052094}
-  - gameObject: {fileID: 707934596}
-    abilityText: {fileID: 1228536011}
-    set1Text: {fileID: 806516774}
-    set2Text: {fileID: 491571272}
-    rewardsText: {fileID: 275669212}
-    healthText: {fileID: 1169657021}
-    selectButton: {fileID: 297240733}
   - gameObject: {fileID: 277063060}
     abilityText: {fileID: 420057281}
     set1Text: {fileID: 1741058630}
@@ -7585,6 +7556,20 @@ MonoBehaviour:
     rewardsText: {fileID: 1600834881}
     healthText: {fileID: 592166750}
     selectButton: {fileID: 1791011086}
+  - gameObject: {fileID: 707934596}
+    abilityText: {fileID: 1228536011}
+    set1Text: {fileID: 806516774}
+    set2Text: {fileID: 491571272}
+    rewardsText: {fileID: 275669212}
+    healthText: {fileID: 1169657021}
+    selectButton: {fileID: 297240733}
+  - gameObject: {fileID: 1816958134}
+    abilityText: {fileID: 1758864651}
+    set1Text: {fileID: 552649910}
+    set2Text: {fileID: 1334571781}
+    rewardsText: {fileID: 1951271449}
+    healthText: {fileID: 1924619066}
+    selectButton: {fileID: 1372052094}
 --- !u!114 &1228536011 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5668167590100697312, guid: 4a4328ebd5b580d4fb361db268efa5ed, type: 3}
@@ -8290,6 +8275,10 @@ MonoBehaviour:
   detailNameText: {fileID: 295515926}
   detailSetText: {fileID: 2043751160}
   detailDescriptionText: {fileID: 301453847}
+  cancelReplaceButton: {fileID: 0}
+  OnCancelReplace:
+    m_PersistentCalls:
+      m_Calls: []
   abilityDatabase: {fileID: 0}
 --- !u!114 &1426548040
 MonoBehaviour:
@@ -9301,7 +9290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9312,7 +9301,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4
@@ -9321,7 +9310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: "\u0412\u044B\u0439\u0442\u0438 \u0432 \u043C\u0435\u043D\u044E"
 --- !u!222 &1549378485
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10235,7 +10224,7 @@ MonoBehaviour:
   - {fileID: 719790675}
   - {fileID: 817297419}
   - {fileID: 973094427}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
 --- !u!114 &1969181800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10325,7 +10314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 1969181799}
   handPanel: {fileID: 888826171}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
   deck:
   - {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
 --- !u!114 &1969181806

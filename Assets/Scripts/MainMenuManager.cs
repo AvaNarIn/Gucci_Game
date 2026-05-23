@@ -19,10 +19,17 @@ public class MainMenuManager : MonoBehaviour
 
     private CharacterData selectedCharacter;
 
+    public GameObject TrainingImage;
+
     void Start()
     {
         resetProgressButton.onClick.AddListener(ResetProgress);
         PopulateCharacters();
+    }
+
+    public void TrainingClick()
+    {
+        TrainingImage.SetActive(!TrainingImage.activeSelf);
     }
 
     void PopulateCharacters()

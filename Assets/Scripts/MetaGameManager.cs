@@ -38,6 +38,8 @@ public class MetaGameManager : MonoBehaviour
     public GameObject settingsPanel;   // панель с кнопкой "Выйти в меню"
     public Button exitToMenuButton;    // кнопка внутри settingsPanel
 
+    public GridManager playerGridManager;
+
     // Таблица здоровья для 18 боссов (6 уровней * 3 босса)
     private int[] enemyHealthTable = new int[]
     {
@@ -66,6 +68,13 @@ public class MetaGameManager : MonoBehaviour
         itemRewardUI.Init(deckViewUI, playerDeckManager);
         abilityRewardUI.Init(abilitySlotsUI);
         abilitySlotsUI.abilityDatabase = abilityDatabase;
+
+        // Инициализация способностей для обработчиков игрока
+        foreach (var handler in playerGridManager.GetComponents<ItemHandler>())
+        {
+            handler.abilityDatabase = abilityDatabase;
+            handler.InitAbilities();
+        }
 
         RefreshDeckButtonText();
         abilitySlotsUI.UpdateSlots();

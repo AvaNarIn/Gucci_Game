@@ -72,6 +72,8 @@ public class TurnManager : MonoBehaviour
         {
             if (buff.data.buffName == "Дополнительная мана")
                 bonusMana += 2;
+            else if (buff.data.buffName == "Дополнительная мана II")
+                bonusMana += 3;
         }
         playerMana += bonusMana;
 
@@ -118,6 +120,7 @@ public class TurnManager : MonoBehaviour
             case TurnPhase.PlayerTurn:
                 if (!firstPlayerTurn)
                     AddPlayerMana(5);
+                AddTurnMana();
                 firstPlayerTurn = false;
                 actionButtonText.text = "Завершить ход";
                 actionButton.interactable = true;
@@ -131,6 +134,16 @@ public class TurnManager : MonoBehaviour
                 break;
         }
         UpdateUI();
+    }
+
+    private void AddTurnMana()
+    {
+        int extra = 0;
+        foreach (var buff in PlayerInventory.activeBuffs)
+            if (buff.data.buffName == "Мана в ход")
+                extra += 1;
+        if (extra > 0)
+            AddPlayerMana(extra);
     }
 
     private void SubscribeToEnemyDraggables()
@@ -238,20 +251,18 @@ public class TurnManager : MonoBehaviour
 
     private IEnumerator BotTurnSequence()
     {
-        // 1. Атака (используем очки, которые были до хода)
         bool actionDone = false;
-        botController.StartActionPhase((remaining) => {
+        botController.StartActionPhase((remaining) =>
+        {
             botScore = remaining;
             actionDone = true;
         }, botScore, playerGridManager, playerCharacter);
         yield return new WaitUntil(() => actionDone);
 
-        // 2. Размещение предметов
         bool placementDone = false;
         botController.StartPlacementPhase(() => { placementDone = true; });
         yield return new WaitUntil(() => placementDone);
 
-        // 3. Подсчёт очков за ход
         int earnedScore = 0;
         yield return StartCoroutine(botGridManager.CountingCoroutine(value => earnedScore = value));
         botScore += earnedScore;
@@ -264,7 +275,6 @@ public class TurnManager : MonoBehaviour
             botAbilityHandler.OnBotTurnEnd(playerGridManager);
 
         CheckEndGame();
-
         SetPhase(TurnPhase.PlayerTurn);
     }
 
