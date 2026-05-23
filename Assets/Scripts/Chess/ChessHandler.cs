@@ -13,25 +13,28 @@ public class ChessHandler : ItemHandler
     public override IEnumerator CountingScore_Coroutine()
     {
         ItemData[] gridState = gridManager.GetGridState();
+        GridCell[] cells = gridManager.GetCells();
         List<ChessData> pieces = new List<ChessData>();
         List<int> pieceIndices = new List<int>();
+        List<Draggable> pieceDraggables = new List<Draggable>();
+
         for (int i = 0; i < gridState.Length; i++)
         {
             if (gridState[i] is ChessData chess)
             {
                 pieces.Add(chess);
                 pieceIndices.Add(i);
+                pieceDraggables.Add(cells[i].currentItem);
             }
         }
 
-        yield return new WaitForSeconds(animationDuration); //ÇÀÃËÓØÊÀ ÄËß ÀÍÈÌÀÖÈÈ
+        yield return new WaitForSeconds(animationDuration);
 
-        float totalScore = CalculateScore(pieces, pieceIndices);
+        float totalScore = CalculateScore(pieces, pieceIndices, pieceDraggables);
         LastScore = totalScore;
-        Debug.Log($"Î÷êè çà øàõìàòû: {totalScore}");
     }
 
-    private float CalculateScore(List<ChessData> pieces, List<int> indices)
+    private float CalculateScore(List<ChessData> pieces, List<int> indices, List<Draggable> draggables)
     {
         if (pieces.Count == 0) return 0f;
 
@@ -66,6 +69,9 @@ public class ChessHandler : ItemHandler
             float cellMult = cell.GetMultiplier(pieces[i]);
             float pieceScore = pieces[i].score * multiplier * cellMult;
             total += pieceScore;
+
+            if (draggables[i] != null)
+                draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
 
         return total;

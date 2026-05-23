@@ -10,10 +10,8 @@ public class DamageFeedback : MonoBehaviour
 
     [SerializeField] private Color hitColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] private float flashDuration = 2f;
-
     [SerializeField] private float shakeDuration = 2f;
     [SerializeField] private float shakeStrength = 8f;
-
     [SerializeField] private float punchScale = 1.08f;
     [SerializeField] private float scaleDuration = 2f;
 
@@ -31,14 +29,14 @@ public class DamageFeedback : MonoBehaviour
         if (shakeTarget == null) shakeTarget = transform as RectTransform;
         baseScale = shakeTarget != null ? shakeTarget.localScale : transform.localScale;
 
-        if (flashGraphic != null) baseColor = flashGraphic.color;
+        if (flashGraphic != null)
+            baseColor = flashGraphic.color;   // запоминаем исходный цвет
     }
 
     public void Play()
     {
         if (shakeTarget != null) baseAnchoredPos = shakeTarget.anchoredPosition;
         if (flashGraphic != null) baseColor = flashGraphic.color;
-
         if (routine != null) StopCoroutine(routine);
         routine = StartCoroutine(Run());
     }
@@ -46,12 +44,10 @@ public class DamageFeedback : MonoBehaviour
     private IEnumerator Run()
     {
         float t = 0f;
+        float total = Mathf.Max(flashDuration, shakeDuration, scaleDuration);
 
         if (flashGraphic != null) flashGraphic.color = hitColor;
-
         if (shakeTarget != null) shakeTarget.localScale = baseScale * punchScale;
-
-        float total = Mathf.Max(flashDuration, shakeDuration, scaleDuration);
 
         while (t < total)
         {
@@ -61,10 +57,8 @@ public class DamageFeedback : MonoBehaviour
             {
                 float p = Mathf.Clamp01(t / shakeDuration);
                 float amp = (1f - p) * shakeStrength;
-
                 float rx = (float)(rng.NextDouble() * 2.0 - 1.0) * amp;
                 float ry = (float)(rng.NextDouble() * 2.0 - 1.0) * amp;
-
                 shakeTarget.anchoredPosition = baseAnchoredPos + new Vector2(rx, ry);
             }
 
@@ -83,14 +77,32 @@ public class DamageFeedback : MonoBehaviour
             yield return null;
         }
 
+        // Финальный гарантированный сброс
         if (shakeTarget != null)
         {
             shakeTarget.anchoredPosition = baseAnchoredPos;
             shakeTarget.localScale = baseScale;
         }
-
-        if (flashGraphic != null) flashGraphic.color = baseColor;
+        if (flashGraphic != null)
+            flashGraphic.color = baseColor;
 
         routine = null;
+    }
+
+    private void OnDisable()
+    {
+        // Если объект выключается (например, уничтожается), принудительно возвращаем цвет
+        if (flashGraphic != null)
+            flashGraphic.color = baseColor;
+        if (shakeTarget != null)
+        {
+            shakeTarget.localScale = baseScale;
+            shakeTarget.anchoredPosition = baseAnchoredPos;
+        }
+        if (routine != null)
+        {
+            StopCoroutine(routine);
+            routine = null;
+        }
     }
 }

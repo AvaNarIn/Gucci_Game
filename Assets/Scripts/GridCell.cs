@@ -137,7 +137,10 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem == null) return;
         if (damage <= 0) return;
 
-        GetComponent<DamageFeedback>()?.Play();
+        // Показываем урон на тексте стоимости предмета
+        currentItem.ShowDamageTemporarily(damage);
+        DamageFeedback fb = GetComponent<DamageFeedback>();
+        if (fb != null) fb.Play();
 
         currentHealth -= damage;
         if (currentHealth <= 0)

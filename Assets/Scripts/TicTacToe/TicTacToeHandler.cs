@@ -12,21 +12,22 @@ public class TicTacToeHandler : ItemHandler
     public override IEnumerator CountingScore_Coroutine()
     {
         ItemData[] gridState = gridManager.GetGridState();
+        GridCell[] cells = gridManager.GetCells();
         List<TicTacToeData> marks = new List<TicTacToeData>();
         List<int> markIndices = new List<int>();
+        List<Draggable> markDraggables = new List<Draggable>();
         int[] positions = new int[9];
+
         for (int i = 0; i < 9; i++)
         {
             if (gridState[i] is TicTacToeData mark)
             {
                 marks.Add(mark);
                 markIndices.Add(i);
+                markDraggables.Add(cells[i].currentItem);
                 positions[i] = marks.Count - 1;
             }
-            else
-            {
-                positions[i] = -1;
-            }
+            else positions[i] = -1;
         }
 
         int[][] lines = new int[][]
@@ -58,15 +59,13 @@ public class TicTacToeHandler : ItemHandler
             }
         }
 
-        yield return new WaitForSeconds(animationDuration); //ÇÀÃËÓØÊÀ ÏÎÄ ÀÍÈÌÀÖÈÞ
+        yield return new WaitForSeconds(animationDuration);
 
-
-        float totalScore = CalculateScore(marks, positions, winningLines, markIndices);
+        float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
         LastScore = totalScore;
-        Debug.Log($"Î÷êè çà êðåñòèêè-íîëèêè: {totalScore}");
     }
 
-    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines, List<int> markIndices)
+    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines, List<int> indices, List<Draggable> draggables)
     {
         int[] lineCount = new int[marks.Count];
         foreach (var line in winningLines)
@@ -85,9 +84,13 @@ public class TicTacToeHandler : ItemHandler
         {
             TicTacToeData mark = marks[i];
             float multiplier = Mathf.Pow(1.5f, lineCount[i]);
-            GridCell cell = cells[markIndices[i]];
+            GridCell cell = cells[indices[i]];
             float cellMult = cell.GetMultiplier(mark);
-            total += mark.score * multiplier * cellMult;
+            float pieceScore = mark.score * multiplier * cellMult;
+            total += pieceScore;
+
+            if (draggables[i] != null)
+                draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
 
         return total;

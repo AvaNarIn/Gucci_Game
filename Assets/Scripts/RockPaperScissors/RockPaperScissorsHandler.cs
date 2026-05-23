@@ -25,8 +25,10 @@ public class RockPaperScissorsHandler : ItemHandler
     public override IEnumerator CountingScore_Coroutine()
     {
         ItemData[] gridState = gridManager.GetGridState();
+        GridCell[] cells = gridManager.GetCells();
         Dictionary<int, RockPaperScissorsData> cellToItem = new Dictionary<int, RockPaperScissorsData>();
         List<int> indices = new List<int>();
+        List<Draggable> draggables = new List<Draggable>();
 
         for (int i = 0; i < gridState.Length; i++)
         {
@@ -34,15 +36,17 @@ public class RockPaperScissorsHandler : ItemHandler
             {
                 cellToItem.Add(i, rps);
                 indices.Add(i);
+                draggables.Add(cells[i].currentItem);
             }
         }
 
-        yield return new WaitForSeconds(animationDuration); //«ј√Ћ”Ў ј ƒЋя јЌ»ћј÷»»
+        yield return new WaitForSeconds(animationDuration);
 
         float totalScore = 0f;
 
-        foreach (int index in indices)
+        for (int idx = 0; idx < indices.Count; idx++)
         {
+            int index = indices[idx];
             RockPaperScissorsData current = cellToItem[index];
             int row = index / 3;
             int col = index % 3;
@@ -50,36 +54,31 @@ public class RockPaperScissorsHandler : ItemHandler
             int beatenNeighbours = 0;
 
             for (int dr = -1; dr <= 1; dr++)
-            {
                 for (int dc = -1; dc <= 1; dc++)
                 {
                     if (dr == 0 && dc == 0) continue;
-
                     int r = row + dr;
                     int c = col + dc;
+                    if (r < 0 || r >= 3 || c < 0 || c >= 3) continue;
 
-                    if (r >= 0 && r < 3 && c >= 0 && c < 3)
+                    int neighbourIndex = r * 3 + c;
+                    if (cellToItem.TryGetValue(neighbourIndex, out RockPaperScissorsData neighbour))
                     {
-                        int neighbourIndex = r * 3 + c;
-                        if (cellToItem.TryGetValue(neighbourIndex, out RockPaperScissorsData neighbour))
-                        {
-                            if (Beats(current.shape, neighbour.shape))
-                                beatenNeighbours++;
-                        }
+                        if (Beats(current.shape, neighbour.shape))
+                            beatenNeighbours++;
                     }
                 }
-            }
 
             float multiplier = Mathf.Pow(1.1f, beatenNeighbours);
-            GridCell cell = gridManager.GetCells()[index];
+            GridCell cell = cells[index];
             float cellMult = cell.GetMultiplier(current);
             float itemScore = current.score * multiplier * cellMult;
             totalScore += itemScore;
 
-            Debug.Log($"{current.shape} ({current.score}) побил {beatenNeighbours} соседей, " +
-                      $"множитель {multiplier:F4}, очки: {itemScore:F2}");
+            if (draggables[idx] != null)
+                draggables[idx].ShowScoreGain(Mathf.RoundToInt(itemScore));
         }
+
         LastScore = totalScore;
-        Debug.Log($"ќбщий счЄт камней-ножниц-бумаг: {totalScore}");
     }
 }

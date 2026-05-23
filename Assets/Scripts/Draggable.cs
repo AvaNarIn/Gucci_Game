@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +13,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public GridManager OwnerGridManager { get; private set; }
 
     [Header("Отображение стоимости")]
-    [SerializeField] private Text costText;   // назначьте дочерний Text в префабе
+    [SerializeField] private Text costText;
+    public Text CostText => costText;
+
+    private string originalText;
+    private Color originalColor;
+
+    private Coroutine textCoroutine;
 
     private Canvas canvas;
     private RectTransform rectTransform;
@@ -33,6 +40,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
         canvasGroup.blocksRaycasts = true;
+
+        if (costText != null)
+        {
+            originalText = costText.text;
+            originalColor = costText.color;
+        }
     }
 
     public void Initialize(GridManager owner) => OwnerGridManager = owner;
@@ -42,12 +55,50 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         itemData = data;
         GetComponent<Image>().sprite = data.icon;
 
-        // Устанавливаем текст стоимости, если поле назначено
         if (costText != null)
-            costText.text = data.score.ToString();
+        {
+            originalText = data.score.ToString();
+            originalColor = costText.color;
+            costText.text = originalText;
+            costText.color = originalColor;
+        }
     }
 
     public void SetDraggable(bool draggable) { isDraggable = draggable; }
+
+    /// <summary>Временный текст (урон, очки, бросок) с автоматическим восстановлением.</summary>
+    public void ShowTextTemporarily(string text, Color color, float duration)
+    {
+        if (costText == null) return;
+
+        if (textCoroutine != null)
+            StopCoroutine(textCoroutine);
+
+        costText.text = text;
+        costText.color = color;
+
+        textCoroutine = StartCoroutine(RestoreAfterDuration(duration));
+    }
+
+    private IEnumerator RestoreAfterDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        if (costText != null)
+        {
+            costText.text = originalText;
+            costText.color = originalColor;
+        }
+        textCoroutine = null;
+    }
+
+    public void ShowRollValue(int value) =>
+        ShowTextTemporarily(value.ToString(), Color.yellow, 0.5f);
+
+    public void ShowDamageTemporarily(int damage) =>
+        ShowTextTemporarily($"-{damage}", Color.red, 0.5f);
+
+    public void ShowScoreGain(int amount) =>
+        ShowTextTemporarily($"+{amount}", Color.green, 0.5f);
 
     public void OnBeginDrag(PointerEventData eventData)
     {
