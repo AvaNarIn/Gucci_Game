@@ -31,6 +31,8 @@ public class ChessHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration);
 
         float totalScore = CalculateScore(pieces, pieceIndices, pieceDraggables);
+        if (HasAbility("Базовое усиление (Шахматы)"))
+            totalScore *= 1.5f;
         LastScore = totalScore;
     }
 

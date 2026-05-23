@@ -400,7 +400,7 @@ public class MetaGameManager : MonoBehaviour
 
     public void OpenSettings()
     {
-        settingsPanel.SetActive(true);
+        settingsPanel.SetActive(!settingsPanel.activeSelf);
     }
 
     public void OnContinueClicked()

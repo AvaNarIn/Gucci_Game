@@ -62,6 +62,10 @@ public class TicTacToeHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration);
 
         float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
+
+        if (HasAbility("Базовое усиление (Крестики-Нолики)"))
+            totalScore *= 1.5f;
+
         LastScore = totalScore;
     }
 

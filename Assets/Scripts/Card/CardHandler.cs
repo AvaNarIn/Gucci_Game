@@ -55,6 +55,10 @@ public class CardHandler : ItemHandler
 
         // Подсчёт очков (передаём storedCombo)
         float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo);
+
+        if (HasAbility("Базовое усиление (Карты)"))
+            totalScore *= 1.5f;
+
         LastScore = totalScore;
         Debug.Log($"Очки за карты: {totalScore}");
     }

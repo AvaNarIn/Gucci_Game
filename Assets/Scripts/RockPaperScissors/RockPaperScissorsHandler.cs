@@ -78,7 +78,8 @@ public class RockPaperScissorsHandler : ItemHandler
             if (draggables[idx] != null)
                 draggables[idx].ShowScoreGain(Mathf.RoundToInt(itemScore));
         }
-
+        if (HasAbility("Базовое усиление (КНБ)"))
+            totalScore *= 1.5f;
         LastScore = totalScore;
     }
 }

@@ -34,14 +34,17 @@ public class DiceHandler : ItemHandler
         {
             int roll = Random.Range(1, (int)(diceList[i].numberOfFaces) + 1);
             rolledValues.Add(roll);
-
             if (diceDraggables[i] != null)
                 diceDraggables[i].ShowRollValue(roll);
         }
 
-        yield return new WaitForSeconds(0.6f); // даём время увидеть значения
+        yield return new WaitForSeconds(0.6f);
 
         float totalScore = CalculateScore(diceList, rolledValues, diceIndices, diceDraggables);
+
+        if (HasAbility("Базовое усиление (Кубики)"))
+            totalScore *= 1.5f;
+
         LastScore = totalScore;
     }
 
