@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2840d1555a2e5124c9d67471b1cb33e2, type: 3}
   m_Name: "\u041A\u043E\u043F\u044B\u0442\u043E"
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
-  characterName: "\u041F\u043B\u0430\u0432\u043D\u0438\u043A"
-  description: "\u0420\u044B\u0431\u0438\u0439"
+  characterName: "\u041A\u043E\u043F\u044B\u0442\u043E"
+  description: "\u041F\u0430\u0440\u043D\u043E\u043A\u043E\u043F\u044B\u0442\u043D\u043E\u0433\u043E"
   set: 3
   startingDeck:
-  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
-  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
   - {fileID: 11400000, guid: 710aae0f9a39963479890090824c353f, type: 2}
   - {fileID: 11400000, guid: 710aae0f9a39963479890090824c353f, type: 2}
   - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
   - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
-  - {fileID: 11400000, guid: 0a073550d7f6d654dbbb7ba0cee4d146, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
+  - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
   requiredCharacter: {fileID: 11400000, guid: e12ae42a6e497b84694770a5a0b669b2, type: 2}
   requiredLevel: 4

@@ -59,10 +59,14 @@ public class DeckViewUI : MonoBehaviour
 
     public void Refresh()
     {
+        // Удаляем старые карточки
         foreach (var go in spawnedCards)
-            Destroy(go);
+        {
+            if (go != null) Destroy(go);
+        }
         spawnedCards.Clear();
 
+        // Получаем текущую колоду (оставшиеся карты) и считаем количество каждой
         List<ItemData> drawPile = playerDeckManager.GetDrawPile();
         Dictionary<ItemData, int> drawCounts = new Dictionary<ItemData, int>();
         foreach (var card in drawPile)
@@ -73,42 +77,53 @@ public class DeckViewUI : MonoBehaviour
                 drawCounts[card] = 1;
         }
 
+        Debug.Log($"[DeckView] Refresh: всего в колоде {drawPile.Count} карт, уникальных {drawCounts.Keys.Count}");
+
+        // Группируем инвентарь игрока по типам
         var groupedInventory = PlayerInventory.cards.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
 
+        // Показываем каждый уникальный тип
         foreach (var kv in groupedInventory)
         {
             ItemData cardType = kv.Key;
-            int totalOwned = kv.Value;
+            int totalOwned = kv.Value; // сколько всего таких карт в инвентаре
             int available = drawCounts.ContainsKey(cardType) ? drawCounts[cardType] : 0;
 
             GameObject cardGO = Instantiate(cardPrefab, cardsContainer);
             spawnedCards.Add(cardGO);
 
+            // Находим текст и картинку, проверяя на null
             Text nameText = cardGO.GetComponentInChildren<Text>();
             if (nameText != null)
-                nameText.text = $"{cardType.displayName} (в колоде: {available})";
+                nameText.text = $"{available}/{totalOwned}";
 
             Image iconImage = cardGO.GetComponent<Image>();
-            if (iconImage != null)
+            if (iconImage != null && cardType.icon != null)
                 iconImage.sprite = cardType.icon;
 
             bool isAvailable = available > 0;
 
             CanvasGroup cg = cardGO.GetComponent<CanvasGroup>();
             if (cg == null) cg = cardGO.AddComponent<CanvasGroup>();
-            cg.alpha = isAvailable ? 1f : 0.4f;
-            cg.interactable = replaceMode && isAvailable;
+            if (cg != null)
+            {
+                cg.alpha = isAvailable ? 1f : 0.4f;
+                cg.interactable = replaceMode && isAvailable;
+            }
 
             if (replaceMode && isAvailable)
             {
                 Button btn = cardGO.GetComponent<Button>();
                 if (btn == null) btn = cardGO.AddComponent<Button>();
-                btn.onClick.RemoveAllListeners();
-                ItemData capturedType = cardType;
-                btn.onClick.AddListener(() =>
+                if (btn != null)
                 {
-                    onCardSelected?.Invoke(capturedType);
-                });
+                    btn.onClick.RemoveAllListeners();
+                    ItemData capturedCard = cardType;
+                    btn.onClick.AddListener(() =>
+                    {
+                        onCardSelected?.Invoke(capturedCard);
+                    });
+                }
             }
         }
     }

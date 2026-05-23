@@ -170,6 +170,17 @@ MonoBehaviour:
   allCharacters:
   - {fileID: 11400000, guid: eece652abd3e05e4fab86b3c55b4bee8, type: 2}
   - {fileID: 11400000, guid: 718e1dab2a6d893498fe93229d68241e, type: 2}
+  - {fileID: 11400000, guid: 000afb0b77fd3634fa15b1c2cf90ed82, type: 2}
+  - {fileID: 11400000, guid: 05a79fa558edbb54bb8bcb24b8da40f6, type: 2}
+  - {fileID: 11400000, guid: e38233522752dd04dafab9838cc4ac36, type: 2}
+  - {fileID: 11400000, guid: 0f85aed5eff732143950dc2eb99f5c7c, type: 2}
+  - {fileID: 11400000, guid: 96ef8fd1509bc37479ae2cf884bfeb7b, type: 2}
+  - {fileID: 11400000, guid: 031b5c3a4a83366479d2f269861d182d, type: 2}
+  - {fileID: 11400000, guid: 127fef5e8e8f8c443a1fc0f75bbfd320, type: 2}
+  - {fileID: 11400000, guid: e12ae42a6e497b84694770a5a0b669b2, type: 2}
+  - {fileID: 11400000, guid: fc13ed5f520f68e4585ef445a1588a27, type: 2}
+  - {fileID: 11400000, guid: 2ed9df037b9f9294495b4f1e6c8b294b, type: 2}
+  - {fileID: 11400000, guid: 2afe977cefd586842afb9bdd2b26a6a6, type: 2}
   characterButtonContainer: {fileID: 1354389692}
   characterButtonPrefab: {fileID: 3453781516953175739, guid: c9ed1bfee9be9804f93f3022176821b8, type: 3}
   levelSelectionPanel: {fileID: 1135201092}
