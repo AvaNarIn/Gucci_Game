@@ -2638,7 +2638,7 @@ MonoBehaviour:
   - {fileID: 2076719973}
   - {fileID: 2089467191}
   - {fileID: 1446389004}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
 --- !u!114 &308498417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2728,7 +2728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 308498416}
   handPanel: {fileID: 1146578038}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
   deck:
   - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
   - {fileID: 11400000, guid: 8971e7a3fb8e0b54d8895b397d3cae41, type: 2}
@@ -10207,7 +10207,7 @@ MonoBehaviour:
   - {fileID: 719790675}
   - {fileID: 817297419}
   - {fileID: 973094427}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
 --- !u!114 &1969181800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10297,9 +10297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckManager
   gridManager: {fileID: 1969181799}
   handPanel: {fileID: 888826171}
-  draggablePrefab: {fileID: 818224680557970022, guid: 7888650adb1e22148bc998264a0b20d9, type: 3}
-  deck:
-  - {fileID: 11400000, guid: 156056a9c16721b49a280435b1bb380b, type: 2}
+  draggablePrefab: {fileID: 4578154878324085857, guid: 754619b3fa429964183fe2aa5a9ab13e, type: 3}
+  deck: []
 --- !u!114 &1969181806
 MonoBehaviour:
   m_ObjectHideFlags: 0
