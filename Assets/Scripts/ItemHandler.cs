@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 
@@ -7,7 +7,7 @@ public abstract class ItemHandler : MonoBehaviour
     public float LastScore { get; protected set; }
     protected GridManager gridManager;
 
-    [Header("Набор предметов, который обрабатывает этот Handler")]
+    [Header("РќР°Р±РѕСЂ РїСЂРµРґРјРµС‚РѕРІ, РєРѕС‚РѕСЂС‹Р№ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ СЌС‚РѕС‚ Handler")]
     public ItemSet set;
 
     public AbilityDatabase abilityDatabase;
@@ -90,11 +90,11 @@ public abstract class ItemHandler : MonoBehaviour
 
     public static string GetAbilityCustomDescription(AbilityData ability)
     {
-        if (ability.abilityName == "Усиление комбинации")
+        if (ability.abilityName == "РЈСЃРёР»РµРЅРёРµ РєРѕРјР±РёРЅР°С†РёРё")
         {
             string combo = GetAbilityState(ability.abilityName) as string;
             if (!string.IsNullOrEmpty(combo))
-                return ability.description + "\nВыбранная комбинация: " + combo;
+                return ability.description + "\nР’С‹Р±СЂР°РЅРЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ: " + combo;
         }
         return ability.description;
     }

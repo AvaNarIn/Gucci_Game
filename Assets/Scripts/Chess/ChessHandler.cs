@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,29 +28,15 @@ public class ChessHandler : ItemHandler
             }
         }
 
-        // Проверка на "Защиту полководца": ферзь в центре?
-        bool queenInCenter = false;
-        if (HasAbility("Защита полководца"))
-        {
-            int centerIdx = 4;
-            if (centerIdx < gridState.Length && gridState[centerIdx] is ChessData centerChess &&
-                centerChess.TypeOfChessPiece == ChessData.TypesOfChessPiece.Queen)
-            {
-                queenInCenter = true;
-            }
-        }
-
         yield return new WaitForSeconds(animationDuration);
 
-        float totalScore = CalculateScore(pieces, pieceIndices, pieceDraggables, queenInCenter);
-
-        if (HasAbility("Базовое усиление (Шахматы)"))
+        float totalScore = CalculateScore(pieces, pieceIndices, pieceDraggables);
+        if (HasAbility("Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РЁР°С…РјР°С‚С‹)"))
             totalScore *= 1.5f;
-
         LastScore = totalScore;
     }
 
-    private float CalculateScore(List<ChessData> pieces, List<int> indices, List<Draggable> draggables, bool queenInCenter)
+    private float CalculateScore(List<ChessData> pieces, List<int> indices, List<Draggable> draggables)
     {
         if (pieces.Count == 0) return 0f;
 
@@ -83,38 +69,14 @@ public class ChessHandler : ItemHandler
             float multiplier = Mathf.Pow(1.25f, targets);
             GridCell cell = cells[indices[i]];
             float cellMult = cell.GetMultiplier(pieces[i]);
-
-            float pieceScore;
-            // Способность "Превращение пешки"
-            if (HasAbility("Превращение пешки") && pieces[i].TypeOfChessPiece == ChessData.TypesOfChessPiece.Pawn && rows[i] == 0)
-            {
-                pieceScore = GetTransformedPawnScore();
-            }
-            else
-            {
-                pieceScore = pieces[i].score * multiplier * cellMult;
-            }
-
+            float pieceScore = pieces[i].score * multiplier * cellMult;
             total += pieceScore;
 
             if (draggables[i] != null)
                 draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
 
-        // Способность "Защита полководца"
-        if (queenInCenter)
-            total *= 1.5f;
-
         return total;
-    }
-
-    private float GetTransformedPawnScore()
-    {
-        int r = Random.Range(0, 18); // 0..17
-        if (r < 9) return 1;         // 9/18
-        if (r < 14) return 3;        // 5/18
-        if (r < 17) return 5;        // 3/18
-        return 9;                     // 1/18
     }
 
     private List<Vector2Int> GetAttackedCells(
@@ -127,10 +89,10 @@ public class ChessHandler : ItemHandler
         for (int k = 0; k < allRows.Length; k++)
             allPositions.Add(new Vector2Int(allRows[k], allCols[k]));
 
-        // Направления для слона и ферзя
+        // РќР°РїСЂР°РІР»РµРЅРёСЏ РґР»СЏ СЃР»РѕРЅР° Рё С„РµСЂР·СЏ
         int[][] diagDirs = new int[][] { new int[] { 1, 1 }, new int[] { 1, -1 },
                                      new int[] { -1, 1 }, new int[] { -1, -1 } };
-        // Направления для ладьи и ферзя
+        // РќР°РїСЂР°РІР»РµРЅРёСЏ РґР»СЏ Р»Р°РґСЊРё Рё С„РµСЂР·СЏ
         int[][] rookDirs = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 },
                                      new int[] { 1, 0 }, new int[] { -1, 0 } };
 

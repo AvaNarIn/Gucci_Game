@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -52,7 +52,7 @@ public class GridManager : MonoBehaviour
     {
         if (data == null)
         {
-            Debug.LogError("[GridManager] Попытка создать предмет с data == null!");
+            Debug.LogError("[GridManager] РџРѕРїС‹С‚РєР° СЃРѕР·РґР°С‚СЊ РїСЂРµРґРјРµС‚ СЃ data == null!");
             return null;
         }
 

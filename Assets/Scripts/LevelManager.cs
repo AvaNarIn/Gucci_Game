@@ -1,11 +1,11 @@
-public static class LevelManager
+п»їpublic static class LevelManager
 {
     public static CharacterData selectedCharacter;
     public static int currentLevel = 1;            // 1..6
-    public static int bossesDefeatedThisRun = 0;  // сколько боссов побеждено в текущем забеге
-    public static int bossesRequired => currentLevel; // для прохождения уровня нужно победить столько боссов
-    public static bool levelCompleted = false;     // становится true при выполнении условия
-    public static bool runActive = false;          // идёт ли забег
+    public static int bossesDefeatedThisRun = 0;  // СЃРєРѕР»СЊРєРѕ Р±РѕСЃСЃРѕРІ РїРѕР±РµР¶РґРµРЅРѕ РІ С‚РµРєСѓС‰РµРј Р·Р°Р±РµРіРµ
+    public static int bossesRequired => currentLevel; // РґР»СЏ РїСЂРѕС…РѕР¶РґРµРЅРёСЏ СѓСЂРѕРІРЅСЏ РЅСѓР¶РЅРѕ РїРѕР±РµРґРёС‚СЊ СЃС‚РѕР»СЊРєРѕ Р±РѕСЃСЃРѕРІ
+    public static bool levelCompleted = false;     // СЃС‚Р°РЅРѕРІРёС‚СЃСЏ true РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё СѓСЃР»РѕРІРёСЏ
+    public static bool runActive = false;          // РёРґС‘С‚ Р»Рё Р·Р°Р±РµРі
 
     public static void StartRun(CharacterData character, int level)
     {
@@ -15,16 +15,16 @@ public static class LevelManager
         levelCompleted = false;
         runActive = true;
 
-        // Очищаем инвентарь и загружаем стартовую колоду
+        // РћС‡РёС‰Р°РµРј РёРЅРІРµРЅС‚Р°СЂСЊ Рё Р·Р°РіСЂСѓР¶Р°РµРј СЃС‚Р°СЂС‚РѕРІСѓСЋ РєРѕР»РѕРґСѓ
         PlayerInventory.cards.Clear();
         foreach (var card in character.startingDeck)
             PlayerInventory.cards.Add(card);
 
-        // Сбрасываем способности и баффы
+        // РЎР±СЂР°СЃС‹РІР°РµРј СЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё Рё Р±Р°С„С„С‹
         PlayerInventory.abilities.Clear();
         PlayerInventory.activeBuffs.Clear();
 
-        // Устанавливаем лимит способностей равным текущему уровню
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р»РёРјРёС‚ СЃРїРѕСЃРѕР±РЅРѕСЃС‚РµР№ СЂР°РІРЅС‹Рј С‚РµРєСѓС‰РµРјСѓ СѓСЂРѕРІРЅСЋ
         PlayerInventory.maxAbilities = currentLevel;
     }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -48,13 +48,13 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (cellLabel == null) return;
         string typeName = cellType switch
         {
-            CellType.Empty => "Ïóñòàÿ",
-            CellType.Universal => "Óíèâåðñàëüíàÿ",
-            CellType.Dice => "Êóáèêè",
-            CellType.Card => "Êàðòû",
-            CellType.Chess => "Øàõìàòû",
-            CellType.RockPaperScissors => "ÊÍÁ",
-            CellType.TicTacToe => "Êðåñòèêè-Íîëèêè",
+            CellType.Empty => "ÐŸÑƒÑÑ‚Ð°Ñ",
+            CellType.Universal => "Ð£Ð½Ð¸Ð²ÐµÑ€ÑÐ°Ð»ÑŒÐ½Ð°Ñ",
+            CellType.Dice => "ÐšÑƒÐ±Ð¸ÐºÐ¸",
+            CellType.Card => "ÐšÐ°Ñ€Ñ‚Ñ‹",
+            CellType.Chess => "Ð¨Ð°Ñ…Ð¼Ð°Ñ‚Ñ‹",
+            CellType.RockPaperScissors => "ÐšÐÐ‘",
+            CellType.TicTacToe => "ÐšÑ€ÐµÑÑ‚Ð¸ÐºÐ¸-ÐÐ¾Ð»Ð¸ÐºÐ¸",
             _ => cellType.ToString()
         };
         cellLabel.text = $"{typeName}\nx{multiplier:F1}";
@@ -121,6 +121,8 @@ public class GridCell : MonoBehaviour, IDropHandler
 
         OnItemPlaced?.Invoke(CellIndex, item);
         UpdateHealthBar();
+
+        item.PlayPlaceAnimation();
     }
 
     public void RemoveItem()
@@ -137,7 +139,7 @@ public class GridCell : MonoBehaviour, IDropHandler
         if (currentItem == null) return;
         if (damage <= 0) return;
 
-        // Ïîêàçûâàåì óðîí íà òåêñòå ñòîèìîñòè ïðåäìåòà
+        // ÐŸÐ¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ ÑƒÑ€Ð¾Ð½ Ð½Ð° Ñ‚ÐµÐºÑÑ‚Ðµ ÑÑ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚Ð¸ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚Ð°
         currentItem.ShowDamageTemporarily(damage);
         DamageFeedback fb = GetComponent<DamageFeedback>();
         if (fb != null) fb.Play();

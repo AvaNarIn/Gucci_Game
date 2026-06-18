@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,13 +35,13 @@ public class TemporaryBuffRewardUI : MonoBehaviour
             int index = i;
             if (offeredBuffsData[i] != null)
             {
-                string text = $"{offeredBuffsData[i].buffName} (длительность: {offeredDurations[i]})";
+                string text = $"{offeredBuffsData[i].buffName} (РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ: {offeredDurations[i]})";
                 choiceButtons[i].GetComponentInChildren<Text>().text = text;
                 choiceButtons[i].interactable = true;
             }
             else
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = "Нет доступных";
+                choiceButtons[i].GetComponentInChildren<Text>().text = "РќРµС‚ РґРѕСЃС‚СѓРїРЅС‹С…";
                 choiceButtons[i].interactable = false;
             }
             choiceButtons[i].onClick.RemoveAllListeners();

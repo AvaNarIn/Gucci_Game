@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 
 public class BotAbilityHandler : MonoBehaviour
@@ -9,9 +9,9 @@ public class BotAbilityHandler : MonoBehaviour
     {
         currentBossAbility = ability;
         if (ability != null)
-            Debug.Log($"Способность босса: {ability.abilityName}");
+            Debug.Log($"РЎРїРѕСЃРѕР±РЅРѕСЃС‚СЊ Р±РѕСЃСЃР°: {ability.abilityName}");
         else
-            Debug.Log("Обычный противник, способности нет");
+            Debug.Log("РћР±С‹С‡РЅС‹Р№ РїСЂРѕС‚РёРІРЅРёРє, СЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё РЅРµС‚");
     }
 
     public void OnBotTurnEnd(GridManager playerGridManager)
@@ -21,11 +21,11 @@ public class BotAbilityHandler : MonoBehaviour
         string abilityName = currentBossAbility.abilityName;
         System.Type targetType = null;
 
-        if (abilityName == "Анти-Карты") targetType = typeof(CardData);
-        else if (abilityName == "Анти-Кубики") targetType = typeof(DiceData);
-        else if (abilityName == "Анти-Шахматы") targetType = typeof(ChessData);
-        else if (abilityName == "Анти-КНБ") targetType = typeof(RockPaperScissorsData);
-        else if (abilityName == "Анти-Крестики-Нолики") targetType = typeof(TicTacToeData);
+        if (abilityName == "РђРЅС‚Рё-РљР°СЂС‚С‹") targetType = typeof(CardData);
+        else if (abilityName == "РђРЅС‚Рё-РљСѓР±РёРєРё") targetType = typeof(DiceData);
+        else if (abilityName == "РђРЅС‚Рё-РЁР°С…РјР°С‚С‹") targetType = typeof(ChessData);
+        else if (abilityName == "РђРЅС‚Рё-РљРќР‘") targetType = typeof(RockPaperScissorsData);
+        else if (abilityName == "РђРЅС‚Рё-РљСЂРµСЃС‚РёРєРё-РќРѕР»РёРєРё") targetType = typeof(TicTacToeData);
 
         if (targetType == null) return;
 
@@ -43,7 +43,7 @@ public class BotAbilityHandler : MonoBehaviour
         {
             GridCell target = targetCells[Random.Range(0, targetCells.Count)];
             target.TakeDamage(target.CurrentHealth);
-            Debug.Log($"[{abilityName}] Уничтожен предмет игрока в клетке {target.CellIndex}");
+            Debug.Log($"[{abilityName}] РЈРЅРёС‡С‚РѕР¶РµРЅ РїСЂРµРґРјРµС‚ РёРіСЂРѕРєР° РІ РєР»РµС‚РєРµ {target.CellIndex}");
         }
     }
 }

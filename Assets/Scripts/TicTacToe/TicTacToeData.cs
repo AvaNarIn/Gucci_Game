@@ -1,10 +1,10 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "New TicTacToe", menuName = "Items/TicTacToe Data")]
 public class TicTacToeData : ItemData
 {
-    [Header("Параметры Крестика-Нолика")]
+    [Header("РџР°СЂР°РјРµС‚СЂС‹ РљСЂРµСЃС‚РёРєР°-РќРѕР»РёРєР°")]
     public MarkTypes markType;
 
     public enum MarkTypes { Cross, Nought }

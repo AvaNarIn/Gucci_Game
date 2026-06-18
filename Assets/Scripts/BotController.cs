@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -277,7 +277,7 @@ public class BotController : MonoBehaviour
 
         while (remainingScore > 0 && (HasAnyEnemyCell(playerGridManager) || playerCharacter.IsAlive))
         {
-            // 1. Добивание персонажа, если хватает очков
+            // 1. Р”РѕР±РёРІР°РЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°, РµСЃР»Рё С…РІР°С‚Р°РµС‚ РѕС‡РєРѕРІ
             if (playerCharacter.IsAlive && remainingScore >= playerCharacter.CurrentHealth)
             {
                 int dmg = playerCharacter.CurrentHealth;
@@ -290,7 +290,7 @@ public class BotController : MonoBehaviour
 
             bool hasCells = HasAnyEnemyCell(playerGridManager);
 
-            // 2. Клеток нет — бьём персонажа
+            // 2. РљР»РµС‚РѕРє РЅРµС‚ вЂ” Р±СЊС‘Рј РїРµСЂСЃРѕРЅР°Р¶Р°
             if (!hasCells)
             {
                 if (playerCharacter.IsAlive)
@@ -304,7 +304,7 @@ public class BotController : MonoBehaviour
                 continue;
             }
 
-            // 3. Случайная атака персонажа
+            // 3. РЎР»СѓС‡Р°Р№РЅР°СЏ Р°С‚Р°РєР° РїРµСЂСЃРѕРЅР°Р¶Р°
             float faceChance = GetFaceHitChance(playerCharacter);
             bool attackFace = playerCharacter.IsAlive && Rng01() < faceChance;
 
@@ -318,11 +318,11 @@ public class BotController : MonoBehaviour
                 continue;
             }
 
-            // 4. Атака клетки (основной удар)
+            // 4. РђС‚Р°РєР° РєР»РµС‚РєРё (РѕСЃРЅРѕРІРЅРѕР№ СѓРґР°СЂ)
             GridCell target = ChooseBestEnemyCellToAttack(playerGridManager, remainingScore);
             if (target == null)
             {
-                // На всякий случай бьём персонажа, если нет целей
+                // РќР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ Р±СЊС‘Рј РїРµСЂСЃРѕРЅР°Р¶Р°, РµСЃР»Рё РЅРµС‚ С†РµР»РµР№
                 if (playerCharacter.IsAlive)
                 {
                     int dmg = Mathf.Min(remainingScore, playerCharacter.CurrentHealth);

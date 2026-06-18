@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +12,7 @@ public class AbilityRewardUI : MonoBehaviour
     private Action onComplete;
     private AbilitySlotsUI abilitySlotsUI;
     private int pendingReplaceIndex = -1;
-    private bool isReplacing = false;   // активен ли режим замены
+    private bool isReplacing = false;   // Р°РєС‚РёРІРµРЅ Р»Рё СЂРµР¶РёРј Р·Р°РјРµРЅС‹
 
     void Start()
     {
@@ -47,7 +47,7 @@ public class AbilityRewardUI : MonoBehaviour
             }
             else
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = "Нет доступных";
+                choiceButtons[i].GetComponentInChildren<Text>().text = "РќРµС‚ РґРѕСЃС‚СѓРїРЅС‹С…";
                 choiceButtons[i].interactable = false;
                 SetButtonColor(choiceButtons[i], Color.gray);
             }
@@ -68,14 +68,14 @@ public class AbilityRewardUI : MonoBehaviour
 
         if (PlayerInventory.abilities.Count < PlayerInventory.maxAbilities)
         {
-            // Есть свободный слот – просто добавляем
+            // Р•СЃС‚СЊ СЃРІРѕР±РѕРґРЅС‹Р№ СЃР»РѕС‚ вЂ“ РїСЂРѕСЃС‚Рѕ РґРѕР±Р°РІР»СЏРµРј
             PlayerInventory.AddAbility(offeredAbilities[idx]);
             abilitySlotsUI.UpdateSlots();
             Close();
         }
         else
         {
-            // Замена: подсвечиваем выбранную способность зелёным
+            // Р—Р°РјРµРЅР°: РїРѕРґСЃРІРµС‡РёРІР°РµРј РІС‹Р±СЂР°РЅРЅСѓСЋ СЃРїРѕСЃРѕР±РЅРѕСЃС‚СЊ Р·РµР»С‘РЅС‹Рј
             pendingReplaceIndex = idx;
             isReplacing = true;
             for (int i = 0; i < 3; i++)
@@ -86,14 +86,14 @@ public class AbilityRewardUI : MonoBehaviour
                     SetButtonColor(choiceButtons[i], Color.white);
             }
 
-            // Включаем режим замены на слотах (панель награды не скрываем)
+            // Р’РєР»СЋС‡Р°РµРј СЂРµР¶РёРј Р·Р°РјРµРЅС‹ РЅР° СЃР»РѕС‚Р°С… (РїР°РЅРµР»СЊ РЅР°РіСЂР°РґС‹ РЅРµ СЃРєСЂС‹РІР°РµРј)
             abilitySlotsUI.StartReplaceMode(OnReplaceConfirmed);
         }
     }
 
     void OnReplaceConfirmed(AbilityData oldAbility)
     {
-        // Замена произошла – завершаем награду
+        // Р—Р°РјРµРЅР° РїСЂРѕРёР·РѕС€Р»Р° вЂ“ Р·Р°РІРµСЂС€Р°РµРј РЅР°РіСЂР°РґСѓ
         if (pendingReplaceIndex >= 0 && offeredAbilities[pendingReplaceIndex] != null)
         {
             PlayerInventory.ReplaceAbility(oldAbility, offeredAbilities[pendingReplaceIndex]);

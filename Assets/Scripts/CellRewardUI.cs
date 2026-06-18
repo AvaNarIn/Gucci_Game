@@ -1,4 +1,4 @@
-using System;
+ο»Ώusing System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +25,7 @@ public class CellRewardUI : MonoBehaviour
         skipButton.onClick.AddListener(() => {
             GiveRandomBuffAndClose();
         });
-        // gameObject.SetActive(false); σαπΰν
+        // gameObject.SetActive(false); ΡƒΠ±Ρ€Π°Π½
     }
 
     public void Offer(ItemSet set1, ItemSet set2, Action onFinished)

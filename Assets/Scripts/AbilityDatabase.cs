@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AbilityDatabase", menuName = "Game/Ability Database")]
@@ -10,7 +10,7 @@ public class AbilityDatabase : ScriptableObject
     public void Init()
     {
         lookup = new Dictionary<ItemSet, List<AbilityData>>();
-        ItemSet[] sets = (ItemSet[])System.Enum.GetValues(typeof(ItemSet));   // явное приведение
+        ItemSet[] sets = (ItemSet[])System.Enum.GetValues(typeof(ItemSet));   // СЏРІРЅРѕРµ РїСЂРёРІРµРґРµРЅРёРµ
         foreach (var set in sets)
             lookup[set] = new List<AbilityData>();
         foreach (var a in allAbilities)

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public static class CellConstants
 {
@@ -17,7 +17,7 @@ public static class GameUtils
         if (value < 10)
             return Mathf.CeilToInt(value);
 
-        // 10–99: îêðóãëÿåì ââåðõ äî áëèæàéøåãî ÷èñëà, êðàòíîãî 5
+        // 10â€“99: Ð¾ÐºÑ€ÑƒÐ³Ð»ÑÐµÐ¼ Ð²Ð²ÐµÑ€Ñ… Ð´Ð¾ Ð±Ð»Ð¸Ð¶Ð°Ð¹ÑˆÐµÐ³Ð¾ Ñ‡Ð¸ÑÐ»Ð°, ÐºÑ€Ð°Ñ‚Ð½Ð¾Ð³Ð¾ 5
         if (value < 100)
         {
             int rounded = Mathf.CeilToInt(value / 5f) * 5;
@@ -26,10 +26,10 @@ public static class GameUtils
             return rounded;
         }
 
-        // 100 è áîëüøå: øàã çàâèñèò îò ïîðÿäêà ÷èñëà
+        // 100 Ð¸ Ð±Ð¾Ð»ÑŒÑˆÐµ: ÑˆÐ°Ð³ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ Ð¿Ð¾Ñ€ÑÐ´ÐºÐ° Ñ‡Ð¸ÑÐ»Ð°
         int digits = Mathf.FloorToInt(Mathf.Log10(value));
         int step = Mathf.RoundToInt(Mathf.Pow(10, digits - 1));
-        if (step < 10) step = 10;  // äëÿ 100–999 øàã = 10
+        if (step < 10) step = 10;  // Ð´Ð»Ñ 100â€“999 ÑˆÐ°Ð³ = 10
 
         int rounded2 = Mathf.CeilToInt(value / step) * step;
         if (rounded2 <= Mathf.FloorToInt(value))

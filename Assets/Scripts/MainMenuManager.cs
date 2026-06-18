@@ -1,20 +1,20 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [Header("Персонажи")]
+    [Header("РџРµСЂСЃРѕРЅР°Р¶Рё")]
     public CharacterData[] allCharacters;
     public Transform characterButtonContainer;
     public GameObject characterButtonPrefab;
 
-    [Header("Уровни")]
+    [Header("РЈСЂРѕРІРЅРё")]
     public GameObject levelSelectionPanel;
     public Transform levelButtonContainer;
     public GameObject levelButtonPrefab;
 
-    [Header("Прогресс")]
+    [Header("РџСЂРѕРіСЂРµСЃСЃ")]
     public Button resetProgressButton;
 
     private CharacterData selectedCharacter;
@@ -34,7 +34,7 @@ public class MainMenuManager : MonoBehaviour
 
     void PopulateCharacters()
     {
-        // Очищаем старые кнопки, не забывая отписаться от событий
+        // РћС‡РёС‰Р°РµРј СЃС‚Р°СЂС‹Рµ РєРЅРѕРїРєРё, РЅРµ Р·Р°Р±С‹РІР°СЏ РѕС‚РїРёСЃР°С‚СЊСЃСЏ РѕС‚ СЃРѕР±С‹С‚РёР№
         foreach (Transform child in characterButtonContainer)
         {
             if (child == null) continue;
@@ -62,7 +62,7 @@ public class MainMenuManager : MonoBehaviour
 
             if (unlocked)
             {
-                text.text = $"{character.characterName}\n(Ур. {maxLevel})\n{character.description}";
+                text.text = $"{character.characterName}\n(РЈСЂ. {maxLevel})\n{character.description}";
                 btn.interactable = true;
                 btn.onClick.AddListener(() => OnCharacterClicked(character));
             }
@@ -70,7 +70,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 string requirement = "";
                 if (character.requiredCharacter != null)
-                    requirement = $"Требуется: {character.requiredCharacter.characterName} ур.{character.requiredLevel}";
+                    requirement = $"РўСЂРµР±СѓРµС‚СЃСЏ: {character.requiredCharacter.characterName} СѓСЂ.{character.requiredLevel}";
                 text.text = $"{character.characterName}\n{requirement}\n{character.description}";
                 btn.interactable = false;
             }
@@ -87,7 +87,7 @@ public class MainMenuManager : MonoBehaviour
     {
         levelSelectionPanel.SetActive(true);
 
-        // Очищаем старые кнопки уровней с отпиской
+        // РћС‡РёС‰Р°РµРј СЃС‚Р°СЂС‹Рµ РєРЅРѕРїРєРё СѓСЂРѕРІРЅРµР№ СЃ РѕС‚РїРёСЃРєРѕР№
         foreach (Transform child in levelButtonContainer)
         {
             if (child == null) continue;
@@ -111,11 +111,11 @@ public class MainMenuManager : MonoBehaviour
                 continue;
             }
 
-            text.text = $"Уровень {currentLevel}";
+            text.text = $"РЈСЂРѕРІРµРЅСЊ {currentLevel}";
 
             if (level <= maxLevel)
             {
-                text.text += " (пройден)";
+                text.text += " (РїСЂРѕР№РґРµРЅ)";
                 btn.interactable = true;
             }
             else if (level == maxLevel + 1)
