@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ad92049d43a4ca4e8890f3e9b93a8f3, type: 3}
   m_Name: "8 \u043F"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  displayName: New Card
+  displayName: "8 \u043F\u0438\u043A\u0438"
   score: 3
   set: 1
   icon: {fileID: -4012248840765709296, guid: e8ab692a5a405724889523cffce0247c, type: 3}
