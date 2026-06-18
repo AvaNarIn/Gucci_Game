@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
   characterName: Mr. O
   description: OOOO
+  icon: {fileID: -5253080254573285194, guid: e3594f0b535d46740816a22a0eb473b8, type: 3}
   set: 4
   startingDeck:
   - {fileID: 11400000, guid: fa8f0ad6ccf1cb34389f06daf3a6ab12, type: 2}

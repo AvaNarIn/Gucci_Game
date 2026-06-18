@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
   characterName: "\u041A\u043E\u0447\u0435\u0432\u043D\u0438\u043A"
   description: "\u0421\u043B\u043E\u043D\u044B \u0438 \u041A\u043E\u043D\u0438"
+  icon: {fileID: 9201401717012027958, guid: 4e2ed5acc5d88ee48bf24a93e8f300d2, type: 3}
   set: 2
   startingDeck:
   - {fileID: 11400000, guid: dd5541ae877db674f811910c3b4189ad, type: 2}

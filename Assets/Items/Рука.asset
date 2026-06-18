@@ -15,6 +15,7 @@ MonoBehaviour:
   characterName: "\u0420\u0443\u043A\u0430"
   description: "\u0427\u0435\u043B\u043E\u0432\u0435\u0447\u0435\u0441\u043A\u0430\u044F,
     \u0443\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u0430\u044F"
+  icon: {fileID: 1178360157723899984, guid: b408b467533ee554eac9f5f735689766, type: 3}
   set: 3
   startingDeck:
   - {fileID: 11400000, guid: 0c97b1a3b76edfd48a87c8b2887e5819, type: 2}
