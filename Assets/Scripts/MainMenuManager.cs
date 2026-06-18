@@ -49,6 +49,8 @@ public class MainMenuManager : MonoBehaviour
             Text text = btnGO.GetComponentInChildren<Text>();
             Button btn = btnGO.GetComponent<Button>();
 
+            if (character.icon != null) btnGO.GetComponent<Image>().sprite = character.icon;
+
             if (btn == null || text == null)
             {
                 Debug.LogError("CharacterButtonPrefab must have a Button and a Text component.");

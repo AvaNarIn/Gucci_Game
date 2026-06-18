@@ -187,11 +187,7 @@ MonoBehaviour:
   levelButtonContainer: {fileID: 92302013}
   levelButtonPrefab: {fileID: 3453781516953175739, guid: 751b857f8bffb4043a9a3b820ced0045, type: 3}
   resetProgressButton: {fileID: 2103306183}
-<<<<<<< HEAD
   TrainingImage: {fileID: 1110006430}
-=======
-  TrainingImage: {fileID: 0}
->>>>>>> 42b716588feaaaae2126136fde3b4fb6e141ab5d
 --- !u!1 &92302012
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +420,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
 --- !u!1 &389288579
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,15 +458,11 @@ RectTransform:
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &389288581
-=======
---- !u!114 &379892548
->>>>>>> 42b716588feaaaae2126136fde3b4fb6e141ab5d
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
   m_GameObject: {fileID: 389288579}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -508,7 +499,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389288579}
   m_CullTransparentMesh: 1
-=======
+--- !u!114 &379892548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 379892544}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -547,7 +543,7 @@ CanvasRenderer:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
->>>>>>> 42b716588feaaaae2126136fde3b4fb6e141ab5d
+
 --- !u!1 &410146893
 GameObject:
   m_ObjectHideFlags: 0
