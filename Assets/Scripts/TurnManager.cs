@@ -70,9 +70,9 @@ public class TurnManager : MonoBehaviour
         int bonusMana = 0;
         foreach (var buff in PlayerInventory.activeBuffs)
         {
-            if (buff.data.buffName == "ƒополнительна€ мана")
+            if (buff.data.buffName == "+2 маны в начале бо€")
                 bonusMana += 2;
-            else if (buff.data.buffName == "ƒополнительна€ мана II")
+            else if (buff.data.buffName == "+3 маны в начале бо€")
                 bonusMana += 3;
         }
         playerMana += bonusMana;
@@ -140,10 +140,12 @@ public class TurnManager : MonoBehaviour
     {
         int extra = 0;
         foreach (var buff in PlayerInventory.activeBuffs)
-            if (buff.data.buffName == "ћана в ход")
+            if (buff.data.buffName == "+1 мана каждый ход")
                 extra += 1;
+            else if (buff.data.buffName == "+2 маны каждый ход")
+                extra += 2;
         if (extra > 0)
-            AddPlayerMana(extra);
+                AddPlayerMana(extra);
     }
 
     private void SubscribeToEnemyDraggables()
