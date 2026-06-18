@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: BuffDatabase
   m_EditorClassIdentifier: Assembly-CSharp::TemporaryBuffDatabase
   allBuffs:
-  - {fileID: 11400000, guid: 6620abe9db248454c8de297b70e89177, type: 2}
-  - {fileID: 11400000, guid: c71693bfeb3402048a1e0ce458c4f941, type: 2}
-  - {fileID: 11400000, guid: 205dba32edff22747ba5480fe2524ecd, type: 2}
-  - {fileID: 11400000, guid: d5634ad916c0efb40a52f4445f9ed113, type: 2}
-  - {fileID: 11400000, guid: c3a58bba9352dd9499f2239a7c49f5ec, type: 2}
+  - {fileID: 11400000, guid: fe031e47c2a737542ba5fa9745b96772, type: 2}
+  - {fileID: 11400000, guid: a17ee5be4adfe6b468656a0e2372263f, type: 2}
+  - {fileID: 11400000, guid: 545a4b1dd9b0e2f4b9bd4969662bce0d, type: 2}
+  - {fileID: 11400000, guid: 6105fc71ef2f1554c99df8347b677a10, type: 2}

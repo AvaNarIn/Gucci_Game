@@ -1,9 +1,9 @@
-using UnityEngine;
+п»їusing UnityEngine;
 public enum ItemSet { Dice, Card, Chess, RockPaperScissors, TicTacToe }
 [CreateAssetMenu(fileName = "New Item Data", menuName = "Game/Item Data")]
 public class ItemData : ScriptableObject
 {
-    [Header("Общие данные")]
+    [Header("РћР±С‰РёРµ РґР°РЅРЅС‹Рµ")]
     public string displayName;
     public int score;
     public ItemSet set;

@@ -32,14 +32,14 @@ public class TicTacToeHandler : ItemHandler
 
         int[][] lines = new int[][]
         {
-            new int[] {0,1,2}, // верхняя строка
-            new int[] {3,4,5}, // средняя строка
-            new int[] {6,7,8}, // нижняя строка
-            new int[] {0,3,6}, // левый столбец
-            new int[] {1,4,7}, // средний столбец
-            new int[] {2,5,8}, // правый столбец
-            new int[] {0,4,8}, // главная диагональ
-            new int[] {2,4,6}  // побочная диагональ
+            new int[] {0,1,2},
+            new int[] {3,4,5},
+            new int[] {6,7,8},
+            new int[] {0,3,6},
+            new int[] {1,4,7},
+            new int[] {2,5,8},
+            new int[] {0,4,8},
+            new int[] {2,4,6}
         };
 
         List<int[]> winningLines = new List<int[]>();
@@ -59,21 +59,6 @@ public class TicTacToeHandler : ItemHandler
             }
         }
 
-        yield return new WaitForSeconds(animationDuration);
-
-        float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
-
-        string abilityName = "Базовое усиление (Крестики-Нолики)";
-        AbilityData boostAbility = GetAbilityByName(abilityName);
-
-        if (HasAbility("Базовое усиление (Крестики-Нолики)"))
-            totalScore *= 1.5f;
-
-        LastScore = totalScore;
-    }
-
-    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines, List<int> indices, List<Draggable> draggables)
-    {
         int[] lineCount = new int[marks.Count];
         foreach (var line in winningLines)
         {
@@ -85,6 +70,67 @@ public class TicTacToeHandler : ItemHandler
             lineCount[m2]++;
         }
 
+        yield return new WaitForSeconds(animationDuration);
+
+        float totalScore = CalculateScore(marks, positions, lineCount, markIndices, markDraggables);
+
+        // Базовая способность
+        if (HasAbility("Базовое усиление (Крестики-Нолики)"))
+            totalScore *= 1.5f;
+
+        // Новые способности
+        if (HasAbility("Диагональное усиление"))
+        {
+            int centerIdx = positions[4]; // индекс в marks для центральной клетки
+            if (centerIdx >= 0 && marks[centerIdx].markType == TicTacToeData.MarkTypes.Cross)
+            {
+                float sum = 0f;
+                int[] diagIndices = { 0, 2, 6, 8 };
+                foreach (int cellIdx in diagIndices)
+                {
+                    int mIdx = positions[cellIdx];
+                    if (mIdx >= 0)
+                    {
+                        // Используем GetPieceScore для учёта клетки и линий
+                        sum += GetPieceScore(marks[mIdx], cellIdx, lineCount[mIdx]);
+                    }
+                }
+                totalScore += sum * 0.5f;
+            }
+        }
+
+        if (HasAbility("Прямое усиление"))
+        {
+            int centerIdx = positions[4];
+            if (centerIdx >= 0 && marks[centerIdx].markType == TicTacToeData.MarkTypes.Nought)
+            {
+                float sum = 0f;
+                int[] straightIndices = { 1, 3, 5, 7 };
+                foreach (int cellIdx in straightIndices)
+                {
+                    int mIdx = positions[cellIdx];
+                    if (mIdx >= 0)
+                    {
+                        sum += GetPieceScore(marks[mIdx], cellIdx, lineCount[mIdx]);
+                    }
+                }
+                totalScore += sum * 0.5f;
+            }
+        }
+
+        LastScore = totalScore;
+    }
+
+    private float GetPieceScore(TicTacToeData mark, int cellIndex, int lineCount)
+    {
+        float multiplier = Mathf.Pow(1.5f, lineCount);
+        GridCell cell = gridManager.GetCells()[cellIndex];
+        float cellMult = cell.GetMultiplier(mark);
+        return mark.score * multiplier * cellMult;
+    }
+
+    private float CalculateScore(List<TicTacToeData> marks, int[] positions, int[] lineCount, List<int> indices, List<Draggable> draggables)
+    {
         float total = 0f;
         GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < marks.Count; i++)
@@ -99,7 +145,6 @@ public class TicTacToeHandler : ItemHandler
             if (draggables[i] != null)
                 draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
-
         return total;
     }
 }

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MetaGameManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class MetaGameManager : MonoBehaviour
     public AbilitySlotsUI abilitySlotsUI;
     public Button openDeckButton;
     public Text deckCountText;
+    public Image deckImage;
 
     public GameObject levelCompletePanel;
     public Button continueButton;
@@ -84,6 +86,8 @@ public class MetaGameManager : MonoBehaviour
             SceneManager.LoadScene("MainMenu");
             return;
         }
+
+        if (LevelManager.selectedCharacter.icon != null) deckImage.sprite = LevelManager.selectedCharacter.icon;
 
         enemiesDefeated = 0;
         currentEnemyHealth = 30;

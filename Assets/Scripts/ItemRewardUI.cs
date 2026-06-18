@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +17,7 @@ public class ItemRewardUI : MonoBehaviour
         skipButton.onClick.AddListener(() => {
             GiveRandomBuffAndClose();
         });
-        // gameObject.SetActive(false); убран
+        // gameObject.SetActive(false); СѓР±СЂР°РЅ
     }
 
     public void Init(DeckViewUI deckViewUI, DeckManager deckManager)
@@ -47,7 +47,7 @@ public class ItemRewardUI : MonoBehaviour
             }
             else
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = "Нет доступных";
+                choiceButtons[i].GetComponentInChildren<Text>().text = "РќРµС‚ РґРѕСЃС‚СѓРїРЅС‹С…";
                 choiceButtons[i].interactable = false;
             }
             choiceButtons[i].onClick.RemoveAllListeners();

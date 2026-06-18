@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2840d1555a2e5124c9d67471b1cb33e2, type: 3}
   m_Name: "\u0420\u0435\u0448\u043A\u0430"
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
-  characterName: "\u0424\u043E\u0440\u0442\u0443\u043D\u0430"
+  characterName: "\u0420\u0435\u0448\u043A\u0430"
   description: "\u0411\u0440\u043E\u0441\u0438\u0442\u044C \u0436\u0440\u0435\u0431\u0438\u0439?"
   set: 0
   startingDeck:

@@ -1,10 +1,10 @@
-using UnityEngine;
+п»їusing UnityEngine;
 
 [CreateAssetMenu(fileName = "New Chess", menuName = "Items/Chess Data")]
 
 public class ChessData : ItemData
 {
-    [Header("Параметры фигуры")]
+    [Header("РџР°СЂР°РјРµС‚СЂС‹ С„РёРіСѓСЂС‹")]
     public TypesOfChessPiece TypeOfChessPiece;
 
     public enum TypesOfChessPiece { Pawn, Knight, Bishop, Rook, Queen, King}

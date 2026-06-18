@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 
 public static class PlayerInventory
 {
     public static List<ItemData> cards = new List<ItemData>();
     public static List<AbilityData> abilities = new List<AbilityData>();
     public static List<BuffInstance> activeBuffs = new List<BuffInstance>();
-    public static int maxAbilities = 1;   // будет меняться LevelManager
+    public static int maxAbilities = 1;   // Р±СѓРґРµС‚ РјРµРЅСЏС‚СЊСЃСЏ LevelManager
 
     public static bool AddCard(ItemData card)
     {

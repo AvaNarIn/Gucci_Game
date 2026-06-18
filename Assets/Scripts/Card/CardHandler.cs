@@ -30,6 +30,16 @@ public class CardHandler : ItemHandler
             }
         }
 
+        // Подсчитываем количество предметов других наборов на поле
+        int chessCount = 0, tttCount = 0, rpsCount = 0, diceCount = 0;
+        foreach (var item in gridState)
+        {
+            if (item is ChessData) chessCount++;
+            else if (item is TicTacToeData) tttCount++;
+            else if (item is RockPaperScissorsData) rpsCount++;
+            else if (item is DiceData) diceCount++;
+        }
+
         yield return new WaitForSeconds(animationDuration);
 
         // === Обработка способности "Усиление комбинации" ===
@@ -51,20 +61,18 @@ public class CardHandler : ItemHandler
         {
             RemoveAbilityState(abilityName);
         }
-        // Если boostAbility == null – такой способности вообще нет в базе, ничего не делаем
 
-        // Подсчёт очков (передаём storedCombo)
-        float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo);
+        float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo, chessCount, tttCount, rpsCount, diceCount);
 
-        abilityName = "Базовое усиление (Карты)";
-        boostAbility = GetAbilityByName(abilityName);
-        if (boostAbility != null) totalScore *= 1.5f;
+        if (HasAbility("Базовое усиление (Карты)"))
+            totalScore *= 1.5f;
 
         LastScore = totalScore;
         Debug.Log($"Очки за карты: {totalScore}");
     }
 
-    private float CalculateScore(List<CardData> cards, List<int> cardIndices, List<Draggable> draggables, string storedCombo)
+    private float CalculateScore(List<CardData> cards, List<int> cardIndices, List<Draggable> draggables,
+        string storedCombo, int chessCount, int tttCount, int rpsCount, int diceCount)
     {
         if (cards.Count == 0) return 0;
 
@@ -109,6 +117,22 @@ public class CardHandler : ItemHandler
             float cellMult = cell.GetMultiplier(card);
             float comboMult = bestSet.Contains(card) ? effectiveMultiplier : 1f;
             float pieceScore = card.score * comboMult * cellMult;
+
+            // Новые способности
+            if (HasAbility("Усиление Пик") && card.suit == CardData.Suits.Spades)
+                pieceScore *= Mathf.Pow(1.5f, chessCount);
+            if (HasAbility("Усиление Треф") && card.suit == CardData.Suits.Clubs)
+                pieceScore *= Mathf.Pow(1.5f, tttCount);
+            if (HasAbility("Усиление Черви") && card.suit == CardData.Suits.Hearts)
+                pieceScore *= Mathf.Pow(1.5f, rpsCount);
+            if (HasAbility("Усиление Буби") && card.suit == CardData.Suits.Diamonds)
+                pieceScore *= Mathf.Pow(1.5f, diceCount);
+
+            if (HasAbility("Усиление чисел") && IsNumericCard(card.value))
+                pieceScore *= 1.5f;
+            if (HasAbility("Усиление лиц") && IsFaceCard(card.value))
+                pieceScore *= 1.5f;
+
             total += pieceScore;
 
             if (draggables[i] != null)
@@ -116,6 +140,16 @@ public class CardHandler : ItemHandler
         }
 
         return total;
+    }
+
+    private bool IsNumericCard(CardData.Values value)
+    {
+        return value >= CardData.Values.Six && value <= CardData.Values.Ten;
+    }
+
+    private bool IsFaceCard(CardData.Values value)
+    {
+        return value >= CardData.Values.Jack && value <= CardData.Values.Ace;
     }
 
     private string GetCurrentComboName(HashSet<CardData> bestSet, List<CardData> cards)
