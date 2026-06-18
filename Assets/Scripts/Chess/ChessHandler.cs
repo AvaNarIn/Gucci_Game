@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,7 +31,7 @@ public class ChessHandler : ItemHandler
         yield return new WaitForSeconds(animationDuration);
 
         float totalScore = CalculateScore(pieces, pieceIndices, pieceDraggables);
-        if (HasAbility("Базовое усиление (Шахматы)"))
+        if (HasAbility("Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РЁР°С…РјР°С‚С‹)"))
             totalScore *= 1.5f;
         LastScore = totalScore;
     }
@@ -89,10 +89,10 @@ public class ChessHandler : ItemHandler
         for (int k = 0; k < allRows.Length; k++)
             allPositions.Add(new Vector2Int(allRows[k], allCols[k]));
 
-        // Направления для слона и ферзя
+        // РќР°РїСЂР°РІР»РµРЅРёСЏ РґР»СЏ СЃР»РѕРЅР° Рё С„РµСЂР·СЏ
         int[][] diagDirs = new int[][] { new int[] { 1, 1 }, new int[] { 1, -1 },
                                      new int[] { -1, 1 }, new int[] { -1, -1 } };
-        // Направления для ладьи и ферзя
+        // РќР°РїСЂР°РІР»РµРЅРёСЏ РґР»СЏ Р»Р°РґСЊРё Рё С„РµСЂР·СЏ
         int[][] rookDirs = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 },
                                      new int[] { 1, 0 }, new int[] { -1, 0 } };
 

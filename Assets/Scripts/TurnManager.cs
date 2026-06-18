@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -70,9 +70,9 @@ public class TurnManager : MonoBehaviour
         int bonusMana = 0;
         foreach (var buff in PlayerInventory.activeBuffs)
         {
-            if (buff.data.buffName == "Дополнительная мана")
+            if (buff.data.buffName == "Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РјР°РЅР°")
                 bonusMana += 2;
-            else if (buff.data.buffName == "Дополнительная мана II")
+            else if (buff.data.buffName == "Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РјР°РЅР° II")
                 bonusMana += 3;
         }
         playerMana += bonusMana;
@@ -122,7 +122,7 @@ public class TurnManager : MonoBehaviour
                     AddPlayerMana(5);
                 AddTurnMana();
                 firstPlayerTurn = false;
-                actionButtonText.text = "Завершить ход";
+                actionButtonText.text = "Р—Р°РІРµСЂС€РёС‚СЊ С…РѕРґ";
                 actionButton.interactable = true;
                 SubscribeToEnemyDraggables();
                 break;
@@ -140,7 +140,7 @@ public class TurnManager : MonoBehaviour
     {
         int extra = 0;
         foreach (var buff in PlayerInventory.activeBuffs)
-            if (buff.data.buffName == "Мана в ход")
+            if (buff.data.buffName == "РњР°РЅР° РІ С…РѕРґ")
                 extra += 1;
         if (extra > 0)
             AddPlayerMana(extra);
@@ -234,7 +234,7 @@ public class TurnManager : MonoBehaviour
     public void UpdateBotScoreDisplay(int currentScore)
     {
         botScore = currentScore;
-        botScoreText.text = $"Очки бота: {GameUtils.FormatNumber(botScore)}";
+        botScoreText.text = $"РћС‡РєРё Р±РѕС‚Р°: {GameUtils.FormatNumber(botScore)}";
     }
 
     private void StartBotTurn()
@@ -314,15 +314,15 @@ public class TurnManager : MonoBehaviour
         if (buffsText == null) return;
         string text = "";
         foreach (var buff in PlayerInventory.activeBuffs)
-            text += $"{buff.data.buffName} (боёв: {buff.remainingBattles})\n";
+            text += $"{buff.data.buffName} (Р±РѕС‘РІ: {buff.remainingBattles})\n";
         buffsText.text = text;
     }
 
     private void UpdateUI()
     {
-        playerScoreText.text = $"Очки: {GameUtils.FormatNumber(playerScore)}";
-        botScoreText.text = $"Очки бота: {GameUtils.FormatNumber(botScore)}";
-        if (playerManaText != null) playerManaText.text = $"Мана: {GameUtils.FormatNumber(playerMana)}";
-        if (botManaText != null) botManaText.text = $"Мана: {GameUtils.FormatNumber(botMana)}";
+        playerScoreText.text = $"РћС‡РєРё: {GameUtils.FormatNumber(playerScore)}";
+        botScoreText.text = $"РћС‡РєРё Р±РѕС‚Р°: {GameUtils.FormatNumber(botScore)}";
+        if (playerManaText != null) playerManaText.text = $"РњР°РЅР°: {GameUtils.FormatNumber(playerMana)}";
+        if (botManaText != null) botManaText.text = $"РњР°РЅР°: {GameUtils.FormatNumber(botMana)}";
     }
 }

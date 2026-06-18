@@ -1,9 +1,9 @@
-using UnityEngine;
+п»їusing UnityEngine;
 
 [CreateAssetMenu(fileName = "New Card", menuName = "Items/Card Data")]
 public class CardData : ItemData
 {
-    [Header("Параметры карты")]
+    [Header("РџР°СЂР°РјРµС‚СЂС‹ РєР°СЂС‚С‹")]
     public Values value;
     public Suits suit;
 

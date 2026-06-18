@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewCharacter", menuName = "Game/Character Data")]
@@ -9,7 +9,7 @@ public class CharacterData : ScriptableObject
     public ItemSet set;
     public List<ItemData> startingDeck;
 
-    [Header("Условие разблокировки")]
-    public CharacterData requiredCharacter;   // если null – доступен сразу
+    [Header("РЈСЃР»РѕРІРёРµ СЂР°Р·Р±Р»РѕРєРёСЂРѕРІРєРё")]
+    public CharacterData requiredCharacter;   // РµСЃР»Рё null вЂ“ РґРѕСЃС‚СѓРїРµРЅ СЃСЂР°Р·Сѓ
     public int requiredLevel;
 }

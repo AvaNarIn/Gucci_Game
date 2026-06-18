@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,7 +30,7 @@ public class DamageFeedback : MonoBehaviour
         baseScale = shakeTarget != null ? shakeTarget.localScale : transform.localScale;
 
         if (flashGraphic != null)
-            baseColor = flashGraphic.color;   // запоминаем исходный цвет
+            baseColor = flashGraphic.color;   // Р·Р°РїРѕРјРёРЅР°РµРј РёСЃС…РѕРґРЅС‹Р№ С†РІРµС‚
     }
 
     public void Play()
@@ -77,7 +77,7 @@ public class DamageFeedback : MonoBehaviour
             yield return null;
         }
 
-        // Финальный гарантированный сброс
+        // Р¤РёРЅР°Р»СЊРЅС‹Р№ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅС‹Р№ СЃР±СЂРѕСЃ
         if (shakeTarget != null)
         {
             shakeTarget.anchoredPosition = baseAnchoredPos;
@@ -91,7 +91,7 @@ public class DamageFeedback : MonoBehaviour
 
     private void OnDisable()
     {
-        // Если объект выключается (например, уничтожается), принудительно возвращаем цвет
+        // Р•СЃР»Рё РѕР±СЉРµРєС‚ РІС‹РєР»СЋС‡Р°РµС‚СЃСЏ (РЅР°РїСЂРёРјРµСЂ, СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ), РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ РІРѕР·РІСЂР°С‰Р°РµРј С†РІРµС‚
         if (flashGraphic != null)
             flashGraphic.color = baseColor;
         if (shakeTarget != null)

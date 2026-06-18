@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,14 +32,14 @@ public class TicTacToeHandler : ItemHandler
 
         int[][] lines = new int[][]
         {
-            new int[] {0,1,2}, // верхняя строка
-            new int[] {3,4,5}, // средняя строка
-            new int[] {6,7,8}, // нижняя строка
-            new int[] {0,3,6}, // левый столбец
-            new int[] {1,4,7}, // средний столбец
-            new int[] {2,5,8}, // правый столбец
-            new int[] {0,4,8}, // главная диагональ
-            new int[] {2,4,6}  // побочная диагональ
+            new int[] {0,1,2}, // РІРµСЂС…РЅСЏСЏ СЃС‚СЂРѕРєР°
+            new int[] {3,4,5}, // СЃСЂРµРґРЅСЏСЏ СЃС‚СЂРѕРєР°
+            new int[] {6,7,8}, // РЅРёР¶РЅСЏСЏ СЃС‚СЂРѕРєР°
+            new int[] {0,3,6}, // Р»РµРІС‹Р№ СЃС‚РѕР»Р±РµС†
+            new int[] {1,4,7}, // СЃСЂРµРґРЅРёР№ СЃС‚РѕР»Р±РµС†
+            new int[] {2,5,8}, // РїСЂР°РІС‹Р№ СЃС‚РѕР»Р±РµС†
+            new int[] {0,4,8}, // РіР»Р°РІРЅР°СЏ РґРёР°РіРѕРЅР°Р»СЊ
+            new int[] {2,4,6}  // РїРѕР±РѕС‡РЅР°СЏ РґРёР°РіРѕРЅР°Р»СЊ
         };
 
         List<int[]> winningLines = new List<int[]>();
@@ -63,10 +63,10 @@ public class TicTacToeHandler : ItemHandler
 
         float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
 
-        string abilityName = "Базовое усиление (Крестики-Нолики)";
+        string abilityName = "Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РљСЂРµСЃС‚РёРєРё-РќРѕР»РёРєРё)";
         AbilityData boostAbility = GetAbilityByName(abilityName);
 
-        if (HasAbility("Базовое усиление (Крестики-Нолики)"))
+        if (HasAbility("Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РљСЂРµСЃС‚РёРєРё-РќРѕР»РёРєРё)"))
             totalScore *= 1.5f;
 
         LastScore = totalScore;

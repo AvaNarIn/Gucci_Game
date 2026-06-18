@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -35,12 +35,12 @@ public class MetaGameManager : MonoBehaviour
     private int enemiesDefeated;
     private int currentEnemyHealth = 30;
 
-    public GameObject settingsPanel;   // панель с кнопкой "Выйти в меню"
-    public Button exitToMenuButton;    // кнопка внутри settingsPanel
+    public GameObject settingsPanel;   // РїР°РЅРµР»СЊ СЃ РєРЅРѕРїРєРѕР№ "Р’С‹Р№С‚Рё РІ РјРµРЅСЋ"
+    public Button exitToMenuButton;    // РєРЅРѕРїРєР° РІРЅСѓС‚СЂРё settingsPanel
 
     public GridManager playerGridManager;
 
-    // Таблица здоровья для 18 боссов (6 уровней * 3 босса)
+    // РўР°Р±Р»РёС†Р° Р·РґРѕСЂРѕРІСЊСЏ РґР»СЏ 18 Р±РѕСЃСЃРѕРІ (6 СѓСЂРѕРІРЅРµР№ * 3 Р±РѕСЃСЃР°)
     private int[] enemyHealthTable = new int[]
     {
         30, 40, 60, 80, 110, 170, 220, 280, 430, 540,
@@ -69,7 +69,7 @@ public class MetaGameManager : MonoBehaviour
         abilityRewardUI.Init(abilitySlotsUI);
         abilitySlotsUI.abilityDatabase = abilityDatabase;
 
-        // Инициализация способностей для обработчиков игрока
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРїРѕСЃРѕР±РЅРѕСЃС‚РµР№ РґР»СЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РёРіСЂРѕРєР°
         foreach (var handler in playerGridManager.GetComponents<ItemHandler>())
         {
             handler.abilityDatabase = abilityDatabase;
@@ -93,7 +93,7 @@ public class MetaGameManager : MonoBehaviour
     public void RefreshDeckButtonText()
     {
         if (deckCountText != null && playerDeckManager != null)
-            deckCountText.text = $"Колода ({GameUtils.FormatNumber(playerDeckManager.GetDrawPile().Count)})";
+            deckCountText.text = $"РљРѕР»РѕРґР° ({GameUtils.FormatNumber(playerDeckManager.GetDrawPile().Count)})";
     }
 
     public void OpenDeck()
@@ -126,7 +126,7 @@ public class MetaGameManager : MonoBehaviour
         if (isBoss)
         {
             BossAbilityData bossAbility = bossAbilityDatabase.GetRandomAbility();
-            enemy.abilityDescription = bossAbility != null ? bossAbility.abilityName : "Неизвестная способность";
+            enemy.abilityDescription = bossAbility != null ? bossAbility.abilityName : "РќРµРёР·РІРµСЃС‚РЅР°СЏ СЃРїРѕСЃРѕР±РЅРѕСЃС‚СЊ";
             enemy.set1 = sets[Random.Range(0, sets.Length)];
             enemy.set2 = enemy.set1;
             enemy.rewards = new EnemyInfo.RewardType[3];
@@ -299,13 +299,13 @@ public class MetaGameManager : MonoBehaviour
         for (int i = 0; i < 5; i++)
             botDeck.Add(itemDatabase.GetRandomItemExcluding(chosenEnemy.set1, chosenEnemy.set2));
 
-        Debug.Log($"[MetaGameManager] Сформирована колода бота: {botDeck.Count} карт");
+        Debug.Log($"[MetaGameManager] РЎС„РѕСЂРјРёСЂРѕРІР°РЅР° РєРѕР»РѕРґР° Р±РѕС‚Р°: {botDeck.Count} РєР°СЂС‚");
         for (int i = 0; i < botDeck.Count; i++)
         {
             if (botDeck[i] == null)
-                Debug.LogError($"[MetaGameManager] В botDeck[{i}] находится null!");
+                Debug.LogError($"[MetaGameManager] Р’ botDeck[{i}] РЅР°С…РѕРґРёС‚СЃСЏ null!");
             else
-                Debug.Log($"[MetaGameManager] Карта {i}: {botDeck[i].displayName}");
+                Debug.Log($"[MetaGameManager] РљР°СЂС‚Р° {i}: {botDeck[i].displayName}");
         }
 
         botDeckManager.SetCustomDeck(botDeck);

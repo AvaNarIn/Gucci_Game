@@ -1,10 +1,10 @@
-using UnityEngine;
+п»їusing UnityEngine;
 
 [CreateAssetMenu(fileName = "New RockPaperScissor", menuName = "Items/RockPaperScissor Data")]
 
 public class RockPaperScissorsData : ItemData
 {
-    [Header("Параметры Камня-Ножницы-Бумаги")]
+    [Header("РџР°СЂР°РјРµС‚СЂС‹ РљР°РјРЅСЏ-РќРѕР¶РЅРёС†С‹-Р‘СѓРјР°РіРё")]
     public Shapes shape;
 
     public enum Shapes { Rock, Paper, Scissors }

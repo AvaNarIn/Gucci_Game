@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,15 +34,25 @@ public class DiceHandler : ItemHandler
         {
             int roll = Random.Range(1, (int)(diceList[i].numberOfFaces) + 1);
             rolledValues.Add(roll);
-            if (diceDraggables[i] != null)
-                diceDraggables[i].ShowRollValue(roll);
         }
 
-        yield return new WaitForSeconds(0.6f);
+        // запускаем для всех кубиков анимацию броска одновременно
+        for (int i = 0; i < diceList.Count; i++)
+        {
+            if (diceDraggables[i] != null)
+            {
+                int faces = (int)diceList[i].numberOfFaces;
+                Draggable d = diceDraggables[i];
+                d.StartCoroutine(d.PlayRollAnimation(faces, rolledValues[i]));
+            }
+        }
+
+        // ждём завершения анимации + небольшую паузу перед подсчётом очков
+        yield return new WaitForSeconds(diceList.Count > 0 ? 1.2f : 0.6f);
 
         float totalScore = CalculateScore(diceList, rolledValues, diceIndices, diceDraggables);
 
-        if (HasAbility("������� �������� (������)"))
+        if (HasAbility("Базовое усиление (Кубики)"))
             totalScore *= 1.5f;
 
         LastScore = totalScore;

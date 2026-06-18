@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -78,7 +78,7 @@ public class RockPaperScissorsHandler : ItemHandler
             if (draggables[idx] != null)
                 draggables[idx].ShowScoreGain(Mathf.RoundToInt(itemScore));
         }
-        if (HasAbility("Базовое усиление (КНБ)"))
+        if (HasAbility("Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РљРќР‘)"))
             totalScore *= 1.5f;
         LastScore = totalScore;
     }

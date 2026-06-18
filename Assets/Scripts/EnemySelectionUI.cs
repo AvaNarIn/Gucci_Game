@@ -1,4 +1,4 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 
 public class EnemySelectionUI : MonoBehaviour
@@ -36,7 +36,7 @@ public class EnemyCard
 
     public void Setup(EnemyInfo enemy, int index)
     {
-        abilityText.text = enemy.isBoss ? enemy.abilityDescription : "Нет способности";
+        abilityText.text = enemy.isBoss ? enemy.abilityDescription : "РќРµС‚ СЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё";
         set1Text.text = enemy.set1.ToString();
         set2Text.text = enemy.set2.ToString();
         rewardsText.text = "";
