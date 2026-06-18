@@ -1,4 +1,4 @@
-Ôªøusing System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,14 +32,14 @@ public class TicTacToeHandler : ItemHandler
 
         int[][] lines = new int[][]
         {
-            new int[] {0,1,2}, // –≤–µ—Ä—Ö–Ω—è—è —Å—Ç—Ä–æ–∫–∞
-            new int[] {3,4,5}, // —Å—Ä–µ–¥–Ω—è—è —Å—Ç—Ä–æ–∫–∞
-            new int[] {6,7,8}, // –Ω–∏–∂–Ω—è—è —Å—Ç—Ä–æ–∫–∞
-            new int[] {0,3,6}, // –ª–µ–≤—ã–π —Å—Ç–æ–ª–±–µ—Ü
-            new int[] {1,4,7}, // —Å—Ä–µ–¥–Ω–∏–π —Å—Ç–æ–ª–±–µ—Ü
-            new int[] {2,5,8}, // –ø—Ä–∞–≤—ã–π —Å—Ç–æ–ª–±–µ—Ü
-            new int[] {0,4,8}, // –≥–ª–∞–≤–Ω–∞—è –¥–∏–∞–≥–æ–Ω–∞–ª—å
-            new int[] {2,4,6}  // –ø–æ–±–æ—á–Ω–∞—è –¥–∏–∞–≥–æ–Ω–∞–ª—å
+            new int[] {0,1,2},
+            new int[] {3,4,5},
+            new int[] {6,7,8},
+            new int[] {0,3,6},
+            new int[] {1,4,7},
+            new int[] {2,5,8},
+            new int[] {0,4,8},
+            new int[] {2,4,6}
         };
 
         List<int[]> winningLines = new List<int[]>();
@@ -59,21 +59,6 @@ public class TicTacToeHandler : ItemHandler
             }
         }
 
-        yield return new WaitForSeconds(animationDuration);
-
-        float totalScore = CalculateScore(marks, positions, winningLines, markIndices, markDraggables);
-
-        string abilityName = "–ë–∞–∑–æ–≤–æ–µ —É—Å–∏–ª–µ–Ω–∏–µ (–ö—Ä–µ—Å—Ç–∏–∫–∏-–ù–æ–ª–∏–∫–∏)";
-        AbilityData boostAbility = GetAbilityByName(abilityName);
-
-        if (HasAbility("–ë–∞–∑–æ–≤–æ–µ —É—Å–∏–ª–µ–Ω–∏–µ (–ö—Ä–µ—Å—Ç–∏–∫–∏-–ù–æ–ª–∏–∫–∏)"))
-            totalScore *= 1.5f;
-
-        LastScore = totalScore;
-    }
-
-    private float CalculateScore(List<TicTacToeData> marks, int[] positions, List<int[]> winningLines, List<int> indices, List<Draggable> draggables)
-    {
         int[] lineCount = new int[marks.Count];
         foreach (var line in winningLines)
         {
@@ -85,6 +70,67 @@ public class TicTacToeHandler : ItemHandler
             lineCount[m2]++;
         }
 
+        yield return new WaitForSeconds(animationDuration);
+
+        float totalScore = CalculateScore(marks, positions, lineCount, markIndices, markDraggables);
+
+        // ¡‡ÁÓ‚‡ˇ ÒÔÓÒÓ·ÌÓÒÚ¸
+        if (HasAbility("¡‡ÁÓ‚ÓÂ ÛÒËÎÂÌËÂ ( ÂÒÚËÍË-ÕÓÎËÍË)"))
+            totalScore *= 1.5f;
+
+        // ÕÓ‚˚Â ÒÔÓÒÓ·ÌÓÒÚË
+        if (HasAbility("ƒË‡„ÓÌ‡Î¸ÌÓÂ ÛÒËÎÂÌËÂ"))
+        {
+            int centerIdx = positions[4]; // ËÌ‰ÂÍÒ ‚ marks ‰Îˇ ˆÂÌÚ‡Î¸ÌÓÈ ÍÎÂÚÍË
+            if (centerIdx >= 0 && marks[centerIdx].markType == TicTacToeData.MarkTypes.Cross)
+            {
+                float sum = 0f;
+                int[] diagIndices = { 0, 2, 6, 8 };
+                foreach (int cellIdx in diagIndices)
+                {
+                    int mIdx = positions[cellIdx];
+                    if (mIdx >= 0)
+                    {
+                        // »ÒÔÓÎ¸ÁÛÂÏ GetPieceScore ‰Îˇ Û˜∏Ú‡ ÍÎÂÚÍË Ë ÎËÌËÈ
+                        sum += GetPieceScore(marks[mIdx], cellIdx, lineCount[mIdx]);
+                    }
+                }
+                totalScore += sum * 0.5f;
+            }
+        }
+
+        if (HasAbility("œˇÏÓÂ ÛÒËÎÂÌËÂ"))
+        {
+            int centerIdx = positions[4];
+            if (centerIdx >= 0 && marks[centerIdx].markType == TicTacToeData.MarkTypes.Nought)
+            {
+                float sum = 0f;
+                int[] straightIndices = { 1, 3, 5, 7 };
+                foreach (int cellIdx in straightIndices)
+                {
+                    int mIdx = positions[cellIdx];
+                    if (mIdx >= 0)
+                    {
+                        sum += GetPieceScore(marks[mIdx], cellIdx, lineCount[mIdx]);
+                    }
+                }
+                totalScore += sum * 0.5f;
+            }
+        }
+
+        LastScore = totalScore;
+    }
+
+    private float GetPieceScore(TicTacToeData mark, int cellIndex, int lineCount)
+    {
+        float multiplier = Mathf.Pow(1.5f, lineCount);
+        GridCell cell = gridManager.GetCells()[cellIndex];
+        float cellMult = cell.GetMultiplier(mark);
+        return mark.score * multiplier * cellMult;
+    }
+
+    private float CalculateScore(List<TicTacToeData> marks, int[] positions, int[] lineCount, List<int> indices, List<Draggable> draggables)
+    {
         float total = 0f;
         GridCell[] cells = gridManager.GetCells();
         for (int i = 0; i < marks.Count; i++)
@@ -99,7 +145,6 @@ public class TicTacToeHandler : ItemHandler
             if (draggables[i] != null)
                 draggables[i].ShowScoreGain(Mathf.RoundToInt(pieceScore));
         }
-
         return total;
     }
 }

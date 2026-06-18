@@ -1,4 +1,4 @@
-п»їusing System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,10 +30,20 @@ public class CardHandler : ItemHandler
             }
         }
 
+        // Подсчитываем количество предметов других наборов на поле
+        int chessCount = 0, tttCount = 0, rpsCount = 0, diceCount = 0;
+        foreach (var item in gridState)
+        {
+            if (item is ChessData) chessCount++;
+            else if (item is TicTacToeData) tttCount++;
+            else if (item is RockPaperScissorsData) rpsCount++;
+            else if (item is DiceData) diceCount++;
+        }
+
         yield return new WaitForSeconds(animationDuration);
 
-        // === РћР±СЂР°Р±РѕС‚РєР° СЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё "РЈСЃРёР»РµРЅРёРµ РєРѕРјР±РёРЅР°С†РёРё" ===
-        string abilityName = "РЈСЃРёР»РµРЅРёРµ РєРѕРјР±РёРЅР°С†РёРё";
+        // === Обработка способности "Усиление комбинации" ===
+        string abilityName = "Усиление комбинации";
         AbilityData boostAbility = GetAbilityByName(abilityName);
         string storedCombo = null;
 
@@ -42,7 +52,7 @@ public class CardHandler : ItemHandler
             storedCombo = GetAbilityState(abilityName) as string;
             if (string.IsNullOrEmpty(storedCombo))
             {
-                string[] combos = { "РџР°СЂР°", "Р”РІРµ РїР°СЂС‹", "РЎРµС‚", "РЎС‚СЂРёС‚", "Р¤Р»РµС€", "Р¤СѓР»Р»-С…Р°СѓСЃ", "РљР°СЂРµ", "РЎС‚СЂРёС‚-С„Р»РµС€", "Р¤Р»РµС€-СЂРѕСЏР»СЊ", "РџСЏС‚СЊ РѕРґРёРЅР°РєРѕРІС‹С…" };
+                string[] combos = { "Пара", "Две пары", "Сет", "Стрит", "Флеш", "Фулл-хаус", "Каре", "Стрит-флеш", "Флеш-рояль", "Пять одинаковых" };
                 storedCombo = combos[Random.Range(0, combos.Length)];
                 SetAbilityState(abilityName, storedCombo);
             }
@@ -51,20 +61,18 @@ public class CardHandler : ItemHandler
         {
             RemoveAbilityState(abilityName);
         }
-        // Р•СЃР»Рё boostAbility == null вЂ“ С‚Р°РєРѕР№ СЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё РІРѕРѕР±С‰Рµ РЅРµС‚ РІ Р±Р°Р·Рµ, РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
 
-        // РџРѕРґСЃС‡С‘С‚ РѕС‡РєРѕРІ (РїРµСЂРµРґР°С‘Рј storedCombo)
-        float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo);
+        float totalScore = CalculateScore(allCards, cardIndices, cardDraggables, storedCombo, chessCount, tttCount, rpsCount, diceCount);
 
-        abilityName = "Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РљР°СЂС‚С‹)";
-        boostAbility = GetAbilityByName(abilityName);
-        if (boostAbility != null) totalScore *= 1.5f;
+        if (HasAbility("Базовое усиление (Карты)"))
+            totalScore *= 1.5f;
 
         LastScore = totalScore;
-        Debug.Log($"РћС‡РєРё Р·Р° РєР°СЂС‚С‹: {totalScore}");
+        Debug.Log($"Очки за карты: {totalScore}");
     }
 
-    private float CalculateScore(List<CardData> cards, List<int> cardIndices, List<Draggable> draggables, string storedCombo)
+    private float CalculateScore(List<CardData> cards, List<int> cardIndices, List<Draggable> draggables,
+        string storedCombo, int chessCount, int tttCount, int rpsCount, int diceCount)
     {
         if (cards.Count == 0) return 0;
 
@@ -109,6 +117,22 @@ public class CardHandler : ItemHandler
             float cellMult = cell.GetMultiplier(card);
             float comboMult = bestSet.Contains(card) ? effectiveMultiplier : 1f;
             float pieceScore = card.score * comboMult * cellMult;
+
+            // Новые способности
+            if (HasAbility("Усиление Пик") && card.suit == CardData.Suits.Spades)
+                pieceScore *= Mathf.Pow(1.5f, chessCount);
+            if (HasAbility("Усиление Треф") && card.suit == CardData.Suits.Clubs)
+                pieceScore *= Mathf.Pow(1.5f, tttCount);
+            if (HasAbility("Усиление Черви") && card.suit == CardData.Suits.Hearts)
+                pieceScore *= Mathf.Pow(1.5f, rpsCount);
+            if (HasAbility("Усиление Буби") && card.suit == CardData.Suits.Diamonds)
+                pieceScore *= Mathf.Pow(1.5f, diceCount);
+
+            if (HasAbility("Усиление чисел") && IsNumericCard(card.value))
+                pieceScore *= 1.5f;
+            if (HasAbility("Усиление лиц") && IsFaceCard(card.value))
+                pieceScore *= 1.5f;
+
             total += pieceScore;
 
             if (draggables[i] != null)
@@ -118,19 +142,29 @@ public class CardHandler : ItemHandler
         return total;
     }
 
+    private bool IsNumericCard(CardData.Values value)
+    {
+        return value >= CardData.Values.Six && value <= CardData.Values.Ten;
+    }
+
+    private bool IsFaceCard(CardData.Values value)
+    {
+        return value >= CardData.Values.Jack && value <= CardData.Values.Ace;
+    }
+
     private string GetCurrentComboName(HashSet<CardData> bestSet, List<CardData> cards)
     {
-        if (TryGetFiveOfAKind(cards, out var fiveSet) && fiveSet.SetEquals(bestSet)) return "РџСЏС‚СЊ РѕРґРёРЅР°РєРѕРІС‹С…";
-        if (TryGetRoyalFlush(cards, out var royalSet) && royalSet.SetEquals(bestSet)) return "Р¤Р»РµС€-СЂРѕСЏР»СЊ";
-        if (TryGetStraightFlush(cards, out var sfSet) && sfSet.SetEquals(bestSet)) return "РЎС‚СЂРёС‚-С„Р»РµС€";
-        if (TryGetFourOfAKind(cards, out var fourSet) && fourSet.SetEquals(bestSet)) return "РљР°СЂРµ";
-        if (TryGetFullHouse(cards, out var fhSet) && fhSet.SetEquals(bestSet)) return "Р¤СѓР»Р»-С…Р°СѓСЃ";
-        if (TryGetFlush(cards, out var flushSet) && flushSet.SetEquals(bestSet)) return "Р¤Р»РµС€";
-        if (TryGetStraight(cards, out var straightSet) && straightSet.SetEquals(bestSet)) return "РЎС‚СЂРёС‚";
-        if (TryGetThreeOfAKind(cards, out var threeSet) && threeSet.SetEquals(bestSet)) return "РЎРµС‚";
-        if (TryGetTwoPair(cards, out var twoPairSet) && twoPairSet.SetEquals(bestSet)) return "Р”РІРµ РїР°СЂС‹";
-        if (TryGetPair(cards, out var pairSet) && pairSet.SetEquals(bestSet)) return "РџР°СЂР°";
-        return "РЎС‚Р°СЂС€Р°СЏ РєР°СЂС‚Р°";
+        if (TryGetFiveOfAKind(cards, out var fiveSet) && fiveSet.SetEquals(bestSet)) return "Пять одинаковых";
+        if (TryGetRoyalFlush(cards, out var royalSet) && royalSet.SetEquals(bestSet)) return "Флеш-рояль";
+        if (TryGetStraightFlush(cards, out var sfSet) && sfSet.SetEquals(bestSet)) return "Стрит-флеш";
+        if (TryGetFourOfAKind(cards, out var fourSet) && fourSet.SetEquals(bestSet)) return "Каре";
+        if (TryGetFullHouse(cards, out var fhSet) && fhSet.SetEquals(bestSet)) return "Фулл-хаус";
+        if (TryGetFlush(cards, out var flushSet) && flushSet.SetEquals(bestSet)) return "Флеш";
+        if (TryGetStraight(cards, out var straightSet) && straightSet.SetEquals(bestSet)) return "Стрит";
+        if (TryGetThreeOfAKind(cards, out var threeSet) && threeSet.SetEquals(bestSet)) return "Сет";
+        if (TryGetTwoPair(cards, out var twoPairSet) && twoPairSet.SetEquals(bestSet)) return "Две пары";
+        if (TryGetPair(cards, out var pairSet) && pairSet.SetEquals(bestSet)) return "Пара";
+        return "Старшая карта";
     }
 
     private bool TryGetFiveOfAKind(List<CardData> cards, out HashSet<CardData> bestSet)
@@ -283,11 +317,11 @@ public class CardHandler : ItemHandler
     {
 
         CardData.Values[] starts = {
-            CardData.Values.Ten,   // 10вЂ“Ace
-            CardData.Values.Nine,  // 9вЂ“King
-            CardData.Values.Eight, // 8вЂ“Queen
-            CardData.Values.Seven, // 7вЂ“Jack
-            CardData.Values.Six    // 6вЂ“10
+            CardData.Values.Ten,   // 10–Ace
+            CardData.Values.Nine,  // 9–King
+            CardData.Values.Eight, // 8–Queen
+            CardData.Values.Seven, // 7–Jack
+            CardData.Values.Six    // 6–10
         };
 
         HashSet<CardData> best = null;

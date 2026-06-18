@@ -81,6 +81,17 @@ public class DiceHandler : ItemHandler
             GridCell cell = cells[indices[i]];
             float cellMult = cell.GetMultiplier(dice);
             float pieceScore = dice.score * multiplier * cellMult;
+
+            // Новые способности для кубиков
+            if (HasAbility("Чётное усиление") && value % 2 == 0)
+                pieceScore *= 1.25f;
+            if (HasAbility("Нечётное усиление") && value % 2 != 0)
+                pieceScore *= 1.25f;
+            if (HasAbility("Кратное трём усиление") && value % 3 == 0)
+                pieceScore *= 1.5f;
+            if (HasAbility("Кратное четырём усиление") && value % 4 == 0)
+                pieceScore *= 2f;
+
             total += pieceScore;
 
             if (draggables[i] != null)

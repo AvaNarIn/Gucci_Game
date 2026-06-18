@@ -6,6 +6,7 @@ public class CharacterData : ScriptableObject
 {
     public string characterName;
     public string description;
+    public Sprite icon;
     public ItemSet set;
     public List<ItemData> startingDeck;
 

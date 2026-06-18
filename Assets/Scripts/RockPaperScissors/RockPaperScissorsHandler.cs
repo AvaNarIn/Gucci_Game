@@ -1,4 +1,4 @@
-п»їusing System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +30,9 @@ public class RockPaperScissorsHandler : ItemHandler
         List<int> indices = new List<int>();
         List<Draggable> draggables = new List<Draggable>();
 
+        // Подсчитываем количество каждого типа на поле
+        int rockCount = 0, scissorsCount = 0, paperCount = 0;
+
         for (int i = 0; i < gridState.Length; i++)
         {
             if (gridState[i] is RockPaperScissorsData rps)
@@ -37,6 +40,13 @@ public class RockPaperScissorsHandler : ItemHandler
                 cellToItem.Add(i, rps);
                 indices.Add(i);
                 draggables.Add(cells[i].currentItem);
+
+                switch (rps.shape)
+                {
+                    case RockPaperScissorsData.Shapes.Rock: rockCount++; break;
+                    case RockPaperScissorsData.Shapes.Scissors: scissorsCount++; break;
+                    case RockPaperScissorsData.Shapes.Paper: paperCount++; break;
+                }
             }
         }
 
@@ -73,13 +83,24 @@ public class RockPaperScissorsHandler : ItemHandler
             GridCell cell = cells[index];
             float cellMult = cell.GetMultiplier(current);
             float itemScore = current.score * multiplier * cellMult;
+
+            // Новые способности "Единый камень", "Единые ножницы", "Единая бумага"
+            if (HasAbility("Единый камень") && current.shape == RockPaperScissorsData.Shapes.Rock && rockCount == 1)
+                itemScore *= 2f;
+            if (HasAbility("Единые ножницы") && current.shape == RockPaperScissorsData.Shapes.Scissors && scissorsCount == 1)
+                itemScore *= 2f;
+            if (HasAbility("Единая бумага") && current.shape == RockPaperScissorsData.Shapes.Paper && paperCount == 1)
+                itemScore *= 2f;
+
             totalScore += itemScore;
 
             if (draggables[idx] != null)
                 draggables[idx].ShowScoreGain(Mathf.RoundToInt(itemScore));
         }
-        if (HasAbility("Р‘Р°Р·РѕРІРѕРµ СѓСЃРёР»РµРЅРёРµ (РљРќР‘)"))
+
+        if (HasAbility("Базовое усиление (КНБ)"))
             totalScore *= 1.5f;
+
         LastScore = totalScore;
     }
 }
