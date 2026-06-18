@@ -20,4 +20,4 @@ MonoBehaviour:
     \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0447\u043A\u043E\u0432:
     1, 3, 5, \u0438\u043B\u0438 9"
   set: 2
-  icon: {fileID: 0}
+  icon: {fileID: 3276251122103095207, guid: 85f0150f52f0a334ebbba39131bf1bef, type: 3}

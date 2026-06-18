@@ -3245,7 +3245,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.292988, y: 49.999985}
+  m_AnchoredPosition: {x: 28, y: 49.999985}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &367950342
@@ -3450,6 +3450,7 @@ MonoBehaviour:
   abilitySlotsUI: {fileID: 1426548039}
   openDeckButton: {fileID: 720997789}
   deckCountText: {fileID: 125068295}
+  deckImage: {fileID: 0}
   levelCompletePanel: {fileID: 794586632}
   continueButton: {fileID: 1286163339}
   exitButton: {fileID: 937304785}
@@ -11241,7 +11242,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4, y: -4.0000153}
+  m_AnchoredPosition: {x: 0, y: 8}
   m_SizeDelta: {x: 0, y: -87.954}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2120819232
