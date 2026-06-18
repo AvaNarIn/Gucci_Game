@@ -3450,6 +3450,7 @@ MonoBehaviour:
   abilitySlotsUI: {fileID: 1426548039}
   openDeckButton: {fileID: 720997789}
   deckCountText: {fileID: 125068295}
+  deckImage: {fileID: 720997790}
   levelCompletePanel: {fileID: 794586632}
   continueButton: {fileID: 1286163339}
   exitButton: {fileID: 937304785}
