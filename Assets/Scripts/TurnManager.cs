@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public enum TurnPhase
 {
@@ -139,11 +140,7 @@ public class TurnManager : MonoBehaviour
     private void AddTurnMana()
     {
         int extra = 0;
-        foreach (var buff in PlayerInventory.activeBuffs)
-            if (buff.data.buffName == "+1 мана каждый ход")
-                extra += 1;
-            else if (buff.data.buffName == "+2 маны каждый ход")
-                extra += 2;
+
         if (extra > 0)
                 AddPlayerMana(extra);
     }
@@ -324,7 +321,13 @@ public class TurnManager : MonoBehaviour
     {
         playerScoreText.text = $"Очки: {GameUtils.FormatNumber(playerScore)}";
         botScoreText.text = $"Очки бота: {GameUtils.FormatNumber(botScore)}";
-        if (playerManaText != null) playerManaText.text = $"Мана: {GameUtils.FormatNumber(playerMana)}";
-        if (botManaText != null) botManaText.text = $"Мана: {GameUtils.FormatNumber(botMana)}";
+        int addMana = 5;
+        foreach (var buff in PlayerInventory.activeBuffs)
+            if (buff.data.buffName == "+1 мана каждый ход")
+                addMana += 1;
+            else if (buff.data.buffName == "+2 маны каждый ход")
+                addMana += 2;
+        playerManaText.text = $"Мана: {GameUtils.FormatNumber(playerMana)} (+{addMana})";
+        botManaText.text = $"Мана: {GameUtils.FormatNumber(botMana)}";
     }
 }

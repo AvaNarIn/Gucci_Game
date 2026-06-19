@@ -11,12 +11,12 @@ public class AbilityRewardUI : MonoBehaviour
     private AbilityData[] offeredAbilities;
     private Action onComplete;
     private AbilitySlotsUI abilitySlotsUI;
-    private int pendingReplaceIndex = -1;
-    private bool isReplacing = false;   // активен ли режим замены
 
     void Start()
     {
-        skipButton.onClick.AddListener(() => { GiveRandomBuffAndClose(); });
+        skipButton.onClick.AddListener(() => {
+            GiveRandomBuffAndClose();
+        });
     }
 
     public void Init(AbilitySlotsUI slotsUI)
@@ -28,8 +28,6 @@ public class AbilityRewardUI : MonoBehaviour
     {
         onComplete = onFinished;
         gameObject.SetActive(true);
-        pendingReplaceIndex = -1;
-        isReplacing = false;
         offeredAbilities = new AbilityData[3];
         offeredAbilities[0] = db.GetRandomAbility(set1, PlayerInventory.abilities);
         offeredAbilities[1] = db.GetRandomAbility(set2, PlayerInventory.abilities);
@@ -41,25 +39,34 @@ public class AbilityRewardUI : MonoBehaviour
             int idx = i;
             if (offeredAbilities[i] != null)
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = offeredAbilities[i].abilityName;
+                // Текст
+                Text buttonText = choiceButtons[i].GetComponentInChildren<Text>();
+                if (buttonText != null)
+                    buttonText.text = offeredAbilities[i].abilityName;
+
+                // Иконка
+                Image buttonImage = choiceButtons[i].GetComponent<Image>();
+                if (buttonImage != null && offeredAbilities[i].icon != null)
+                    buttonImage.sprite = offeredAbilities[i].icon;
+                else if (buttonImage == null)
+                {
+                    Image childImage = choiceButtons[i].GetComponentInChildren<Image>();
+                    if (childImage != null && offeredAbilities[i].icon != null)
+                        childImage.sprite = offeredAbilities[i].icon;
+                }
+
                 choiceButtons[i].interactable = true;
-                SetButtonColor(choiceButtons[i], Color.white);
             }
             else
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = "Нет доступных";
+                Text buttonText = choiceButtons[i].GetComponentInChildren<Text>();
+                if (buttonText != null)
+                    buttonText.text = "Нет доступных";
                 choiceButtons[i].interactable = false;
-                SetButtonColor(choiceButtons[i], Color.gray);
             }
             choiceButtons[i].onClick.RemoveAllListeners();
             choiceButtons[i].onClick.AddListener(() => OnAbilityChosen(idx));
         }
-    }
-
-    void SetButtonColor(Button btn, Color color)
-    {
-        Image img = btn.GetComponent<Image>();
-        if (img != null) img.color = color;
     }
 
     void OnAbilityChosen(int idx)
@@ -68,39 +75,20 @@ public class AbilityRewardUI : MonoBehaviour
 
         if (PlayerInventory.abilities.Count < PlayerInventory.maxAbilities)
         {
-            // Есть свободный слот – просто добавляем
             PlayerInventory.AddAbility(offeredAbilities[idx]);
             abilitySlotsUI.UpdateSlots();
             Close();
         }
         else
         {
-            // Замена: подсвечиваем выбранную способность зелёным
-            pendingReplaceIndex = idx;
-            isReplacing = true;
-            for (int i = 0; i < 3; i++)
+            abilitySlotsUI.StartReplaceMode((oldAbility) =>
             {
-                if (i == idx)
-                    SetButtonColor(choiceButtons[i], Color.green);
-                else
-                    SetButtonColor(choiceButtons[i], Color.white);
-            }
-
-            // Включаем режим замены на слотах (панель награды не скрываем)
-            abilitySlotsUI.StartReplaceMode(OnReplaceConfirmed);
+                PlayerInventory.ReplaceAbility(oldAbility, offeredAbilities[idx]);
+                abilitySlotsUI.CancelReplaceMode();
+                abilitySlotsUI.UpdateSlots();
+                Close();
+            });
         }
-    }
-
-    void OnReplaceConfirmed(AbilityData oldAbility)
-    {
-        // Замена произошла – завершаем награду
-        if (pendingReplaceIndex >= 0 && offeredAbilities[pendingReplaceIndex] != null)
-        {
-            PlayerInventory.ReplaceAbility(oldAbility, offeredAbilities[pendingReplaceIndex]);
-            abilitySlotsUI.CancelReplaceMode();
-            abilitySlotsUI.UpdateSlots();
-        }
-        Close();
     }
 
     void GiveRandomBuffAndClose()
@@ -122,11 +110,6 @@ public class AbilityRewardUI : MonoBehaviour
 
     void Close()
     {
-        if (isReplacing)
-        {
-            abilitySlotsUI.CancelReplaceMode();
-            isReplacing = false;
-        }
         gameObject.SetActive(false);
         onComplete?.Invoke();
     }

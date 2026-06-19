@@ -17,7 +17,6 @@ public class ItemRewardUI : MonoBehaviour
         skipButton.onClick.AddListener(() => {
             GiveRandomBuffAndClose();
         });
-        // gameObject.SetActive(false); убран
     }
 
     public void Init(DeckViewUI deckViewUI, DeckManager deckManager)
@@ -42,12 +41,30 @@ public class ItemRewardUI : MonoBehaviour
             int index = i;
             if (offeredItems[i] != null)
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = offeredItems[i].displayName + " (" + offeredItems[i].score + ")";
+                // Устанавливаем текст
+                Text buttonText = choiceButtons[i].GetComponentInChildren<Text>();
+                if (buttonText != null)
+                    buttonText.text = offeredItems[i].displayName + " (" + offeredItems[i].score + ")";
+
+                // Устанавливаем иконку
+                Image buttonImage = choiceButtons[i].GetComponent<Image>();
+                if (buttonImage != null && offeredItems[i].icon != null)
+                    buttonImage.sprite = offeredItems[i].icon;
+                else if (buttonImage == null)
+                {
+                    // Если Image на самой кнопке нет, ищем в дочерних (на случай, если иконка отдельным объектом)
+                    Image childImage = choiceButtons[i].GetComponentInChildren<Image>();
+                    if (childImage != null && offeredItems[i].icon != null)
+                        childImage.sprite = offeredItems[i].icon;
+                }
+
                 choiceButtons[i].interactable = true;
             }
             else
             {
-                choiceButtons[i].GetComponentInChildren<Text>().text = "Нет доступных";
+                Text buttonText = choiceButtons[i].GetComponentInChildren<Text>();
+                if (buttonText != null)
+                    buttonText.text = "Нет доступных";
                 choiceButtons[i].interactable = false;
             }
             choiceButtons[i].onClick.RemoveAllListeners();
